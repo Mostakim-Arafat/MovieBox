@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MovieBox — Discover films that match how you feel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="logo"><span class="mark"></span>MovieBox</div>
+    <div class="nav-links">
+      <a href="#discover" class="active">Discover</a>
+      <a href="#categories">Categories</a>
+      <a href="#how-it-works">How it works</a>
+      <a href="#recommended">For you</a>
+    </div>
+    <div class="nav-right">
+      <div class="theme-toggle" id="themeToggle" role="button" aria-label="Toggle light and dark mode" tabindex="0"></div>
+      <a href="#" class="btn-ghost">Sign in</a>
+      <a href="#" class="btn-primary">Create account</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap hero-inner">
+    <div class="eyebrow" style="justify-content:center;">AI-powered discovery</div>
+    <h1>Movies, matched to<br>how you <span class="accent">feel</span></h1>
+    <p>Describe what you're in the mood for and MovieBox finds it — no genre filters, no endless scrolling. Just tell it, the way you'd tell a friend.</p>
+    <div class="prompt-box">
+      <input type="text" placeholder="e.g. a slow-burn mystery with a satisfying ending" aria-label="Describe what you want to watch">
+      <button>Find a film</button>
+    </div>
+    <div class="prompt-hint">Try "something for a rainy Sunday" or "quiet heist movie" — <b>natural language search</b>, understood.</div>
+  </div>
+  <div class="trust-strip">
+    <div class="trust-item"><span class="ico"></span>Built on Next.js (SSR)</div>
+    <div class="trust-item"><span class="ico"></span>Streamed via AWS CloudFront</div>
+    <div class="trust-item"><span class="ico"></span>Vector-based recommendations</div>
+    <div class="trust-item"><span class="ico"></span>Under 2s initial load</div>
+  </div>
+</header>
+
+<section id="discover">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow" style="justify-content:center;">Why MovieBox</div>
+      <h2>Built around three ideas</h2>
+      <p>Fast enough not to notice, personal enough to feel like it knows your taste, and simple enough to use without a manual.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature">
+        <span class="fnum">01</span>
+        <h3>Search by mood</h3>
+        <p>Type a sentence instead of picking filters. MovieBox reads natural language and turns it into a real search — genre, tone, and pacing included.</p>
+      </div>
+      <div class="feature">
+        <span class="fnum">02</span>
+        <h3>Recommendations by theme</h3>
+        <p>Films are mapped by thematic similarity, not just genre tags, so what you're offered next actually resembles what you just watched.</p>
+      </div>
+      <div class="feature">
+        <span class="fnum">03</span>
+        <h3>Everything in one place</h3>
+        <p>Ratings, reviews, favorites, and watch history live together — updated in real time, saved to your profile automatically.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="categories">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow" style="justify-content:center;">Browse by category</div>
+      <h2>Or skip the sentence entirely</h2>
+      <p>Prefer filters over prompts? Browse by genre, year, rating, or language — the traditional way still works.</p>
+    </div>
+    <div class="cat-grid">
+      <div class="cat-card is-active" style="--accent:var(--gold);">
+        <div class="cname">All titles</div>
+        <div class="ccount">4,820 movies</div>
+      </div>
+      <div class="cat-card" style="--accent:#7B9AE0;">
+        <div class="cname">Sci-Fi</div>
+        <div class="ccount">612 movies</div>
+      </div>
+      <div class="cat-card" style="--accent:#C97B7B;">
+        <div class="cname">Drama</div>
+        <div class="ccount">1,140 movies</div>
+      </div>
+      <div class="cat-card" style="--accent:#8F86C9;">
+        <div class="cname">Thriller</div>
+        <div class="ccount">498 movies</div>
+      </div>
+      <div class="cat-card" style="--accent:#D9A441;">
+        <div class="cname">Comedy</div>
+        <div class="ccount">764 movies</div>
+      </div>
+      <div class="cat-card" style="--accent:#C97BA8;">
+        <div class="cname">Romance</div>
+        <div class="ccount">356 movies</div>
+      </div>
+      <div class="cat-card" style="--accent:#7BC9A0;">
+        <div class="cname">Animation</div>
+        <div class="ccount">287 movies</div>
+      </div>
+      <div class="cat-card" style="--accent:#9E9E9E;">
+        <div class="cname">Mystery</div>
+        <div class="ccount">421 movies</div>
+      </div>
+      <div class="cat-card" style="--accent:#C96B4A;">
+        <div class="cname">Action</div>
+        <div class="ccount">889 movies</div>
+      </div>
+      <div class="cat-card" style="--accent:#6BA8C9;">
+        <div class="cname">Documentary</div>
+        <div class="ccount">203 movies</div>
+      </div>
+    </div>
+    <div class="filter-bar">
+      <div class="filter-chips">
+        <span class="fchip">Release year <span class="chev">▾</span></span>
+        <span class="fchip">IMDb rating <span class="chev">▾</span></span>
+        <span class="fchip">Age rating <span class="chev">▾</span></span>
+        <span class="fchip">Language <span class="chev">▾</span></span>
+      </div>
+      <a href="#" class="btn-ghost">Open advanced filters</a>
+    </div>
+  </div>
+</section>
+
+<section id="trending">
+  <div class="wrap">
+    <div class="row-head">
+      <h2>Trending this week</h2>
+      <a href="#" class="seeall">See all →</a>
+    </div>
+    <div class="row">
+      <div class="card">
+        <div class="poster p1"><span class="rating">8.6</span><span class="glyph">Drift Protocol</span></div>
+        <div class="meta"><span class="yr">2025</span><span class="tag">Sci-Fi</span></div>
+      </div>
+      <div class="card">
+        <div class="poster p2"><span class="rating">7.9</span><span class="glyph">The Last Harvest</span></div>
+        <div class="meta"><span class="yr">2024</span><span class="tag">Drama</span></div>
+      </div>
+      <div class="card">
+        <div class="poster p3"><span class="rating">9.1</span><span class="glyph">Salt Roads</span></div>
+        <div class="meta"><span class="yr">2025</span><span class="tag">Thriller</span></div>
+      </div>
+      <div class="card">
+        <div class="poster p4"><span class="rating">8.2</span><span class="glyph">Velvet Hour</span></div>
+        <div class="meta"><span class="yr">2023</span><span class="tag">Romance</span></div>
+      </div>
+      <div class="card">
+        <div class="poster p5"><span class="rating">7.5</span><span class="glyph">Fox &amp; Lantern</span></div>
+        <div class="meta"><span class="yr">2024</span><span class="tag">Animation</span></div>
+      </div>
+      <div class="card">
+        <div class="poster p6"><span class="rating">8.8</span><span class="glyph">North of Nowhere</span></div>
+        <div class="meta"><span class="yr">2025</span><span class="tag">Mystery</span></div>
+      </div>
+      <div class="card">
+        <div class="poster p7"><span class="rating">7.3</span><span class="glyph">Red Crossing</span></div>
+        <div class="meta"><span class="yr">2022</span><span class="tag">Action</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="popular">
+  <div class="wrap">
+    <div class="row-head">
+      <h2>Popular right now</h2>
+      <a href="#" class="seeall">See all →</a>
+    </div>
+    <div class="row">
+      <div class="card">
+        <div class="poster p4"><span class="rating">8.9</span><span class="glyph">Marble Season</span></div>
+        <div class="meta"><span class="yr">2023</span><span class="tag">Drama</span></div>
+      </div>
+      <div class="card">
+        <div class="poster p6"><span class="rating">8.3</span><span class="glyph">Iron Meridian</span></div>
+        <div class="meta"><span class="yr">2024</span><span class="tag">Action</span></div>
+      </div>
+      <div class="card">
+        <div class="poster p2"><span class="rating">7.8</span><span class="glyph">Copper Sky</span></div>
+        <div class="meta"><span class="yr">2022</span><span class="tag">Comedy</span></div>
+      </div>
+      <div class="card">
+        <div class="poster p5"><span class="rating">8.1</span><span class="glyph">Hollow Bloom</span></div>
+        <div class="meta"><span class="yr">2025</span><span class="tag">Fantasy</span></div>
+      </div>
+      <div class="card">
+        <div class="poster p1"><span class="rating">9.0</span><span class="glyph">Static Ceremony</span></div>
+        <div class="meta"><span class="yr">2024</span><span class="tag">Sci-Fi</span></div>
+      </div>
+      <div class="card">
+        <div class="poster p3"><span class="rating">7.6</span><span class="glyph">Low Tide Diner</span></div>
+        <div class="meta"><span class="yr">2023</span><span class="tag">Drama</span></div>
+      </div>
+      <div class="card">
+        <div class="poster p8"><span class="rating">8.5</span><span class="glyph">Amber Circuit</span></div>
+        <div class="meta"><span class="yr">2025</span><span class="tag">Thriller</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="constellation" id="how-it-works">
+  <div class="wrap cw">
+    <div>
+      <div class="eyebrow">How discovery works</div>
+      <h2>Recommendations that follow the theme, not the shelf</h2>
+      <p>Most platforms sort films into genre bins. MovieBox maps each title by theme, tone, and pacing using vector embeddings — so a quiet heist film can surface next to a quiet character study, even if they'd never share a shelf.</p>
+      <div class="stat-row">
+        <div class="stat"><b>1,400+</b><span>THEMES MAPPED</span></div>
+        <div class="stat"><b>0.02s</b><span>MATCH TIME</span></div>
+        <div class="stat"><b>3×</b><span>FEWER DEAD ENDS</span></div>
+      </div>
+    </div>
+    <div class="svg-wrap">
+      <svg viewBox="0 0 560 400" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;">
+        <line x1="120" y1="90" x2="270" y2="150" stroke="var(--violet)" stroke-opacity="0.55" stroke-width="1.4"/>
+        <line x1="270" y1="150" x2="420" y2="95" stroke="var(--violet)" stroke-opacity="0.25" stroke-width="1"/>
+        <line x1="270" y1="150" x2="330" y2="270" stroke="var(--violet)" stroke-opacity="0.65" stroke-width="1.6"/>
+        <line x1="330" y1="270" x2="180" y2="310" stroke="var(--violet)" stroke-opacity="0.4" stroke-width="1.2"/>
+        <line x1="120" y1="90" x2="80" y2="230" stroke="var(--violet)" stroke-opacity="0.3" stroke-width="1"/>
+        <line x1="80" y1="230" x2="180" y2="310" stroke="var(--violet)" stroke-opacity="0.5" stroke-width="1.3"/>
+        <line x1="420" y1="95" x2="470" y2="220" stroke="var(--violet)" stroke-opacity="0.35" stroke-width="1.1"/>
+        <line x1="470" y1="220" x2="330" y2="270" stroke="var(--violet)" stroke-opacity="0.2" stroke-width="1"/>
+        <line x1="270" y1="150" x2="80" y2="230" stroke="var(--violet)" stroke-opacity="0.18" stroke-width="0.8"/>
+
+        <g>
+          <circle cx="270" cy="150" r="7" fill="var(--gold)"/>
+          <text x="284" y="147" font-family="JetBrains Mono, monospace" font-size="11" fill="var(--text)">Salt Roads</text>
+          <text x="284" y="161" font-family="JetBrains Mono, monospace" font-size="9" fill="var(--text-dim)">you're watching</text>
+        </g>
+        <g>
+          <circle cx="120" cy="90" r="4.5" fill="var(--violet)"/>
+          <text x="132" y="87" font-family="JetBrains Mono, monospace" font-size="10" fill="var(--text-dim)">Quiet Descent</text>
+        </g>
+        <g>
+          <circle cx="420" cy="95" r="4.5" fill="var(--violet)"/>
+          <text x="432" y="92" font-family="JetBrains Mono, monospace" font-size="10" fill="var(--text-dim)">North of Nowhere</text>
+        </g>
+        <g>
+          <circle cx="330" cy="270" r="4.5" fill="var(--violet)"/>
+          <text x="342" y="267" font-family="JetBrains Mono, monospace" font-size="10" fill="var(--text-dim)">Slow Fuse</text>
+        </g>
+        <g>
+          <circle cx="180" cy="310" r="4.5" fill="var(--violet)"/>
+          <text x="192" y="307" font-family="JetBrains Mono, monospace" font-size="10" fill="var(--text-dim)">Fox &amp; Lantern</text>
+        </g>
+        <g>
+          <circle cx="80" cy="230" r="4.5" fill="var(--violet)"/>
+          <text x="92" y="227" font-family="JetBrains Mono, monospace" font-size="10" fill="var(--text-dim)">Velvet Hour</text>
+        </g>
+        <g>
+          <circle cx="470" cy="220" r="4.5" fill="var(--violet)"/>
+          <text x="482" y="217" font-family="JetBrains Mono, monospace" font-size="10" fill="var(--text-dim)">Red Crossing</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section id="recommended">
+  <div class="wrap">
+    <div class="row-head">
+      <div>
+        <div class="rec-strip"><h2 style="font-size:30px;">Recommended for you</h2><span class="badge">Personalized</span></div>
+        <p style="color:var(--text-dim);font-size:13.5px;margin-top:6px;">Based on your watch history, favorites, and ratings.</p>
+      </div>
+      <a href="#" class="seeall">See all →</a>
+    </div>
+    <div class="row">
+      <div class="card">
+        <div class="poster p3"><span class="rating">8.7</span><span class="glyph">Quiet Descent</span></div>
+        <div class="meta"><span class="yr">2024</span><span class="tag">Mystery</span></div>
+      </div>
+      <div class="card">
+        <div class="poster p5"><span class="rating">8.0</span><span class="glyph">Slow Fuse</span></div>
+        <div class="meta"><span class="yr">2023</span><span class="tag">Thriller</span></div>
+      </div>
+      <div class="card">
+        <div class="poster p1"><span class="rating">7.8</span><span class="glyph">Ashfall Radio</span></div>
+        <div class="meta"><span class="yr">2025</span><span class="tag">Drama</span></div>
+      </div>
+      <div class="card">
+        <div class="poster p6"><span class="rating">8.4</span><span class="glyph">Winter Currency</span></div>
+        <div class="meta"><span class="yr">2022</span><span class="tag">Sci-Fi</span></div>
+      </div>
+      <div class="card">
+        <div class="poster p2"><span class="rating">7.9</span><span class="glyph">Marrow &amp; Salt</span></div>
+        <div class="meta"><span class="yr">2024</span><span class="tag">Drama</span></div>
+      </div>
+      <div class="card">
+        <div class="poster p8"><span class="rating">8.2</span><span class="glyph">Cedar Static</span></div>
+        <div class="meta"><span class="yr">2023</span><span class="tag">Mystery</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="recent">
+  <div class="wrap">
+    <div class="row-head">
+      <h2>Recently added</h2>
+      <a href="#" class="seeall">See all →</a>
+    </div>
+    <div class="recent-grid">
+      <div class="recent-card">
+        <div style="position:relative;">
+          <span class="newbadge">NEW</span>
+          <div class="poster p8"><span class="rating">8.4</span><span class="glyph">Harbor Light</span></div>
+        </div>
+        <div class="recent-info">
+          <div class="title">Harbor Light</div>
+          <div class="sub"><span>2025 · Drama</span><span>PG-13</span></div>
+        </div>
+      </div>
+      <div class="recent-card">
+        <div style="position:relative;">
+          <span class="newbadge">NEW</span>
+          <div class="poster p4"><span class="rating">7.7</span><span class="glyph">Paper Orbit</span></div>
+        </div>
+        <div class="recent-info">
+          <div class="title">Paper Orbit</div>
+          <div class="sub"><span>2025 · Sci-Fi</span><span>PG</span></div>
+        </div>
+      </div>
+      <div class="recent-card">
+        <div style="position:relative;">
+          <span class="newbadge">NEW</span>
+          <div class="poster p3"><span class="rating">8.0</span><span class="glyph">Glass Orchard</span></div>
+        </div>
+        <div class="recent-info">
+          <div class="title">Glass Orchard</div>
+          <div class="sub"><span>2024 · Mystery</span><span>R</span></div>
+        </div>
+      </div>
+      <div class="recent-card">
+        <div style="position:relative;">
+          <span class="newbadge">NEW</span>
+          <div class="poster p6"><span class="rating">7.2</span><span class="glyph">Tin Altitude</span></div>
+        </div>
+        <div class="recent-info">
+          <div class="title">Tin Altitude</div>
+          <div class="sub"><span>2025 · Action</span><span>PG-13</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="cta">
+      <h2>Start watching in under a minute</h2>
+      <p>Free to join. No payment details, no subscriptions — just create a profile and search.</p>
+      <div class="cta-btns">
+        <a href="#" class="btn-primary">Create free account</a>
+        <a href="#" class="btn-ghost">Browse without signing in</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <div class="logo"><span class="mark"></span>MovieBox</div>
+        <p>Movies, matched by feeling. Free to watch, built to understand what you meant.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h4>Browse</h4>
+          <a href="#">Trending</a>
+          <a href="#">Popular</a>
+          <a href="#">Recently added</a>
+        </div>
+        <div class="foot-col">
+          <h4>Account</h4>
+          <a href="#">Favorites</a>
+          <a href="#">Watch history</a>
+          <a href="#">Profile</a>
+        </div>
+        <div class="foot-col">
+          <h4>Company</h4>
+          <a href="#">About</a>
+          <a href="#">Contact</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 MovieBox. All streams for demonstration only.</span>
+      <div class="legal">
+        <a href="#">Terms</a>
+        <a href="#">Privacy</a>
+        <a href="#">Built with Next.js · Hosted on AWS</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const toggle = document.getElementById('themeToggle');
+  function flipTheme(){ document.documentElement.classList.toggle('light'); }
+  toggle.addEventListener('click', flipTheme);
+  toggle.addEventListener('keydown', (e)=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); flipTheme(); }});
+
+  document.querySelectorAll('.nav-links a').forEach(link=>{
+    link.addEventListener('click', ()=>{
+      document.querySelectorAll('.nav-links a').forEach(l=>l.classList.remove('active'));
+      link.classList.add('active');
+    });
+  });
+
+  document.querySelectorAll('.cat-card').forEach(card=>{
+    card.addEventListener('click', ()=>{
+      document.querySelectorAll('.cat-card').forEach(c=>c.classList.remove('is-active'));
+      card.classList.add('is-active');
+    });
+  });
+</script>
+
+</body>
+</html>
