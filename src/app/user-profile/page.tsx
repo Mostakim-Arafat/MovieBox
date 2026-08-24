@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
 type UserData = {
@@ -18,6 +18,9 @@ export default function UserProfilePage() {
     const [activeTab, setActiveTab] = useState("profile");
     const [isDark, setIsDark] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
+
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const [user, setUser] = useState<UserData>({
         name: "Alomgir Hossain",
@@ -39,11 +42,61 @@ export default function UserProfilePage() {
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    // Click on avatar -> open file picker
+    const handleAvatarClick = () => {
+        if (!isEditing) return;
+        fileInputRef.current?.click();
+    };
+
+    // Upload selected image to imgbb
+    const handleImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
-        const imageUrl = URL.createObjectURL(file);
-        setFormData((prev) => ({ ...prev, avatar: imageUrl }));
+
+        setIsUploading(true);
+        const uploadToast = toast.loading("Uploading photo...");
+
+        try {
+            const apiKey = process.env.NEXT_PUBLIC_IMGBB_API_KEY;
+
+            if (!apiKey) {
+                toast.error("imgbb API key is missing. Check .env.local", {
+                    id: uploadToast,
+                });
+                setIsUploading(false);
+                return;
+            }
+
+            const form = new FormData();
+            form.append("image", file);
+
+            const res = await fetch(
+                `https://api.imgbb.com/1/upload?key=${apiKey}`,
+                {
+                    method: "POST",
+                    body: form,
+                }
+            );
+
+            const data = await res.json();
+
+            if (data.success) {
+                const imageUrl = data.data.url as string;
+
+                setFormData((prev) => ({ ...prev, avatar: imageUrl }));
+
+                toast.success("Photo uploaded!", { id: uploadToast });
+            } else {
+                toast.error("Upload failed. Try again.", { id: uploadToast });
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error("Something went wrong while uploading.", {
+                id: uploadToast,
+            });
+        } finally {
+            setIsUploading(false);
+        }
     };
 
     const handleSave = () => {
@@ -169,7 +222,8 @@ export default function UserProfilePage() {
                                                 </button>
                                                 <button
                                                     onClick={handleSave}
-                                                    className="flex-1 rounded-lg bg-black px-5 py-2.5 text-sm font-medium text-white transition hover:opacity-80 sm:flex-none sm:text-base dark:bg-white dark:text-black"
+                                                    disabled={isUploading}
+                                                    className="flex-1 rounded-lg bg-black px-5 py-2.5 text-sm font-medium text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50 sm:flex-none sm:text-base dark:bg-white dark:text-black"
                                                 >
                                                     Save Changes
                                                 </button>
@@ -177,29 +231,48 @@ export default function UserProfilePage() {
                                         )}
                                     </div>
 
-                                    {/* Avatar Upload */}
+                                    {/* Avatar Upload - click on image itself */}
                                     <div className="mt-8 flex flex-col gap-5 sm:flex-row sm:items-center">
-                                        <img
-                                            src={isEditing ? formData.avatar : user.avatar}
-                                            alt="Profile"
-                                            className="h-24 w-24 rounded-full object-cover sm:h-28 sm:w-28"
-                                        />
+                                        <div
+                                            onClick={handleAvatarClick}
+                                            className={`relative h-24 w-24 shrink-0 rounded-full sm:h-28 sm:w-28 ${
+                                                isEditing
+                                                    ? "cursor-pointer group"
+                                                    : ""
+                                            }`}
+                                        >
+                                            <img
+                                                src={isEditing ? formData.avatar : user.avatar}
+                                                alt="Profile"
+                                                className={`h-24 w-24 rounded-full object-cover sm:h-28 sm:w-28 ${
+                                                    isEditing
+                                                        ? "opacity-90 transition group-hover:opacity-50"
+                                                        : ""
+                                                }`}
+                                            />
+
+                                            {isEditing && (
+                                                <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/0 text-xs font-medium text-white opacity-0 transition group-hover:bg-black/40 group-hover:opacity-100">
+                                                    {isUploading ? "Uploading..." : "Change"}
+                                                </div>
+                                            )}
+
+                                            <input
+                                                ref={fileInputRef}
+                                                type="file"
+                                                accept="image/*"
+                                                className="hidden"
+                                                onChange={handleImageChange}
+                                            />
+                                        </div>
+
                                         <div>
                                             <h3 className="font-semibold">Profile Picture</h3>
                                             <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                                                Upload a new profile picture.
+                                                {isEditing
+                                                    ? "Click on the photo to upload a new one."
+                                                    : "Click Edit Profile to change your photo."}
                                             </p>
-                                            {isEditing && (
-                                                <label className="mt-4 inline-block cursor-pointer rounded-lg border border-gray-300 px-4 py-2 text-sm hover:bg-gray-100 dark:border-gray-700 dark:hover:bg-gray-800">
-                                                    Change Photo
-                                                    <input
-                                                        type="file"
-                                                        accept="image/*"
-                                                        className="hidden"
-                                                        onChange={handleImageChange}
-                                                    />
-                                                </label>
-                                            )}
                                         </div>
                                     </div>
 
@@ -307,9 +380,87 @@ export default function UserProfilePage() {
                             )}
 
                             {activeTab === "security" && (
-                                <p className="text-gray-500 dark:text-gray-400">
-                                    Security settings will go here (next step).
-                                </p>
+                                <div>
+                                    <div className="border-b border-gray-200 pb-6 dark:border-gray-800">
+                                        <h2 className="text-xl font-bold sm:text-2xl">
+                                            Security Settings
+                                        </h2>
+                                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                            Manage your account security.
+                                        </p>
+                                    </div>
+
+                                    <div className="mt-8 space-y-5">
+                                        <div className="flex flex-col justify-between gap-4 rounded-xl border border-gray-200 p-5 sm:flex-row sm:items-center dark:border-gray-800">
+                                            <div>
+                                                <h3 className="font-semibold">
+                                                    Change Password
+                                                </h3>
+                                                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                                    Keep your account secure with a strong password.
+                                                </p>
+                                            </div>
+
+                                            <button
+                                                onClick={() =>
+                                                    toast(
+                                                        "Password update API will be connected later.",
+                                                        { icon: "🔧" }
+                                                    )
+                                                }
+                                                className="w-full shrink-0 rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition hover:bg-gray-100 sm:w-auto dark:border-gray-700 dark:hover:bg-gray-800"
+                                            >
+                                                Change Password
+                                            </button>
+                                        </div>
+
+                                        <div className="flex flex-col justify-between gap-4 rounded-xl border border-gray-200 p-5 sm:flex-row sm:items-center dark:border-gray-800">
+                                            <div>
+                                                <h3 className="font-semibold">
+                                                    Two-Factor Authentication
+                                                </h3>
+                                                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                                    Add an extra layer of security to your account.
+                                                </p>
+                                            </div>
+
+                                            <button
+                                                onClick={() =>
+                                                    toast(
+                                                        "Two-factor authentication coming soon.",
+                                                        { icon: "🔧" }
+                                                    )
+                                                }
+                                                className="w-full shrink-0 rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition hover:bg-gray-100 sm:w-auto dark:border-gray-700 dark:hover:bg-gray-800"
+                                            >
+                                                Enable
+                                            </button>
+                                        </div>
+
+                                        <div className="flex flex-col justify-between gap-4 rounded-xl border border-gray-200 p-5 sm:flex-row sm:items-center dark:border-gray-800">
+                                            <div>
+                                                <h3 className="font-semibold">
+                                                    Active Sessions
+                                                </h3>
+                                                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                                    See where you&apos;re currently logged in.
+                                                </p>
+                                            </div>
+
+                                            <button
+                                                onClick={() =>
+                                                    toast(
+                                                        "Session list API will be connected later.",
+                                                        { icon: "🔧" }
+                                                    )
+                                                }
+                                                className="w-full shrink-0 rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition hover:bg-gray-100 sm:w-auto dark:border-gray-700 dark:hover:bg-gray-800"
+                                            >
+                                                View Sessions
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                             )}
 
                             {activeTab === "settings" && (
