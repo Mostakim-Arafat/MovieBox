@@ -1,6 +1,7 @@
 "use client";
 
 import { ChangeEvent, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 
 type UserData = {
     name: string;
@@ -17,7 +18,6 @@ export default function UserProfilePage() {
     const [activeTab, setActiveTab] = useState("profile");
     const [isDark, setIsDark] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
-    const [message, setMessage] = useState("");
 
     const [user, setUser] = useState<UserData>({
         name: "Alomgir Hossain",
@@ -49,17 +49,19 @@ export default function UserProfilePage() {
     const handleSave = () => {
         setUser(formData);
         setIsEditing(false);
-        setMessage("Profile updated successfully!");
-        setTimeout(() => setMessage(""), 3000);
+        toast.success("Profile updated successfully!");
     };
 
     const handleCancel = () => {
         setFormData(user);
         setIsEditing(false);
+        toast("Changes discarded", { icon: "↩️" });
     };
 
     return (
         <div className={isDark ? "dark" : ""}>
+            <Toaster position="top-center" />
+
             <main className="min-h-screen bg-gray-50 px-4 py-6 text-gray-900 sm:px-6 sm:py-10 dark:bg-gray-950 dark:text-white">
                 <div className="mx-auto max-w-6xl">
                     {/* Header */}
@@ -80,13 +82,6 @@ export default function UserProfilePage() {
                             {isDark ? "🌙 Dark" : "☀️ Light"}
                         </button>
                     </div>
-
-                    {/* Success Message */}
-                    {message && (
-                        <div className="mb-6 rounded-xl border border-green-500 bg-green-100 px-5 py-4 text-sm text-green-700 sm:text-base dark:bg-green-950 dark:text-green-400">
-                            {message}
-                        </div>
-                    )}
 
                     {/* Main Grid: Sidebar + Content */}
                     <div className="grid gap-6 lg:grid-cols-[280px_1fr] lg:gap-8">
@@ -109,7 +104,7 @@ export default function UserProfilePage() {
                             <div className="mt-6 flex gap-2 overflow-x-auto lg:mt-8 lg:flex-col lg:gap-2 lg:overflow-visible">
                                 <button
                                     onClick={() => setActiveTab("profile")}
-                                    className={`whitespace-nowrap rounded-lg px-4 py-3 text-left text-sm transition sm:text-base ${
+                                    className={`shrink-0 whitespace-nowrap rounded-lg px-4 py-3 text-left text-sm transition sm:text-base ${
                                         activeTab === "profile"
                                             ? "bg-black text-white dark:bg-white dark:text-black"
                                             : "hover:bg-gray-100 dark:hover:bg-gray-800"
@@ -120,7 +115,7 @@ export default function UserProfilePage() {
 
                                 <button
                                     onClick={() => setActiveTab("security")}
-                                    className={`whitespace-nowrap rounded-lg px-4 py-3 text-left text-sm transition sm:text-base ${
+                                    className={`shrink-0 whitespace-nowrap rounded-lg px-4 py-3 text-left text-sm transition sm:text-base ${
                                         activeTab === "security"
                                             ? "bg-black text-white dark:bg-white dark:text-black"
                                             : "hover:bg-gray-100 dark:hover:bg-gray-800"
@@ -131,7 +126,7 @@ export default function UserProfilePage() {
 
                                 <button
                                     onClick={() => setActiveTab("settings")}
-                                    className={`whitespace-nowrap rounded-lg px-4 py-3 text-left text-sm transition sm:text-base ${
+                                    className={`shrink-0 whitespace-nowrap rounded-lg px-4 py-3 text-left text-sm transition sm:text-base ${
                                         activeTab === "settings"
                                             ? "bg-black text-white dark:bg-white dark:text-black"
                                             : "hover:bg-gray-100 dark:hover:bg-gray-800"
@@ -147,7 +142,7 @@ export default function UserProfilePage() {
                             {activeTab === "profile" && (
                                 <>
                                     {/* Tab Header + Edit Button */}
-                                    <div className="flex flex-col justify-between gap-4 border-b border-gray-200 pb-6 sm:flex-row sm:items-center dark:border-gray-800">
+                                    <div className="flex flex-col items-start justify-between gap-4 border-b border-gray-200 pb-6 sm:flex-row sm:items-center dark:border-gray-800">
                                         <div>
                                             <h2 className="text-xl font-bold sm:text-2xl">
                                                 Profile Information
@@ -160,21 +155,21 @@ export default function UserProfilePage() {
                                         {!isEditing ? (
                                             <button
                                                 onClick={() => setIsEditing(true)}
-                                                className="rounded-lg bg-black px-5 py-2.5 text-sm font-medium text-white transition hover:opacity-80 sm:text-base dark:bg-white dark:text-black"
+                                                className="w-full rounded-lg bg-black px-5 py-2.5 text-sm font-medium text-white transition hover:opacity-80 sm:w-auto sm:text-base dark:bg-white dark:text-black"
                                             >
                                                 Edit Profile
                                             </button>
                                         ) : (
-                                            <div className="flex gap-3">
+                                            <div className="flex w-full gap-3 sm:w-auto">
                                                 <button
                                                     onClick={handleCancel}
-                                                    className="rounded-lg border border-gray-300 px-5 py-2.5 text-sm transition hover:bg-gray-100 sm:text-base dark:border-gray-700 dark:hover:bg-gray-800"
+                                                    className="flex-1 rounded-lg border border-gray-300 px-5 py-2.5 text-sm transition hover:bg-gray-100 sm:flex-none sm:text-base dark:border-gray-700 dark:hover:bg-gray-800"
                                                 >
                                                     Cancel
                                                 </button>
                                                 <button
                                                     onClick={handleSave}
-                                                    className="rounded-lg bg-black px-5 py-2.5 text-sm font-medium text-white transition hover:opacity-80 sm:text-base dark:bg-white dark:text-black"
+                                                    className="flex-1 rounded-lg bg-black px-5 py-2.5 text-sm font-medium text-white transition hover:opacity-80 sm:flex-none sm:text-base dark:bg-white dark:text-black"
                                                 >
                                                     Save Changes
                                                 </button>
@@ -209,7 +204,7 @@ export default function UserProfilePage() {
                                     </div>
 
                                     {/* Form Fields */}
-                                    <div className="mt-8 grid gap-6 sm:grid-cols-2">
+                                    <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
                                         <div>
                                             <label className="mb-2 block text-sm font-medium">
                                                 Full Name
