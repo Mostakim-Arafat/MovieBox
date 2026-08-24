@@ -16,7 +16,7 @@ type UserData = {
 
 export default function UserProfilePage() {
     const [activeTab, setActiveTab] = useState("profile");
-    const [isDark, setIsDark] = useState(false);
+    const [isDark, setIsDark] = useState(true); // default dark mode
     const [isEditing, setIsEditing] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
 
@@ -42,13 +42,11 @@ export default function UserProfilePage() {
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    // Click on avatar -> open file picker
     const handleAvatarClick = () => {
         if (!isEditing) return;
         fileInputRef.current?.click();
     };
 
-    // Upload selected image to imgbb
     const handleImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
@@ -82,9 +80,7 @@ export default function UserProfilePage() {
 
             if (data.success) {
                 const imageUrl = data.data.url as string;
-
                 setFormData((prev) => ({ ...prev, avatar: imageUrl }));
-
                 toast.success("Photo uploaded!", { id: uploadToast });
             } else {
                 toast.error("Upload failed. Try again.", { id: uploadToast });
@@ -157,33 +153,30 @@ export default function UserProfilePage() {
                             <div className="mt-6 flex gap-2 overflow-x-auto lg:mt-8 lg:flex-col lg:gap-2 lg:overflow-visible">
                                 <button
                                     onClick={() => setActiveTab("profile")}
-                                    className={`shrink-0 whitespace-nowrap rounded-lg px-4 py-3 text-left text-sm transition sm:text-base ${
-                                        activeTab === "profile"
+                                    className={`shrink-0 whitespace-nowrap rounded-lg px-4 py-3 text-left text-sm transition sm:text-base ${activeTab === "profile"
                                             ? "bg-black text-white dark:bg-white dark:text-black"
                                             : "hover:bg-gray-100 dark:hover:bg-gray-800"
-                                    }`}
+                                        }`}
                                 >
                                     👤 Profile Information
                                 </button>
 
                                 <button
                                     onClick={() => setActiveTab("security")}
-                                    className={`shrink-0 whitespace-nowrap rounded-lg px-4 py-3 text-left text-sm transition sm:text-base ${
-                                        activeTab === "security"
+                                    className={`shrink-0 whitespace-nowrap rounded-lg px-4 py-3 text-left text-sm transition sm:text-base ${activeTab === "security"
                                             ? "bg-black text-white dark:bg-white dark:text-black"
                                             : "hover:bg-gray-100 dark:hover:bg-gray-800"
-                                    }`}
+                                        }`}
                                 >
                                     🔒 Security
                                 </button>
 
                                 <button
                                     onClick={() => setActiveTab("settings")}
-                                    className={`shrink-0 whitespace-nowrap rounded-lg px-4 py-3 text-left text-sm transition sm:text-base ${
-                                        activeTab === "settings"
+                                    className={`shrink-0 whitespace-nowrap rounded-lg px-4 py-3 text-left text-sm transition sm:text-base ${activeTab === "settings"
                                             ? "bg-black text-white dark:bg-white dark:text-black"
                                             : "hover:bg-gray-100 dark:hover:bg-gray-800"
-                                    }`}
+                                        }`}
                                 >
                                     ⚙️ Preferences
                                 </button>
@@ -192,9 +185,9 @@ export default function UserProfilePage() {
 
                         {/* Content */}
                         <section className="rounded-2xl border border-gray-200 bg-white p-5 sm:p-6 md:p-8 dark:border-gray-800 dark:bg-gray-900">
+                            {/* PROFILE TAB */}
                             {activeTab === "profile" && (
                                 <>
-                                    {/* Tab Header + Edit Button */}
                                     <div className="flex flex-col items-start justify-between gap-4 border-b border-gray-200 pb-6 sm:flex-row sm:items-center dark:border-gray-800">
                                         <div>
                                             <h2 className="text-xl font-bold sm:text-2xl">
@@ -231,24 +224,20 @@ export default function UserProfilePage() {
                                         )}
                                     </div>
 
-                                    {/* Avatar Upload - click on image itself */}
+                                    {/* Avatar Upload */}
                                     <div className="mt-8 flex flex-col gap-5 sm:flex-row sm:items-center">
                                         <div
                                             onClick={handleAvatarClick}
-                                            className={`relative h-24 w-24 shrink-0 rounded-full sm:h-28 sm:w-28 ${
-                                                isEditing
-                                                    ? "cursor-pointer group"
-                                                    : ""
-                                            }`}
+                                            className={`group relative h-24 w-24 shrink-0 rounded-full sm:h-28 sm:w-28 ${isEditing ? "cursor-pointer" : ""
+                                                }`}
                                         >
                                             <img
                                                 src={isEditing ? formData.avatar : user.avatar}
                                                 alt="Profile"
-                                                className={`h-24 w-24 rounded-full object-cover sm:h-28 sm:w-28 ${
-                                                    isEditing
+                                                className={`h-24 w-24 rounded-full object-cover sm:h-28 sm:w-28 ${isEditing
                                                         ? "opacity-90 transition group-hover:opacity-50"
                                                         : ""
-                                                }`}
+                                                    }`}
                                             />
 
                                             {isEditing && (
@@ -379,6 +368,7 @@ export default function UserProfilePage() {
                                 </>
                             )}
 
+                            {/* SECURITY TAB */}
                             {activeTab === "security" && (
                                 <div>
                                     <div className="border-b border-gray-200 pb-6 dark:border-gray-800">
@@ -463,10 +453,89 @@ export default function UserProfilePage() {
                                 </div>
                             )}
 
+                            {/* PREFERENCES / SETTINGS TAB */}
                             {activeTab === "settings" && (
-                                <p className="text-gray-500 dark:text-gray-400">
-                                    Preferences settings will go here (next step).
-                                </p>
+                                <div>
+                                    <div className="border-b border-gray-200 pb-6 dark:border-gray-800">
+                                        <h2 className="text-xl font-bold sm:text-2xl">
+                                            Preferences
+                                        </h2>
+                                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                            Manage your account preferences.
+                                        </p>
+                                    </div>
+
+                                    <div className="mt-8 space-y-5">
+                                        <div className="rounded-xl border border-gray-200 p-5 dark:border-gray-800">
+                                            <h3 className="font-semibold">
+                                                Email Notifications
+                                            </h3>
+                                            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                                Receive notifications about important account activity.
+                                            </p>
+
+                                            <button
+                                                onClick={() =>
+                                                    toast(
+                                                        "Notification settings will be connected later.",
+                                                        { icon: "🔧" }
+                                                    )
+                                                }
+                                                className="mt-4 w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition hover:bg-gray-100 sm:w-auto dark:border-gray-700 dark:hover:bg-gray-800"
+                                            >
+                                                Manage Notifications
+                                            </button>
+                                        </div>
+
+                                        <div className="rounded-xl border border-gray-200 p-5 dark:border-gray-800">
+                                            <h3 className="font-semibold">
+                                                Language & Region
+                                            </h3>
+                                            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                                Choose your preferred language and region.
+                                            </p>
+
+                                            <button
+                                                onClick={() =>
+                                                    toast(
+                                                        "Language settings will be connected later.",
+                                                        { icon: "🔧" }
+                                                    )
+                                                }
+                                                className="mt-4 w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition hover:bg-gray-100 sm:w-auto dark:border-gray-700 dark:hover:bg-gray-800"
+                                            >
+                                                Change Language
+                                            </button>
+                                        </div>
+
+                                        <div className="rounded-xl border border-red-300 p-5 dark:border-red-900">
+                                            <h3 className="font-semibold text-red-600">
+                                                Delete Account
+                                            </h3>
+                                            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                                This action cannot be undone.
+                                            </p>
+
+                                            <button
+                                                onClick={() => {
+                                                    const confirmDelete = confirm(
+                                                        "Are you sure you want to delete your account?"
+                                                    );
+
+                                                    if (confirmDelete) {
+                                                        toast(
+                                                            "Delete account API will be connected later.",
+                                                            { icon: "🔧" }
+                                                        );
+                                                    }
+                                                }}
+                                                className="mt-4 w-full rounded-lg bg-red-600 px-4 py-2.5 text-sm text-white transition hover:opacity-80 sm:w-auto"
+                                            >
+                                                Delete Account
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                             )}
                         </section>
                     </div>
