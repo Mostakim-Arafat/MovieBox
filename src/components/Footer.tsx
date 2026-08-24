@@ -51,10 +51,10 @@ export default function Footer() {
   return (
     <footer className="w-full bg-[#131517] text-zinc-400 py-12 px-6 sm:px-12 lg:px-16 border-t border-zinc-800/40">
       <div className="max-w-7xl mx-auto">
-        {/* Top grid with logo and link categories */}
-        <div className="grid grid-cols-2 md:grid-cols-6 gap-8 pb-12">
+        {/* Top flex wrapper to push links to the right */}
+        <div className="flex flex-col lg:flex-row justify-between gap-12 pb-12">
           {/* Logo Section */}
-          <div className="col-span-2 md:col-span-1 flex flex-col items-start">
+          <div className="flex flex-col items-start min-w-[200px]">
             <Link href="/" className="flex items-center gap-2 mb-4 group">
               <svg
                 className="h-7 w-7 text-rose-600 transition-transform group-hover:scale-110 duration-300"
@@ -76,95 +76,98 @@ export default function Footer() {
             </Link>
           </div>
 
-          {/* Links Columns */}
-          <div className="flex flex-col gap-2">
-            <h3 className="text-[11px] font-bold uppercase tracking-wider text-zinc-100 mb-2">
-              Company
-            </h3>
-            <ul className="flex flex-col gap-2 text-[13px]">
-              {companyLinks.map((link) => (
-                <li key={link.label}>
-                  <Link
-                    href={link.href}
-                    className="hover:text-rose-500 transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {/* Links Columns (pushed to the far right using lg:ml-auto with tight width) */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-y-8 gap-x-4 sm:gap-x-6 lg:gap-x-8 lg:ml-auto max-w-[580px] w-full">
+            {/* Company */}
+            <div className="flex flex-col gap-2">
+              <h3 className="text-[11px] font-bold uppercase tracking-wider text-zinc-100 mb-2">
+                Company
+              </h3>
+              <ul className="flex flex-col gap-2 text-[13px]">
+                {companyLinks.map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      href={link.href}
+                      className="hover:text-rose-500 transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-          <div className="flex flex-col gap-2">
-            <h3 className="text-[11px] font-bold uppercase tracking-wider text-zinc-100 mb-2">
-              Watch Free
-            </h3>
-            <ul className="flex flex-col gap-2 text-[13px]">
-              {watchFreeLinks.map((link) => (
-                <li key={link.label}>
-                  <Link
-                    href={link.href}
-                    className="hover:text-rose-500 transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+            <div className="flex flex-col gap-2">
+              <h3 className="text-[11px] font-bold uppercase tracking-wider text-zinc-100 mb-2">
+                Watch Free
+              </h3>
+              <ul className="flex flex-col gap-2 text-[13px]">
+                {watchFreeLinks.map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      href={link.href}
+                      className="hover:text-rose-500 transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-          <div className="flex flex-col gap-2">
-            <h3 className="text-[11px] font-bold uppercase tracking-wider text-zinc-100 mb-2">
-              Discover
-            </h3>
-            <ul className="flex flex-col gap-2 text-[13px]">
-              {discoverLinks.map((link) => (
-                <li key={link.label}>
-                  <Link
-                    href={link.href}
-                    className="hover:text-rose-500 transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+            <div className="flex flex-col gap-2">
+              <h3 className="text-[11px] font-bold uppercase tracking-wider text-zinc-100 mb-2">
+                Discover
+              </h3>
+              <ul className="flex flex-col gap-2 text-[13px]">
+                {discoverLinks.map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      href={link.href}
+                      className="hover:text-rose-500 transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-          <div className="flex flex-col gap-2">
-            <h3 className="text-[11px] font-bold uppercase tracking-wider text-zinc-100 mb-2">
-              My Media
-            </h3>
-            <ul className="flex flex-col gap-2 text-[13px]">
-              {myMediaLinks.map((link) => (
-                <li key={link.label}>
-                  <Link
-                    href={link.href}
-                    className="hover:text-rose-500 transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+            <div className="flex flex-col gap-2">
+              <h3 className="text-[11px] font-bold uppercase tracking-wider text-zinc-100 mb-2">
+                My Media
+              </h3>
+              <ul className="flex flex-col gap-2 text-[13px]">
+                {myMediaLinks.map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      href={link.href}
+                      className="hover:text-rose-500 transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-          <div className="flex flex-col gap-2">
-            <h3 className="text-[11px] font-bold uppercase tracking-wider text-zinc-100 mb-2">
-              Resources
-            </h3>
-            <ul className="flex flex-col gap-2 text-[13px]">
-              {resourceLinks.map((link) => (
-                <li key={link.label}>
-                  <Link
-                    href={link.href}
-                    className="hover:text-rose-500 transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <div className="flex flex-col gap-2">
+              <h3 className="text-[11px] font-bold uppercase tracking-wider text-zinc-100 mb-2">
+                Resources
+              </h3>
+              <ul className="flex flex-col gap-2 text-[13px]">
+                {resourceLinks.map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      href={link.href}
+                      className="hover:text-rose-500 transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
 
