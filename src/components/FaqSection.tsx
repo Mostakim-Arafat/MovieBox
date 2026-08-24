@@ -49,19 +49,12 @@ export default function FaqSection() {
 
   return (
     <section className="w-full bg-black text-white py-24 px-6 sm:px-12 lg:px-16 border-t border-zinc-900">
-      <div className="max-w-3xl mx-auto flex flex-col items-center">
-        {/* Subtle Category Badge */}
-        <span className="text-[11px] font-bold uppercase tracking-widest text-rose-500 bg-rose-500/10 px-3 py-1.5 rounded-full mb-3 border border-rose-500/20">
-          FAQ
-        </span>
-
+      <div className="max-w-3xl mx-auto flex flex-col items-start w-full">
+        
         {/* Section Header */}
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-center mb-2 tracking-tight text-white">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-left mb-2 tracking-tight text-white">
           Frequently Asked Questions
         </h2>
-        <p className="text-zinc-400 text-sm sm:text-base text-center mb-12 max-w-md">
-          Got questions? We've got answers. If you can't find what you are looking for, contact our support team.
-        </p>
 
         {/* Accordions Wrapper */}
         <div className="w-full space-y-3.5">
@@ -70,7 +63,7 @@ export default function FaqSection() {
             return (
               <div 
                 key={index} 
-                className="w-full rounded-xl border border-zinc-800/60 bg-[#161719]/40 hover:bg-[#1a1c1f]/80 overflow-hidden transition-all duration-300"
+                className="w-full rounded-xl border border-zinc-700/30 bg-[#2d2f34] hover:bg-[#383a40] overflow-hidden transition-all duration-350"
               >
                 {/* Accordion Header */}
                 <button
@@ -106,7 +99,7 @@ export default function FaqSection() {
                   }`}
                 >
                   <div className="overflow-hidden">
-                    <div className="p-5 sm:p-6 bg-[#161719]/60 text-zinc-300 text-sm sm:text-base leading-relaxed font-normal">
+                    <div className="p-5 sm:p-6 bg-[#222428] text-zinc-300 text-sm sm:text-base leading-relaxed font-normal">
                       {item.answer}
                     </div>
                   </div>
