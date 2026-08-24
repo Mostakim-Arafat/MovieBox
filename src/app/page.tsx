@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Footer from "@/components/Footer";
+import FaqSection from "@/components/FaqSection";
 export default function Home() {
   return (
        <div className="flex flex-col min-h-screen bg-zinc-50 font-sans dark:bg-black w-full">
@@ -66,6 +67,7 @@ export default function Home() {
         </div>
       </main>
     </div>
+    <FaqSection />
      <Footer />
      </div>
   );

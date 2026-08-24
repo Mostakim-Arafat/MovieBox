@@ -14,27 +14,27 @@ export default function FaqSection() {
     {
       question: "What is MovieBox?",
       answer:
-        "MovieBox is a cinematic database and streaming recommendation platform that helps you find, rate, and track your favorite movies and TV shows. We aggregate information from all popular streaming services so you know exactly where to watch.",
+        "MovieBox is a cinematic database and streaming recommendation platform that helps you find, rate and track your favorite movies and TV shows. We aggregate information from all popular streaming services so you know exactly where to watch.",
     },
     {
       question: "How much does MovieBox cost?",
       answer:
-        "MovieBox offers a free standard tier with complete access to watchlist tracking and our movie database. Premium plans start at just $4.99/month, offering advanced analytics, ad-free viewing recommendations, and priority updates.",
+        "MovieBox offers a free standard tier with complete access to watchlist tracking and our movie database. Premium plans start at just $4.99/month, offering advanced analytics, ad-free viewing recommendations and priority updates.",
     },
     {
       question: "Where can I watch?",
       answer:
-        "You can access MovieBox anywhere through your web browser on desktop computers, laptops, tablets, smartphones, and smart TVs. We also support casting to chromecast-enabled devices.",
+        "You can access MovieBox anywhere through your web browser on desktop computers, laptops, tablets, smartphones and smart TVs. We also support casting to chromecast-enabled devices.",
     },
     {
       question: "How do I cancel?",
       answer:
-        "Canceling your Premium subscription is simple and quick. You can do it in your Account settings page with a single click. There are no cancellation fees, contracts, or hidden terms.",
+        "Canceling your Premium subscription is simple and quick. You can do it in your Account settings page with a single click. There are no cancellation fees, contracts or hidden terms.",
     },
     {
       question: "What can I watch on MovieBox?",
       answer:
-        "MovieBox tracks and cataloges millions of titles across multiple genres, including blockbusters, award-winning indie films, documentaries, classics, and newly released TV series from platforms like Netflix, Hulu, Prime Video, and Disney+.",
+        "MovieBox tracks and cataloges millions of titles across multiple genres, including blockbusters, award-winning indie films, documentaries, classics and newly released TV series from platforms like Netflix, Hulu, Prime Video and Disney+.",
     },
     {
       question: "Is MovieBox good for kids?",
