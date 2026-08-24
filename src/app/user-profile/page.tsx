@@ -26,7 +26,7 @@ export default function UserProfilePage() {
                             onClick={() => setIsDark(!isDark)}
                             className="shrink-0 rounded-full border border-gray-300 px-3 py-2 text-sm hover:bg-gray-100 sm:px-4 dark:border-gray-700 dark:hover:bg-gray-800"
                         >
-                            {isDark ? "☀️ Light" : "🌙 Dark"}
+                            {isDark ? "🌙 Dark" : "☀️ Light"}
                         </button>
                     </div>
                 </div>
