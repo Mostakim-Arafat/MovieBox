@@ -3,7 +3,7 @@ async function delay(ms: number) {
 }
 
 export default async function HomePage() {
-  await delay(5000); // 5 seconds delay
+  await delay(1000); // 5 seconds delay
 
   return (
     <div>
