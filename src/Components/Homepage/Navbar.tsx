@@ -50,9 +50,9 @@ function Navbar() {
                     <PiDotsSixVerticalFill size={20} />
                 </button>
 
-                <button aria-label="Profile" className="hover:text-white transition">
+                <Link href={"/Profile"} aria-label="Profile" className="hover:text-white transition">
                     <CgProfile size={20} />
-                </button>
+                </Link>
 
                 <Link 
                     href={"/login"} 
