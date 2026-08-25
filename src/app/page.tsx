@@ -1,13 +1,13 @@
 
-import Footer from "@/components/Footer";
-import FaqSection from "@/components/FaqSection";
 
-import Navbar from "../Components/Homepage/Navbar";
+import FaqSection from "@/Components/Homepage/FaqSection";
+
+
 
 export default function Home() {
   return (
     <div>
-    
+    <FaqSection></FaqSection>
     </div>
   );
 }
