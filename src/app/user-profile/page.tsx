@@ -154,7 +154,7 @@ export default function UserProfilePage() {
                                 <button
                                     onClick={() => setActiveTab("profile")}
                                     className={`shrink-0 whitespace-nowrap rounded-lg px-4 py-3 text-left text-sm transition sm:text-base ${activeTab === "profile"
-                                            ? "bg-black text-white dark:bg-white dark:text-black"
+                                            ? "bg-red-600 text-white"
                                             : "hover:bg-gray-100 dark:hover:bg-gray-800"
                                         }`}
                                 >
@@ -164,7 +164,7 @@ export default function UserProfilePage() {
                                 <button
                                     onClick={() => setActiveTab("security")}
                                     className={`shrink-0 whitespace-nowrap rounded-lg px-4 py-3 text-left text-sm transition sm:text-base ${activeTab === "security"
-                                            ? "bg-black text-white dark:bg-white dark:text-black"
+                                            ? "bg-red-600 text-white"
                                             : "hover:bg-gray-100 dark:hover:bg-gray-800"
                                         }`}
                                 >
@@ -174,7 +174,7 @@ export default function UserProfilePage() {
                                 <button
                                     onClick={() => setActiveTab("settings")}
                                     className={`shrink-0 whitespace-nowrap rounded-lg px-4 py-3 text-left text-sm transition sm:text-base ${activeTab === "settings"
-                                            ? "bg-black text-white dark:bg-white dark:text-black"
+                                            ? "bg-red-600 text-white"
                                             : "hover:bg-gray-100 dark:hover:bg-gray-800"
                                         }`}
                                 >
@@ -201,7 +201,7 @@ export default function UserProfilePage() {
                                         {!isEditing ? (
                                             <button
                                                 onClick={() => setIsEditing(true)}
-                                                className="w-full rounded-lg bg-black px-5 py-2.5 text-sm font-medium text-white transition hover:opacity-80 sm:w-auto sm:text-base dark:bg-white dark:text-black"
+                                                className="w-full rounded-lg bg-red-600 px-5 py-2.5 text-sm font-medium text-white transition hover:opacity-80 sm:w-auto sm:text-base"
                                             >
                                                 Edit Profile
                                             </button>
@@ -216,7 +216,7 @@ export default function UserProfilePage() {
                                                 <button
                                                     onClick={handleSave}
                                                     disabled={isUploading}
-                                                    className="flex-1 rounded-lg bg-black px-5 py-2.5 text-sm font-medium text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50 sm:flex-none sm:text-base dark:bg-white dark:text-black"
+                                                    className="flex-1 rounded-lg bg-red-600 px-5 py-2.5 text-sm font-medium text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50 sm:flex-none sm:text-base"
                                                 >
                                                     Save Changes
                                                 </button>
@@ -277,7 +277,7 @@ export default function UserProfilePage() {
                                                 value={isEditing ? formData.name : user.name}
                                                 onChange={handleChange}
                                                 disabled={!isEditing}
-                                                className="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm outline-none transition focus:border-black disabled:cursor-not-allowed disabled:opacity-70 sm:text-base dark:border-gray-700 dark:focus:border-white"
+                                                className="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm outline-none transition focus:border-red-600 disabled:cursor-not-allowed disabled:opacity-70 sm:text-base dark:border-gray-700"
                                             />
                                         </div>
 
@@ -291,7 +291,7 @@ export default function UserProfilePage() {
                                                 value={isEditing ? formData.username : user.username}
                                                 onChange={handleChange}
                                                 disabled={!isEditing}
-                                                className="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm outline-none transition focus:border-black disabled:cursor-not-allowed disabled:opacity-70 sm:text-base dark:border-gray-700 dark:focus:border-white"
+                                                className="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm outline-none transition focus:border-red-600 disabled:cursor-not-allowed disabled:opacity-70 sm:text-base dark:border-gray-700"
                                             />
                                         </div>
 
@@ -305,7 +305,7 @@ export default function UserProfilePage() {
                                                 value={isEditing ? formData.email : user.email}
                                                 onChange={handleChange}
                                                 disabled={!isEditing}
-                                                className="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm outline-none transition focus:border-black disabled:cursor-not-allowed disabled:opacity-70 sm:text-base dark:border-gray-700 dark:focus:border-white"
+                                                className="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm outline-none transition focus:border-red-600 disabled:cursor-not-allowed disabled:opacity-70 sm:text-base dark:border-gray-700"
                                             />
                                         </div>
 
@@ -319,7 +319,7 @@ export default function UserProfilePage() {
                                                 value={isEditing ? formData.phone : user.phone}
                                                 onChange={handleChange}
                                                 disabled={!isEditing}
-                                                className="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm outline-none transition focus:border-black disabled:cursor-not-allowed disabled:opacity-70 sm:text-base dark:border-gray-700 dark:focus:border-white"
+                                                className="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm outline-none transition focus:border-red-600 disabled:cursor-not-allowed disabled:opacity-70 sm:text-base dark:border-gray-700"
                                             />
                                         </div>
 
@@ -333,7 +333,7 @@ export default function UserProfilePage() {
                                                 value={isEditing ? formData.location : user.location}
                                                 onChange={handleChange}
                                                 disabled={!isEditing}
-                                                className="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm outline-none transition focus:border-black disabled:cursor-not-allowed disabled:opacity-70 sm:text-base dark:border-gray-700 dark:focus:border-white"
+                                                className="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm outline-none transition focus:border-red-600 disabled:cursor-not-allowed disabled:opacity-70 sm:text-base dark:border-gray-700"
                                             />
                                         </div>
 
@@ -347,7 +347,7 @@ export default function UserProfilePage() {
                                                 value={isEditing ? formData.website : user.website}
                                                 onChange={handleChange}
                                                 disabled={!isEditing}
-                                                className="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm outline-none transition focus:border-black disabled:cursor-not-allowed disabled:opacity-70 sm:text-base dark:border-gray-700 dark:focus:border-white"
+                                                className="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm outline-none transition focus:border-red-600 disabled:cursor-not-allowed disabled:opacity-70 sm:text-base dark:border-gray-700"
                                             />
                                         </div>
 
@@ -361,7 +361,7 @@ export default function UserProfilePage() {
                                                 value={isEditing ? formData.bio : user.bio}
                                                 onChange={handleChange}
                                                 disabled={!isEditing}
-                                                className="w-full resize-none rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm outline-none transition focus:border-black disabled:cursor-not-allowed disabled:opacity-70 sm:text-base dark:border-gray-700 dark:focus:border-white"
+                                                className="w-full resize-none rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm outline-none transition focus:border-red-600 disabled:cursor-not-allowed disabled:opacity-70 sm:text-base dark:border-gray-700"
                                             />
                                         </div>
                                     </div>
