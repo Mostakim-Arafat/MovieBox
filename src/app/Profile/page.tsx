@@ -16,7 +16,6 @@ type UserData = {
 
 export default function UserProfilePage() {
     const [activeTab, setActiveTab] = useState("profile");
-    const [isDark, setIsDark] = useState(true); // default dark mode
     const [isEditing, setIsEditing] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
 
@@ -108,10 +107,10 @@ export default function UserProfilePage() {
     };
 
     return (
-        <div className={isDark ? "dark" : ""}>
+        <>
             <Toaster position="top-center" />
 
-            <main className="min-h-screen bg-gray-50 px-4 py-6 text-gray-900 sm:px-6 sm:py-10 dark:bg-gray-950 dark:text-white">
+            <main className="min-h-screen bg-background px-4 py-6 text-foreground sm:px-6 sm:py-10">
                 <div className="mx-auto max-w-6xl">
                     {/* Header */}
                     <div className="mb-6 flex items-start justify-between gap-4 sm:mb-8">
@@ -119,33 +118,26 @@ export default function UserProfilePage() {
                             <h1 className="text-2xl font-bold sm:text-3xl">
                                 My Profile
                             </h1>
-                            <p className="mt-2 text-sm text-gray-500 sm:text-base dark:text-gray-400">
+                            <p className="mt-2 text-sm text-muted-foreground sm:text-base">
                                 Manage your personal information and account settings.
                             </p>
                         </div>
-
-                        <button
-                            onClick={() => setIsDark(!isDark)}
-                            className="shrink-0 rounded-full border border-gray-300 px-3 py-2 text-sm hover:bg-gray-100 sm:px-4 dark:border-gray-700 dark:hover:bg-gray-800"
-                        >
-                            {isDark ? "🌙 Dark" : "☀️ Light"}
-                        </button>
                     </div>
 
                     {/* Main Grid: Sidebar + Content */}
                     <div className="grid gap-6 lg:grid-cols-[280px_1fr] lg:gap-8">
                         {/* Sidebar */}
-                        <aside className="h-fit rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-gray-900">
+                        <aside className="h-fit rounded-2xl border border-border bg-card p-5">
                             <div className="flex flex-col items-center text-center">
                                 <img
                                     src={user.avatar}
                                     alt={user.name}
-                                    className="h-20 w-20 rounded-full border-4 border-gray-100 object-cover sm:h-24 sm:w-24 dark:border-gray-800"
+                                    className="h-20 w-20 rounded-full border-4 border-border object-cover sm:h-24 sm:w-24"
                                 />
                                 <h2 className="mt-4 text-lg font-bold sm:text-xl">
                                     {user.name}
                                 </h2>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">
+                                <p className="text-sm text-muted-foreground">
                                     @{user.username}
                                 </p>
                             </div>
@@ -154,8 +146,8 @@ export default function UserProfilePage() {
                                 <button
                                     onClick={() => setActiveTab("profile")}
                                     className={`shrink-0 whitespace-nowrap rounded-lg px-4 py-3 text-left text-sm transition sm:text-base ${activeTab === "profile"
-                                            ? "bg-red-600 text-white"
-                                            : "hover:bg-gray-100 dark:hover:bg-gray-800"
+                                            ? "bg-primary text-primary-foreground"
+                                            : "hover:bg-muted"
                                         }`}
                                 >
                                     👤 Profile Information
@@ -164,8 +156,8 @@ export default function UserProfilePage() {
                                 <button
                                     onClick={() => setActiveTab("security")}
                                     className={`shrink-0 whitespace-nowrap rounded-lg px-4 py-3 text-left text-sm transition sm:text-base ${activeTab === "security"
-                                            ? "bg-red-600 text-white"
-                                            : "hover:bg-gray-100 dark:hover:bg-gray-800"
+                                            ? "bg-primary text-primary-foreground"
+                                            : "hover:bg-muted"
                                         }`}
                                 >
                                     🔒 Security
@@ -174,8 +166,8 @@ export default function UserProfilePage() {
                                 <button
                                     onClick={() => setActiveTab("settings")}
                                     className={`shrink-0 whitespace-nowrap rounded-lg px-4 py-3 text-left text-sm transition sm:text-base ${activeTab === "settings"
-                                            ? "bg-red-600 text-white"
-                                            : "hover:bg-gray-100 dark:hover:bg-gray-800"
+                                            ? "bg-primary text-primary-foreground"
+                                            : "hover:bg-muted"
                                         }`}
                                 >
                                     ⚙️ Preferences
@@ -184,16 +176,16 @@ export default function UserProfilePage() {
                         </aside>
 
                         {/* Content */}
-                        <section className="rounded-2xl border border-gray-200 bg-white p-5 sm:p-6 md:p-8 dark:border-gray-800 dark:bg-gray-900">
+                        <section className="rounded-2xl border border-border bg-card p-5 sm:p-6 md:p-8">
                             {/* PROFILE TAB */}
                             {activeTab === "profile" && (
                                 <>
-                                    <div className="flex flex-col items-start justify-between gap-4 border-b border-gray-200 pb-6 sm:flex-row sm:items-center dark:border-gray-800">
+                                    <div className="flex flex-col items-start justify-between gap-4 border-b border-border pb-6 sm:flex-row sm:items-center">
                                         <div>
                                             <h2 className="text-xl font-bold sm:text-2xl">
                                                 Profile Information
                                             </h2>
-                                            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                            <p className="mt-1 text-sm text-muted-foreground">
                                                 Update your personal information.
                                             </p>
                                         </div>
@@ -201,7 +193,7 @@ export default function UserProfilePage() {
                                         {!isEditing ? (
                                             <button
                                                 onClick={() => setIsEditing(true)}
-                                                className="w-full rounded-lg bg-red-600 px-5 py-2.5 text-sm font-medium text-white transition hover:opacity-80 sm:w-auto sm:text-base"
+                                                className="w-full rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition hover:opacity-80 sm:w-auto sm:text-base"
                                             >
                                                 Edit Profile
                                             </button>
@@ -209,14 +201,14 @@ export default function UserProfilePage() {
                                             <div className="flex w-full gap-3 sm:w-auto">
                                                 <button
                                                     onClick={handleCancel}
-                                                    className="flex-1 rounded-lg border border-gray-300 px-5 py-2.5 text-sm transition hover:bg-gray-100 sm:flex-none sm:text-base dark:border-gray-700 dark:hover:bg-gray-800"
+                                                    className="flex-1 rounded-lg border border-border bg-background px-5 py-2.5 text-sm transition hover:bg-muted sm:flex-none sm:text-base"
                                                 >
                                                     Cancel
                                                 </button>
                                                 <button
                                                     onClick={handleSave}
                                                     disabled={isUploading}
-                                                    className="flex-1 rounded-lg bg-red-600 px-5 py-2.5 text-sm font-medium text-white transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50 sm:flex-none sm:text-base"
+                                                    className="flex-1 rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50 sm:flex-none sm:text-base"
                                                 >
                                                     Save Changes
                                                 </button>
@@ -241,7 +233,7 @@ export default function UserProfilePage() {
                                             />
 
                                             {isEditing && (
-                                                <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/0 text-xs font-medium text-white opacity-0 transition group-hover:bg-black/40 group-hover:opacity-100">
+                                                <div className="absolute inset-0 flex items-center justify-center rounded-full bg-foreground/20 text-xs font-medium text-background opacity-0 transition group-hover:bg-foreground/40 group-hover:opacity-100">
                                                     {isUploading ? "Uploading..." : "Change"}
                                                 </div>
                                             )}
@@ -257,7 +249,7 @@ export default function UserProfilePage() {
 
                                         <div>
                                             <h3 className="font-semibold">Profile Picture</h3>
-                                            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                            <p className="mt-1 text-sm text-muted-foreground">
                                                 {isEditing
                                                     ? "Click on the photo to upload a new one."
                                                     : "Click Edit Profile to change your photo."}
@@ -268,7 +260,7 @@ export default function UserProfilePage() {
                                     {/* Form Fields */}
                                     <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
                                         <div>
-                                            <label className="mb-2 block text-sm font-medium">
+                                            <label className="mb-2 block text-sm font-medium text-foreground">
                                                 Full Name
                                             </label>
                                             <input
@@ -277,12 +269,12 @@ export default function UserProfilePage() {
                                                 value={isEditing ? formData.name : user.name}
                                                 onChange={handleChange}
                                                 disabled={!isEditing}
-                                                className="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm outline-none transition focus:border-red-600 disabled:cursor-not-allowed disabled:opacity-70 sm:text-base dark:border-gray-700"
+                                                className="w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary disabled:cursor-not-allowed disabled:opacity-70 sm:text-base"
                                             />
                                         </div>
 
                                         <div>
-                                            <label className="mb-2 block text-sm font-medium">
+                                            <label className="mb-2 block text-sm font-medium text-foreground">
                                                 Username
                                             </label>
                                             <input
@@ -291,12 +283,12 @@ export default function UserProfilePage() {
                                                 value={isEditing ? formData.username : user.username}
                                                 onChange={handleChange}
                                                 disabled={!isEditing}
-                                                className="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm outline-none transition focus:border-red-600 disabled:cursor-not-allowed disabled:opacity-70 sm:text-base dark:border-gray-700"
+                                                className="w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary disabled:cursor-not-allowed disabled:opacity-70 sm:text-base"
                                             />
                                         </div>
 
                                         <div>
-                                            <label className="mb-2 block text-sm font-medium">
+                                            <label className="mb-2 block text-sm font-medium text-foreground">
                                                 Email Address
                                             </label>
                                             <input
@@ -305,12 +297,12 @@ export default function UserProfilePage() {
                                                 value={isEditing ? formData.email : user.email}
                                                 onChange={handleChange}
                                                 disabled={!isEditing}
-                                                className="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm outline-none transition focus:border-red-600 disabled:cursor-not-allowed disabled:opacity-70 sm:text-base dark:border-gray-700"
+                                                className="w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary disabled:cursor-not-allowed disabled:opacity-70 sm:text-base"
                                             />
                                         </div>
 
                                         <div>
-                                            <label className="mb-2 block text-sm font-medium">
+                                            <label className="mb-2 block text-sm font-medium text-foreground">
                                                 Phone Number
                                             </label>
                                             <input
@@ -319,12 +311,12 @@ export default function UserProfilePage() {
                                                 value={isEditing ? formData.phone : user.phone}
                                                 onChange={handleChange}
                                                 disabled={!isEditing}
-                                                className="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm outline-none transition focus:border-red-600 disabled:cursor-not-allowed disabled:opacity-70 sm:text-base dark:border-gray-700"
+                                                className="w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary disabled:cursor-not-allowed disabled:opacity-70 sm:text-base"
                                             />
                                         </div>
 
                                         <div>
-                                            <label className="mb-2 block text-sm font-medium">
+                                            <label className="mb-2 block text-sm font-medium text-foreground">
                                                 Location
                                             </label>
                                             <input
@@ -333,12 +325,12 @@ export default function UserProfilePage() {
                                                 value={isEditing ? formData.location : user.location}
                                                 onChange={handleChange}
                                                 disabled={!isEditing}
-                                                className="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm outline-none transition focus:border-red-600 disabled:cursor-not-allowed disabled:opacity-70 sm:text-base dark:border-gray-700"
+                                                className="w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary disabled:cursor-not-allowed disabled:opacity-70 sm:text-base"
                                             />
                                         </div>
 
                                         <div>
-                                            <label className="mb-2 block text-sm font-medium">
+                                            <label className="mb-2 block text-sm font-medium text-foreground">
                                                 Website
                                             </label>
                                             <input
@@ -347,12 +339,12 @@ export default function UserProfilePage() {
                                                 value={isEditing ? formData.website : user.website}
                                                 onChange={handleChange}
                                                 disabled={!isEditing}
-                                                className="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm outline-none transition focus:border-red-600 disabled:cursor-not-allowed disabled:opacity-70 sm:text-base dark:border-gray-700"
+                                                className="w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary disabled:cursor-not-allowed disabled:opacity-70 sm:text-base"
                                             />
                                         </div>
 
                                         <div className="sm:col-span-2">
-                                            <label className="mb-2 block text-sm font-medium">
+                                            <label className="mb-2 block text-sm font-medium text-foreground">
                                                 Bio
                                             </label>
                                             <textarea
@@ -361,7 +353,7 @@ export default function UserProfilePage() {
                                                 value={isEditing ? formData.bio : user.bio}
                                                 onChange={handleChange}
                                                 disabled={!isEditing}
-                                                className="w-full resize-none rounded-lg border border-gray-300 bg-transparent px-4 py-3 text-sm outline-none transition focus:border-red-600 disabled:cursor-not-allowed disabled:opacity-70 sm:text-base dark:border-gray-700"
+                                                className="w-full resize-none rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary disabled:cursor-not-allowed disabled:opacity-70 sm:text-base"
                                             />
                                         </div>
                                     </div>
@@ -371,22 +363,22 @@ export default function UserProfilePage() {
                             {/* SECURITY TAB */}
                             {activeTab === "security" && (
                                 <div>
-                                    <div className="border-b border-gray-200 pb-6 dark:border-gray-800">
+                                    <div className="border-b border-border pb-6">
                                         <h2 className="text-xl font-bold sm:text-2xl">
                                             Security Settings
                                         </h2>
-                                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                        <p className="mt-1 text-sm text-muted-foreground">
                                             Manage your account security.
                                         </p>
                                     </div>
 
                                     <div className="mt-8 space-y-5">
-                                        <div className="flex flex-col justify-between gap-4 rounded-xl border border-gray-200 p-5 sm:flex-row sm:items-center dark:border-gray-800">
+                                        <div className="flex flex-col justify-between gap-4 rounded-xl border border-border bg-background p-5 sm:flex-row sm:items-center">
                                             <div>
                                                 <h3 className="font-semibold">
                                                     Change Password
                                                 </h3>
-                                                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                                <p className="mt-1 text-sm text-muted-foreground">
                                                     Keep your account secure with a strong password.
                                                 </p>
                                             </div>
@@ -398,18 +390,18 @@ export default function UserProfilePage() {
                                                         { icon: "🔧" }
                                                     )
                                                 }
-                                                className="w-full shrink-0 rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition hover:bg-gray-100 sm:w-auto dark:border-gray-700 dark:hover:bg-gray-800"
+                                                className="w-full shrink-0 rounded-lg border border-border bg-background px-4 py-2.5 text-sm transition hover:bg-muted sm:w-auto"
                                             >
                                                 Change Password
                                             </button>
                                         </div>
 
-                                        <div className="flex flex-col justify-between gap-4 rounded-xl border border-gray-200 p-5 sm:flex-row sm:items-center dark:border-gray-800">
+                                        <div className="flex flex-col justify-between gap-4 rounded-xl border border-border bg-background p-5 sm:flex-row sm:items-center">
                                             <div>
                                                 <h3 className="font-semibold">
                                                     Two-Factor Authentication
                                                 </h3>
-                                                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                                <p className="mt-1 text-sm text-muted-foreground">
                                                     Add an extra layer of security to your account.
                                                 </p>
                                             </div>
@@ -421,18 +413,18 @@ export default function UserProfilePage() {
                                                         { icon: "🔧" }
                                                     )
                                                 }
-                                                className="w-full shrink-0 rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition hover:bg-gray-100 sm:w-auto dark:border-gray-700 dark:hover:bg-gray-800"
+                                                className="w-full shrink-0 rounded-lg border border-border bg-background px-4 py-2.5 text-sm transition hover:bg-muted sm:w-auto"
                                             >
                                                 Enable
                                             </button>
                                         </div>
 
-                                        <div className="flex flex-col justify-between gap-4 rounded-xl border border-gray-200 p-5 sm:flex-row sm:items-center dark:border-gray-800">
+                                        <div className="flex flex-col justify-between gap-4 rounded-xl border border-border bg-background p-5 sm:flex-row sm:items-center">
                                             <div>
                                                 <h3 className="font-semibold">
                                                     Active Sessions
                                                 </h3>
-                                                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                                <p className="mt-1 text-sm text-muted-foreground">
                                                     See where you&apos;re currently logged in.
                                                 </p>
                                             </div>
@@ -444,7 +436,7 @@ export default function UserProfilePage() {
                                                         { icon: "🔧" }
                                                     )
                                                 }
-                                                className="w-full shrink-0 rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition hover:bg-gray-100 sm:w-auto dark:border-gray-700 dark:hover:bg-gray-800"
+                                                className="w-full shrink-0 rounded-lg border border-border bg-background px-4 py-2.5 text-sm transition hover:bg-muted sm:w-auto"
                                             >
                                                 View Sessions
                                             </button>
@@ -456,21 +448,21 @@ export default function UserProfilePage() {
                             {/* PREFERENCES / SETTINGS TAB */}
                             {activeTab === "settings" && (
                                 <div>
-                                    <div className="border-b border-gray-200 pb-6 dark:border-gray-800">
+                                    <div className="border-b border-border pb-6">
                                         <h2 className="text-xl font-bold sm:text-2xl">
                                             Preferences
                                         </h2>
-                                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                        <p className="mt-1 text-sm text-muted-foreground">
                                             Manage your account preferences.
                                         </p>
                                     </div>
 
                                     <div className="mt-8 space-y-5">
-                                        <div className="rounded-xl border border-gray-200 p-5 dark:border-gray-800">
+                                        <div className="rounded-xl border border-border bg-background p-5">
                                             <h3 className="font-semibold">
                                                 Email Notifications
                                             </h3>
-                                            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                            <p className="mt-1 text-sm text-muted-foreground">
                                                 Receive notifications about important account activity.
                                             </p>
 
@@ -481,17 +473,17 @@ export default function UserProfilePage() {
                                                         { icon: "🔧" }
                                                     )
                                                 }
-                                                className="mt-4 w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition hover:bg-gray-100 sm:w-auto dark:border-gray-700 dark:hover:bg-gray-800"
+                                                className="mt-4 w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm transition hover:bg-muted sm:w-auto"
                                             >
                                                 Manage Notifications
                                             </button>
                                         </div>
 
-                                        <div className="rounded-xl border border-gray-200 p-5 dark:border-gray-800">
+                                        <div className="rounded-xl border border-border bg-background p-5">
                                             <h3 className="font-semibold">
                                                 Language & Region
                                             </h3>
-                                            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                            <p className="mt-1 text-sm text-muted-foreground">
                                                 Choose your preferred language and region.
                                             </p>
 
@@ -502,17 +494,17 @@ export default function UserProfilePage() {
                                                         { icon: "🔧" }
                                                     )
                                                 }
-                                                className="mt-4 w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition hover:bg-gray-100 sm:w-auto dark:border-gray-700 dark:hover:bg-gray-800"
+                                                className="mt-4 w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm transition hover:bg-muted sm:w-auto"
                                             >
                                                 Change Language
                                             </button>
                                         </div>
 
-                                        <div className="rounded-xl border border-red-300 p-5 dark:border-red-900">
+                                        <div className="rounded-xl border border-red-300 bg-red-500/5 p-5 dark:border-red-900">
                                             <h3 className="font-semibold text-red-600">
                                                 Delete Account
                                             </h3>
-                                            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                            <p className="mt-1 text-sm text-muted-foreground">
                                                 This action cannot be undone.
                                             </p>
 
@@ -541,6 +533,6 @@ export default function UserProfilePage() {
                     </div>
                 </div>
             </main>
-        </div>
+        </>
     );
 }
