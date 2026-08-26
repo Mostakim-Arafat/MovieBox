@@ -12,8 +12,10 @@ function Navbar() {
     const handleLogOut = async () => {
         await authClient.signOut()
     }
-
+   
+    // window.location.reload()
     const {data} = authClient.useSession()
+    
     console.log(data?.user)
 
     return (  
@@ -60,16 +62,17 @@ function Navbar() {
                 <button aria-label="Apps" className="hidden lg:block hover:text-white transition">
                     <PiDotsSixVerticalFill size={20} />
                 </button>
-
-                <Link href={"/Profile"} aria-label="Profile" className="hover:text-white transition">
-                    <CgProfile size={20} />
-                </Link>
+               
                 {
                     data?.user ?
-                
+                <div>
+                 <Link href={"/Profile"} aria-label="Profile" className="hover:text-white transition">
+                    <CgProfile size={20} />
+                </Link>
                 <button className="btn btn-warning" onClick={handleLogOut}>
                     Logout
                 </button>
+                </div>
                 :
                 <Link 
                     href={"/login"} 
