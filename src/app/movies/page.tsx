@@ -60,7 +60,7 @@ export default function MoviesPage() {
                                 key={movie.id}
                                 layoutId={`movie-card-${movie.id}`}
                                 onClick={() => setSelectedMovie(movie)}
-                                className="group cursor-pointer overflow-hidden rounded-xl bg-neutral-900"
+                                className="group cursor-pointer overflow-hidden rounded-xl border border-neutral-800 bg-neutral-900 shadow-sm"
                                 whileHover={{ scale: 1.03 }}
                                 transition={{ duration: 0.2 }}
                             >
@@ -73,7 +73,7 @@ export default function MoviesPage() {
                                 <div className="p-3">
                                     <motion.h3
                                         layoutId={`movie-title-${movie.id}`}
-                                        className="truncate text-sm font-semibold sm:text-base"
+                                        className="truncate text-sm font-semibold text-white sm:text-base"
                                     >
                                         {movie.title}
                                     </motion.h3>
@@ -131,7 +131,7 @@ export default function MoviesPage() {
                                     <div className="flex-1 p-6">
                                         <motion.h2
                                             layoutId={`movie-title-${selectedMovie.id}`}
-                                            className="text-2xl font-bold"
+                                            className="text-2xl font-bold text-white"
                                         >
                                             {selectedMovie.title}
                                         </motion.h2>
