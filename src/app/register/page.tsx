@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signUp } from "@/lib/auth-client";
 import { toast } from "react-hot-toast";
+import { authClient } from "@/lib/auth-client";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -47,8 +48,11 @@ export default function RegisterPage() {
     );
   };
 
-  const handleGoogleSignUp = () => {
-    alert("Initiating Google Sign-Up...");
+  const handleGoogleSignUp = async() => {
+    const data = await authClient.signIn.social({
+       provider: "google",
+     });
+     console.log(data)
   };
 
   return (
