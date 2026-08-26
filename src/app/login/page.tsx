@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { signIn } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -29,8 +30,11 @@ export default function LoginPage() {
     router.push("/")
   };
 
-  const handleGoogleSignIn = () => {
-    alert("Initiating Google Sign-In...");
+  const handleGoogleSignIn = async() => {
+     const data = await authClient.signIn.social({
+    provider: "google",
+  });
+  console.log(data)
   };
 
   return (
