@@ -65,7 +65,7 @@ function Navbar() {
                
                 {
                     data?.user ?
-                <div>
+                <div className="flex items-center gap-4">
                  <Link href={"/Profile"} aria-label="Profile" className="hover:text-white transition">
                     <CgProfile size={20} />
                 </Link>
