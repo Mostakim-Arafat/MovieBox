@@ -2,7 +2,7 @@
     {
         "id": 1,
         "title": "The Last Sunrise",
-        "poster": "https://i.ibb.co/xxxxx/last-sunrise.jpg",
+        "poster": "https://i.ibb.co.com/d437GDpv/image.png",
         "year": 2024,
         "genre": [
             "Drama",
@@ -15,7 +15,7 @@
     {
         "id": 2,
         "title": "Back to the 90s",
-        "poster": "https://i.ibb.co/xxxxx/back-to-90s.jpg",
+        "poster": "https://i.ibb.co.com/YFkr1fLw/image.png",
         "year": 2024,
         "genre": [
             "Comedy",
@@ -28,7 +28,7 @@
     {
         "id": 3,
         "title": "Nocturne",
-        "poster": "https://i.ibb.co/xxxxx/nocturne.jpg",
+        "poster": "https://i.ibb.co.com/N6Vnz5Rz/image.png",
         "year": 2023,
         "genre": [
             "Thriller",
@@ -41,7 +41,7 @@
     {
         "id": 4,
         "title": "Your Fault",
-        "poster": "https://i.ibb.co/xxxxx/your-fault.jpg",
+        "poster": "https://i.ibb.co.com/3y54JSQF/image.png",
         "year": 2024,
         "genre": [
             "Romance"
@@ -53,7 +53,7 @@
     {
         "id": 5,
         "title": "The Wolf in Winter",
-        "poster": "https://i.ibb.co/xxxxx/wolf-in-winter.jpg",
+        "poster": "https://i.ibb.co.com/bjqwShR3/image.png",
         "year": 2024,
         "genre": [
             "Documentary",
@@ -66,7 +66,7 @@
     {
         "id": 6,
         "title": "Top Love",
-        "poster": "https://i.ibb.co/xxxxx/top-love.jpg",
+        "poster": "https://i.ibb.co.com/TNW8Sjs/image.png",
         "year": 2023,
         "genre": [
             "Comedy",
@@ -79,7 +79,7 @@
     {
         "id": 7,
         "title": "Autumn Beat",
-        "poster": "https://i.ibb.co/xxxxx/autumn-beat.jpg",
+        "poster": "https://i.ibb.co.com/ycCJBNcX/image.png",
         "year": 2023,
         "genre": [
             "Drama",
@@ -92,7 +92,7 @@
     {
         "id": 8,
         "title": "Selah & The Spades",
-        "poster": "https://i.ibb.co/xxxxx/selah-spades.jpg",
+        "poster": "https://i.ibb.co.com/WRpvBwt/image.png",
         "year": 2022,
         "genre": [
             "Drama"
@@ -104,7 +104,7 @@
     {
         "id": 9,
         "title": "That Peter Crouch Film",
-        "poster": "https://i.ibb.co/xxxxx/peter-crouch.jpg",
+        "poster": "https://i.ibb.co.com/tpRMnz4M/image.png",
         "year": 2023,
         "genre": [
             "Documentary",
@@ -117,7 +117,7 @@
     {
         "id": 10,
         "title": "Time",
-        "poster": "https://i.ibb.co/xxxxx/time.jpg",
+        "poster": "https://i.ibb.co.com/Kx2sMvQ4/image.png",
         "year": 2022,
         "genre": [
             "Drama",
@@ -130,7 +130,7 @@
     {
         "id": 11,
         "title": "Zara Larsson: Up Close",
-        "poster": "https://i.ibb.co/xxxxx/zara-larsson.jpg",
+        "poster": "https://i.ibb.co.com/Xf0nvz5b/image.png",
         "year": 2024,
         "genre": [
             "Documentary",
@@ -143,7 +143,7 @@
     {
         "id": 12,
         "title": "Untrapped: The Story of Big Boi",
-        "poster": "https://i.ibb.co/xxxxx/untrapped.jpg",
+        "poster": "https://i.ibb.co.com/ks4ZTxF4/image.png",
         "year": 2023,
         "genre": [
             "Documentary",
@@ -156,7 +156,7 @@
     {
         "id": 13,
         "title": "Federer: Twelve Final Days",
-        "poster": "https://i.ibb.co/xxxxx/federer.jpg",
+        "poster": "https://i.ibb.co.com/WvCrd1Ws/image.png",
         "year": 2024,
         "genre": [
             "Documentary",
@@ -169,7 +169,7 @@
     {
         "id": 14,
         "title": "Reggie",
-        "poster": "https://i.ibb.co/xxxxx/reggie.jpg",
+        "poster": "https://i.ibb.co.com/chQD1Vkf/image.png",
         "year": 2023,
         "genre": [
             "Documentary",
@@ -181,8 +181,8 @@
     },
     {
         "id": 15,
-        "title": "Clasico",
-        "poster": "https://i.ibb.co/xxxxx/clasico.jpg",
+        "title": "ClasicoClasico",
+        "poster": "https://i.ibb.co.com/236tTmzd/image.png",
         "year": 2024,
         "genre": [
             "Documentary",
