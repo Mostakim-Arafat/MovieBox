@@ -1,10 +1,21 @@
+"use client"
+
 import Link from "next/link";
 import { MdOutlineSearch } from "react-icons/md";
 import { MdOutlineExpandMore } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
 import { PiDotsSixVerticalFill } from "react-icons/pi";
+import { authClient } from "@/lib/auth-client";
 
 function Navbar() {
+
+    const handleLogOut = async () => {
+        await authClient.signOut()
+    }
+
+    const {data} = authClient.useSession()
+    console.log(data?.user)
+
     return (  
         <nav className="flex justify-between items-center px-6 py-3 bg-black text-white">
             <div className="lg:hidden">
@@ -12,7 +23,7 @@ function Navbar() {
             </div>
             <div className="hidden lg:flex items-center space-x-6 ">
                 <span className="font-bold tracking-tight text-lg lowercase">
-                    prime video
+                    Movie Box
                 </span>
                 <div className="flex items-center space-x-1 bg-zinc-900/60 p-1 rounded-full">
                     <Link 
@@ -53,13 +64,21 @@ function Navbar() {
                 <Link href={"/Profile"} aria-label="Profile" className="hover:text-white transition">
                     <CgProfile size={20} />
                 </Link>
-
+                {
+                    data?.user ?
+                
+                <button className="btn btn-warning" onClick={handleLogOut}>
+                    Logout
+                </button>
+                :
                 <Link 
                     href={"/login"} 
                     className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-md text-sm transition"
                 >
-                    Join Prime
+                    Join MovieBox
                 </Link>
+                
+                }
             </div>
         </nav>
     );

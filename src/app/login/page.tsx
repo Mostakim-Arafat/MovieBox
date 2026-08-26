@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { signIn } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -10,17 +12,21 @@ export default function LoginPage() {
   const [rememberMe, setRememberMe] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const router = useRouter()
+  
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     setError("");
 
-    // Simulate mock API request
-    setTimeout(() => {
-      setIsSubmitting(false);
-      alert(`Logging in with: ${email}`);
-    }, 1000);
+   const result = await signIn.email({email,password})
+    if(result.error){
+      setError(result.error.message ?? "login failed")
+      return
+    }
+    
+    router.push("/")
   };
 
   const handleGoogleSignIn = () => {

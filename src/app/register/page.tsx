@@ -2,33 +2,49 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { signUp } from "@/lib/auth-client";
+import { toast } from "react-hot-toast";
 
 export default function RegisterPage() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsSubmitting(true);
     setError("");
 
-    if (password !== confirmPassword) {
+    const formdata = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formdata.entries());
+
+    if (data.password !== confirmPassword) {
       setError("Passwords do not match");
-      setIsSubmitting(false);
       return;
     }
 
-    // Simulate mock API request
-    setTimeout(() => {
-      setIsSubmitting(false);
-      alert(`Registered account for: ${email}`);
-    }, 1000);
+    setIsSubmitting(true);
+
+    await signUp.email(
+      {
+        email: data.email as string,
+        password: data.password as string,
+        name: data.name as string,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Account created successfully!");
+          router.push("/login");
+        },
+        onError: (ctx) => {
+          setError(ctx.error.message);
+          setIsSubmitting(false);
+        },
+      }
+    );
   };
 
   const handleGoogleSignUp = () => {
@@ -37,12 +53,10 @@ export default function RegisterPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-950 px-4 py-12 sm:px-6 lg:px-8 relative overflow-hidden">
-      {/* Cinematic ambient background glow */}
       <div className="absolute top-[-20%] left-[-20%] w-[60%] h-[60%] rounded-full bg-rose-900/10 blur-[120px] pointer-events-none" />
       <div className="absolute bottom-[-20%] right-[-20%] w-[60%] h-[60%] rounded-full bg-blue-900/10 blur-[120px] pointer-events-none" />
 
       <div className="w-full max-w-md space-y-8 bg-zinc-900/60 backdrop-blur-xl border border-zinc-800 p-8 rounded-2xl shadow-2xl relative z-10">
-        {/* Header */}
         <div className="flex flex-col items-center justify-center text-center">
           <Link href="/" className="flex items-center gap-2 mb-2 group">
             <svg
@@ -77,7 +91,6 @@ export default function RegisterPage() {
           </div>
         )}
 
-        {/* Form */}
         <form className="space-y-5" onSubmit={handleSubmit}>
           <div>
             <label
@@ -91,8 +104,6 @@ export default function RegisterPage() {
               name="name"
               type="text"
               required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
               className="mt-1.5 block w-full rounded-lg bg-zinc-950 border border-zinc-800 px-3.5 py-2.5 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-rose-500/50 focus:border-rose-500 transition-all text-sm"
               placeholder="John Doe"
             />
@@ -111,14 +122,12 @@ export default function RegisterPage() {
               type="email"
               autoComplete="email"
               required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
               className="mt-1.5 block w-full rounded-lg bg-zinc-950 border border-zinc-800 px-3.5 py-2.5 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-rose-500/50 focus:border-rose-500 transition-all text-sm"
               placeholder="name@example.com"
             />
           </div>
 
-                   <div>
+          <div>
             <label
               htmlFor="password"
               className="block text-sm font-medium text-zinc-300"
@@ -131,8 +140,7 @@ export default function RegisterPage() {
                 name="password"
                 type={showPassword ? "text" : "password"}
                 required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                minLength={8}
                 className="block w-full rounded-lg bg-zinc-950 border border-zinc-800 pl-3.5 pr-11 py-2.5 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-rose-500/50 focus:border-rose-500 transition-all text-sm"
                 placeholder="••••••••"
               />
@@ -169,6 +177,7 @@ export default function RegisterPage() {
                 name="confirmPassword"
                 type={showConfirmPassword ? "text" : "password"}
                 required
+                minLength={8}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 className="block w-full rounded-lg bg-zinc-950 border border-zinc-800 pl-3.5 pr-11 py-2.5 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-rose-500/50 focus:border-rose-500 transition-all text-sm"
@@ -203,7 +212,6 @@ export default function RegisterPage() {
           </button>
         </form>
 
-        {/* Divider */}
         <div className="relative flex py-2 items-center">
           <div className="flex-grow border-t border-zinc-800"></div>
           <span className="flex-shrink mx-4 text-xs font-semibold uppercase tracking-wider text-zinc-500">
@@ -212,7 +220,6 @@ export default function RegisterPage() {
           <div className="flex-grow border-t border-zinc-800"></div>
         </div>
 
-        {/* Google Sign In Button */}
         <button
           onClick={handleGoogleSignUp}
           type="button"
@@ -239,7 +246,6 @@ export default function RegisterPage() {
           Google
         </button>
 
-        {/* Footer Link */}
         <p className="text-center text-sm text-zinc-400">
           Already have an account?{" "}
           <Link
