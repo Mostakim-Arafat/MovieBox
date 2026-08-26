@@ -10,14 +10,14 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+ 
   const [error, setError] = useState("");
   const router = useRouter()
   
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
+  
     setError("");
 
    const result = await signIn.email({email,password})
@@ -155,10 +155,10 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            disabled={isSubmitting}
+            
             className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg text-sm font-semibold text-white bg-rose-600 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-zinc-900 focus:ring-rose-500 disabled:opacity-50 transition-colors cursor-pointer"
           >
-            {isSubmitting ? "Signing in..." : "Sign In"}
+            Sign In
           </button>
         </form>
 
