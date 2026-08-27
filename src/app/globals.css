@@ -129,3 +129,29 @@
     @apply font-sans;
   }
 }
+/* Infinitely scrolling backdrop marquee animations */
+@keyframes marquee {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+@keyframes marquee-reverse {
+  0% {
+    transform: translateY(-50%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.animate-marquee-slow {
+  animation: marquee 60s linear infinite;
+}
+
+.animate-marquee-slow-reverse {
+  animation: marquee-reverse 60s linear infinite;
+}
