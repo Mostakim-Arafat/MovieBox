@@ -35,7 +35,7 @@ function Navbar() {
                         Home
                     </Link>
                     <Link 
-                        href={"/#"} 
+                        href={"/movies"} 
                         className="px-4 py-1.5 rounded-full text-zinc-300 hover:text-white font-medium text-sm transition"
                     >
                         Movies
