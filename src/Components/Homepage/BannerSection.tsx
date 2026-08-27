@@ -66,7 +66,7 @@ export default function BannerSection() {
       
       {/* 1. Backdrop Tilted Poster Grid */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        <div className="absolute w-[140%] h-[140%] -top-[20%] -left-[20%] grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3 md:gap-4.5 transform -rotate-[7deg] scale-105 opacity-[0.22] transition-opacity duration-700">
+        <div className="absolute w-[140%] h-[140%] -top-[20%] -left-[20%] grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3 md:gap-4.5 transform -rotate-[7deg] scale-105 opacity-[0.62] transition-opacity duration-700">
           {posterColumns.map((column, colIdx) => (
             <div 
               key={colIdx} 
@@ -89,11 +89,11 @@ export default function BannerSection() {
         </div>
         
         {/* Cinematic Vignette Overlay Gradients */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/45 to-black z-10" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_10%,rgba(0,0,0,0.92)_90%)] z-10" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/85 z-10" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_35%,rgba(0,0,0,0.75)_95%)] z-10" />
       </div>
 
-      {/* 2. Floating Navbar Header */}
+      {/* 2. Simple Brand Header */}
       <header className="relative z-30 w-full max-w-7xl mx-auto px-6 py-6 md:px-12 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5 group">
           <svg
@@ -116,7 +116,7 @@ export default function BannerSection() {
         </Link>
         <Link
           href="/login"
-          className="bg-rose-600 hover:bg-rose-700 text-white font-semibold px-5 py-1.5 rounded-lg text-sm transition-all duration-200 shadow-md shadow-rose-900/20 active:scale-95"
+          className="bg-[#e50914] hover:bg-[#c11119] text-white font-semibold px-4.5 py-1.5 rounded text-sm transition-colors duration-200 active:scale-95 shadow-md shadow-black/10"
         >
           Sign In
         </Link>
@@ -211,6 +211,24 @@ export default function BannerSection() {
           </defs>
         </svg>
       </div>
+
+      {/* 5. Injected keyframe animations */}
+      <style dangerouslySetInnerHTML={{__html: `
+        @keyframes marquee {
+          0% { transform: translateY(0); }
+          100% { transform: translateY(-50%); }
+        }
+        @keyframes marquee-reverse {
+          0% { transform: translateY(-50%); }
+          100% { transform: translateY(0); }
+        }
+        .animate-marquee-slow {
+          animation: marquee 60s linear infinite !important;
+        }
+        .animate-marquee-slow-reverse {
+          animation: marquee-reverse 60s linear infinite !important;
+        }
+      `}} />
 
     </section>
   );
