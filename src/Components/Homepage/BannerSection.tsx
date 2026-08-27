@@ -94,33 +94,7 @@ export default function BannerSection() {
       </div>
 
       {/* 2. Simple Brand Header */}
-      <header className="relative z-30 w-full max-w-7xl mx-auto px-6 py-6 md:px-12 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2.5 group">
-          <svg
-            className="h-8 w-8 text-rose-600 transition-transform group-hover:scale-110 duration-300"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2.5}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"
-            />
-          </svg>
-          <span className="text-2xl font-black tracking-wider text-white">
-            MOVIE<span className="text-rose-600">BOX</span>
-          </span>
-        </Link>
-        <Link
-          href="/login"
-          className="bg-[#e50914] hover:bg-[#c11119] text-white font-semibold px-4.5 py-1.5 rounded text-sm transition-colors duration-200 active:scale-95 shadow-md shadow-black/10"
-        >
-          Sign In
-        </Link>
-      </header>
+     
 
       {/* 3. Hero Copy & Call To Action */}
       <div className="relative z-20 flex-grow flex flex-col items-center justify-center text-center px-4 max-w-3xl mx-auto -mt-6 sm:-mt-12">
