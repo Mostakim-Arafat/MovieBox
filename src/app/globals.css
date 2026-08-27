@@ -148,10 +148,20 @@
   }
 }
 
+<<<<<<< HEAD
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+=======
 .animate-marquee-slow {
   animation: marquee 60s linear infinite;
 }
 
 .animate-marquee-slow-reverse {
   animation: marquee-reverse 60s linear infinite;
+>>>>>>> 8fe2027d18892e1a85db05b0eee33bfb155ed739
 }
