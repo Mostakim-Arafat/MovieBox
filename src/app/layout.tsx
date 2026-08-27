@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import {ThemeProvider} from "next-themes"
 import Navbar from "@/Components/Homepage/Navbar";
 import Footer from "@/Components/Homepage/Footer";
 
@@ -24,13 +25,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
-        <Navbar></Navbar>
-        {children}
-        <Footer></Footer>
-        </body>
+      <body className="min-h-full bg-background text-foreground">
+        <ThemeProvider attribute="class" enableSystem defaultTheme="system" disableTransitionOnChange>
+          <Navbar />
+          {children}
+          <Footer />
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

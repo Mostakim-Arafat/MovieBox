@@ -48,34 +48,30 @@ export default function FaqSection() {
   };
 
   return (
-    <section className="w-full bg-black text-white py-24 px-6 sm:px-12 lg:px-16 border-t border-zinc-900">
-      <div className="max-w-3xl mx-auto flex flex-col items-start w-full">
-        
-        {/* Section Header */}
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-left mb-2 tracking-tight text-white">
+    <section className="w-full border-t border-border bg-background px-6 py-24 text-foreground sm:px-12 lg:px-16">
+      <div className="mx-auto flex w-full max-w-3xl flex-col items-start">
+        <h2 className="mb-2 text-left text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl md:text-4xl">
           Frequently Asked Questions
         </h2>
 
-        {/* Accordions Wrapper */}
         <div className="w-full space-y-3.5">
           {faqData.map((item, index) => {
             const isOpen = openIndex === index;
             return (
-              <div 
-                key={index} 
-                className="w-full rounded-xl border border-zinc-700/30 bg-[#2d2f34] hover:bg-[#383a40] overflow-hidden transition-all duration-350"
+              <div
+                key={index}
+                className="w-full overflow-hidden rounded-xl border border-border bg-muted/60 transition-all duration-350 hover:bg-muted"
               >
-                {/* Accordion Header */}
                 <button
                   onClick={() => handleToggle(index)}
-                  className="w-full flex items-center justify-between p-5 sm:p-6 transition-colors duration-200 text-left select-none cursor-pointer focus:outline-none"
+                  className="flex w-full cursor-pointer items-center justify-between p-5 text-left transition-colors duration-200 focus:outline-none sm:p-6"
                 >
-                  <span className={`text-base sm:text-lg font-semibold transition-colors duration-200 ${isOpen ? 'text-rose-500' : 'text-zinc-100'}`}>
+                  <span className={`text-base font-semibold transition-colors duration-200 sm:text-lg ${isOpen ? "text-rose-500" : "text-foreground"}`}>
                     {item.question}
                   </span>
                   <svg
-                    className={`w-5 h-5 sm:w-6 sm:h-6 text-zinc-400 hover:text-white transition-transform duration-300 ease-out ${
-                      isOpen ? "rotate-45 text-rose-500" : ""
+                    className={`h-5 w-5 transition-transform duration-300 ease-out sm:h-6 sm:w-6 ${
+                      isOpen ? "rotate-45 text-rose-500" : "text-muted-foreground hover:text-foreground"
                     }`}
                     fill="none"
                     viewBox="0 0 24 24"
@@ -90,16 +86,15 @@ export default function FaqSection() {
                   </svg>
                 </button>
 
-                {/* Accordion Answer Body with Auto-height Slide transition */}
                 <div
-                  className={`grid transition-all duration-300 ease-in-out overflow-hidden ${
+                  className={`grid overflow-hidden transition-all duration-300 ease-in-out ${
                     isOpen
-                      ? "grid-rows-[1fr] opacity-100 border-t border-zinc-800/40"
+                      ? "grid-rows-[1fr] border-t border-border opacity-100"
                       : "grid-rows-[0fr] opacity-0"
                   }`}
                 >
                   <div className="overflow-hidden">
-                    <div className="p-5 sm:p-6 bg-[#222428] text-zinc-300 text-sm sm:text-base leading-relaxed font-normal">
+                    <div className="bg-background/80 p-5 text-sm leading-relaxed text-muted-foreground sm:p-6 sm:text-base">
                       {item.answer}
                     </div>
                   </div>
