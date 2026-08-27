@@ -155,3 +155,21 @@
 .animate-marquee-slow-reverse {
   animation: marquee-reverse 60s linear infinite;
 }
+
+.trending-rank {
+  font-weight: 900;
+  font-stretch: condensed;
+  line-height: 0.72;
+  letter-spacing: -0.08em;
+  color: var(--background);
+  -webkit-text-stroke: 3px color-mix(in oklch, var(--foreground) 72%, transparent);
+  paint-order: stroke fill;
+  user-select: none;
+  pointer-events: none;
+}
+.trending-scroll {
+  scrollbar-width: none;
+}
+.trending-scroll::-webkit-scrollbar {
+  display: none;
+}
