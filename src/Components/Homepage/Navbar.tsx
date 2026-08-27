@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { MdOutlineSearch } from "react-icons/md";
 import { MdOutlineExpandMore } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
@@ -16,8 +17,13 @@ function Navbar() {
    
     // window.location.reload()
     const {data} = authClient.useSession()
+    const pathname = usePathname()
     
-    console.log(data?.user)
+    const isHome = pathname === "/" || pathname === ""
+    const isMovies = pathname?.startsWith("/movies")
+    const isTV = pathname?.startsWith("/tv")
+
+    console.log(data?.user, pathname)
 
     return (  
         <nav className="flex items-center justify-between border-b border-border bg-background/95 px-6 py-3 text-foreground backdrop-blur-sm">
@@ -30,20 +36,20 @@ function Navbar() {
                 </span>
                 <div className="flex items-center space-x-1 rounded-full bg-muted p-1">
                     <Link 
-                        href={"/"} 
-                        className="rounded-full bg-foreground px-4 py-1.5 text-sm font-semibold text-background transition"
+                        href={'/'} 
+                        className={`px-4 py-1.5 rounded-full text-sm transition ${isHome ? 'bg-foreground text-background font-semibold' : 'text-zinc-300 hover:text-white font-medium'}`}
                     >
                         Home
                     </Link>
                     <Link 
-                        href={"/movies"} 
-                        className="px-4 py-1.5 rounded-full text-zinc-300 hover:text-white font-medium text-sm transition"
+                        href={'/movies'} 
+                        className={`px-4 py-1.5 rounded-full text-sm transition ${isMovies ? 'bg-foreground text-background font-semibold' : 'text-zinc-300 hover:text-white font-medium'}`}
                     >
                         Movies
                     </Link>
                     <Link 
-                        href={"/#"} 
-                        className="rounded-full px-4 py-1.5 text-sm font-medium text-muted-foreground transition hover:text-foreground"
+                        href={'/tv'} 
+                        className={`px-4 py-1.5 rounded-full text-sm transition ${isTV ? 'bg-foreground text-background font-semibold' : 'text-muted-foreground hover:text-foreground font-medium'}`}
                     >
                         TV shows
                     </Link>
