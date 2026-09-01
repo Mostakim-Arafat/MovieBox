@@ -8,8 +8,12 @@ import { CgProfile } from "react-icons/cg";
 import { PiDotsSixVerticalFill } from "react-icons/pi";
 import { authClient } from "@/lib/auth-client";
 import ThemeToggle from "@/components/TToggle";
+import { useState } from "react";
 
 function Navbar() {
+
+    const [query,setQuery] = useState('')
+    
 
     const handleLogOut = async () => {
         await authClient.signOut()
@@ -74,7 +78,7 @@ function Navbar() {
                             <path d="m21 21-4.3-4.3"></path>
                         </g>
                     </svg>
-                    <input type="search" required placeholder="Search" />
+                    <input type="search" required placeholder="Search" value={query} onChange={(e) => {setQuery(e.target.value)}}/>
                 </label>
 
                 <div className="flex cursor-pointer items-center space-x-1 text-sm font-medium transition hover:text-foreground">
