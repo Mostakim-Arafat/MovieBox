@@ -7,13 +7,14 @@ import { useRouter } from "next/navigation";
 export default function BannerSection() {
   const [email, setEmail] = useState("");
   const router = useRouter();
-
-  const handleSignup = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email.trim()) {
-      router.push(`/register?email=${encodeURIComponent(email.trim())}`);
-    }
-  };
+   
+  // const handleSignup = (e: React.FormEvent) => {
+  //   e.preventDefault();
+    
+  //   if (email.trim()) {
+  //     router.push(`/register?email=${encodeURIComponent(email.trim())}`);
+  //   }
+  // };
 
   // Movie poster list from Unsplash to create a beautiful grid
   const posterColumns = [
@@ -109,11 +110,11 @@ export default function BannerSection() {
         </p>
 
         {/* Signup Email Form */}
-        <form 
+        {/* <form 
           onSubmit={handleSignup}
           className="w-full max-w-xl mt-6 flex flex-col sm:flex-row gap-3 items-stretch px-2 sm:px-0"
         >
-          {/* Floating Label Email Input */}
+         
           <div className="relative flex-grow min-w-0">
             <input
               type="email"
@@ -135,7 +136,7 @@ export default function BannerSection() {
             </label>
           </div>
 
-          {/* Submit Button */}
+        
           <button
             type="submit"
             className="bg-rose-600 hover:bg-rose-700 text-white font-bold text-base sm:text-lg px-6 py-3.5 sm:py-0 rounded-lg flex items-center justify-center gap-1.5 transition-all duration-200 shadow-md shadow-rose-900/10 active:scale-[0.98] cursor-pointer whitespace-nowrap"
@@ -151,7 +152,22 @@ export default function BannerSection() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
             </svg>
           </button>
-        </form>
+        </form> */}
+         <button
+            onClick={() => {router.push('/login')}}
+            className="mt-4 bg-rose-600 hover:bg-rose-700 text-white font-bold text-base sm:text-lg px-6 py-3.5 sm:py-0 rounded-lg flex items-center justify-center gap-1.5 transition-all duration-200 shadow-md shadow-rose-900/10 active:scale-[0.98] cursor-pointer whitespace-nowrap"
+          >
+            Get Started
+            <svg
+              className="w-4 h-4 text-white transform transition-transform group-hover:translate-x-1"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2.5}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
       </div>
 
       {/* 4. Curved Glowing Bottom Divider */}

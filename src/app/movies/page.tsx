@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
+
 type Movie = {
     id: number;
     title: string;
@@ -187,7 +188,7 @@ function MovieRow({
     );
 }
 
-export default function MoviesPage() {
+export default function  MoviesPage() {
     const [movies, setMovies] = useState<Movie[]>([]);
     const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
     const [selectedGenre, setSelectedGenre] = useState<{
@@ -196,8 +197,10 @@ export default function MoviesPage() {
     } | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
+
+
     useEffect(() => {
-        fetch("/movies.json")
+        fetch("/api/movies")
             .then((res) => res.json())
             .then((data: Movie[]) => {
                 setMovies(data);

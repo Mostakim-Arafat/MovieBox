@@ -2,15 +2,14 @@
 
 import { ChangeEvent, useRef, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 type UserData = {
     name: string;
-    username: string;
     email: string;
     phone: string;
-    bio: string;
     location: string;
-    website: string;
     avatar: string;
 };
 
@@ -21,16 +20,18 @@ export default function UserProfilePage() {
 
     const fileInputRef = useRef<HTMLInputElement>(null);
 
+     const {data} = authClient.useSession()
+    console.log(data?.user?.name)
+
     const [user, setUser] = useState<UserData>({
-        name: "Alomgir Hossain",
-        username: "alomgir",
-        email: "alomgir@example.com",
+        name: data?.user?.name ?? "",
+        email: data?.user?.email ?? "",
         phone: "+880 1XXX-XXXXXX",
-        bio: "Movie lover and passionate about discovering amazing films.",
-        location: "Mymensingh, Bangladesh",
-        website: "https://example.com",
-        avatar: "https://i.pravatar.cc/300?img=12",
+        location: "dhaka",
+        avatar: data?.user?.image ?? ""
     });
+
+   
 
     const [formData, setFormData] = useState<UserData>(user);
 
@@ -105,7 +106,12 @@ export default function UserProfilePage() {
         setIsEditing(false);
         toast("Changes discarded", { icon: "↩️" });
     };
+    const router = useRouter()
 
+    if ( !data?.user){
+       router.push('/login')
+    }
+    
     return (
         <>
             <Toaster position="top-center" />
@@ -130,16 +136,13 @@ export default function UserProfilePage() {
                         <aside className="h-fit rounded-2xl border border-border bg-card p-5">
                             <div className="flex flex-col items-center text-center">
                                 <img
-                                    src={user.avatar}
+                                    src={user.avatar || "./random.png"}
                                     alt={user.name}
                                     className="h-20 w-20 rounded-full border-4 border-border object-cover sm:h-24 sm:w-24"
                                 />
                                 <h2 className="mt-4 text-lg font-bold sm:text-xl">
                                     {user.name}
                                 </h2>
-                                <p className="text-sm text-muted-foreground">
-                                    @{user.username}
-                                </p>
                             </div>
 
                             <div className="mt-6 flex gap-2 overflow-x-auto lg:mt-8 lg:flex-col lg:gap-2 lg:overflow-visible">
@@ -273,19 +276,6 @@ export default function UserProfilePage() {
                                             />
                                         </div>
 
-                                        <div>
-                                            <label className="mb-2 block text-sm font-medium text-foreground">
-                                                Username
-                                            </label>
-                                            <input
-                                                type="text"
-                                                name="username"
-                                                value={isEditing ? formData.username : user.username}
-                                                onChange={handleChange}
-                                                disabled={!isEditing}
-                                                className="w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary disabled:cursor-not-allowed disabled:opacity-70 sm:text-base"
-                                            />
-                                        </div>
 
                                         <div>
                                             <label className="mb-2 block text-sm font-medium text-foreground">
@@ -329,33 +319,6 @@ export default function UserProfilePage() {
                                             />
                                         </div>
 
-                                        <div>
-                                            <label className="mb-2 block text-sm font-medium text-foreground">
-                                                Website
-                                            </label>
-                                            <input
-                                                type="text"
-                                                name="website"
-                                                value={isEditing ? formData.website : user.website}
-                                                onChange={handleChange}
-                                                disabled={!isEditing}
-                                                className="w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary disabled:cursor-not-allowed disabled:opacity-70 sm:text-base"
-                                            />
-                                        </div>
-
-                                        <div className="sm:col-span-2">
-                                            <label className="mb-2 block text-sm font-medium text-foreground">
-                                                Bio
-                                            </label>
-                                            <textarea
-                                                name="bio"
-                                                rows={4}
-                                                value={isEditing ? formData.bio : user.bio}
-                                                onChange={handleChange}
-                                                disabled={!isEditing}
-                                                className="w-full resize-none rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary disabled:cursor-not-allowed disabled:opacity-70 sm:text-base"
-                                            />
-                                        </div>
                                     </div>
                                 </>
                             )}
@@ -535,4 +498,6 @@ export default function UserProfilePage() {
             </main>
         </>
     );
+
+    
 }
