@@ -3,6 +3,7 @@
 import { ChangeEvent, useRef, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 type UserData = {
     name: string;
@@ -105,9 +106,12 @@ export default function UserProfilePage() {
         setIsEditing(false);
         toast("Changes discarded", { icon: "↩️" });
     };
+    const router = useRouter()
 
+    if ( !data?.user){
+       router.push('/login')
+    }
     
-
     return (
         <>
             <Toaster position="top-center" />
@@ -494,4 +498,6 @@ export default function UserProfilePage() {
             </main>
         </>
     );
+
+    
 }
