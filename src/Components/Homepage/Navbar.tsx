@@ -40,6 +40,14 @@ function Navbar() {
         } else {
             setIsOpen(true)
         }
+
+        const fetchData = async () => {
+            const coming = await fetch(`/api/movies/search?q=${encodeURIComponent(query)}`)
+            const data = await coming.json()
+            setmovies(data)
+        }
+        const timer = setTimeout(fetchData, 300);
+        return () => clearTimeout(timer)
     }, [query])
 
     return (
