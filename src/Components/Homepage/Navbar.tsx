@@ -8,12 +8,16 @@ import { CgProfile } from "react-icons/cg";
 import { PiDotsSixVerticalFill } from "react-icons/pi";
 import { authClient } from "@/lib/auth-client";
 import ThemeToggle from "@/components/TToggle";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 function Navbar() {
 
-    const [query,setQuery] = useState('')
-    
+    const [query, setQuery] = useState('')
+    const [isOpen, setIsOpen] = useState(false)
+    const [movies, setmovies] = useState<any[]>([])
+    const router = useRouter()
+
 
     const handleLogOut = async () => {
         await authClient.signOut()
@@ -27,7 +31,16 @@ function Navbar() {
     const isMovies = pathname?.startsWith("/movies")
     const isTV = pathname?.startsWith("/tv")
 
-    console.log(data?.user, pathname)
+    // console.log(data?.user, pathname)
+    console.log(query)
+
+    useEffect(() => {
+        if (query.trim() === "") {
+            setIsOpen(false)
+        } else {
+            setIsOpen(true)
+        }
+    }, [query])
 
     return (
         <nav className="flex  items-center justify-between border-b border-border bg-background/95 px-6 py-3 text-foreground backdrop-blur-sm">
@@ -64,6 +77,8 @@ function Navbar() {
                 {/* <button aria-label="Search" className="transition hover:text-foreground">
                     <MdOutlineSearch size={20} />
                 </button> */}
+
+
                 {/* // search button */}
                 <label className="input">
                     <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -78,8 +93,36 @@ function Navbar() {
                             <path d="m21 21-4.3-4.3"></path>
                         </g>
                     </svg>
-                    <input type="search" required placeholder="Search" value={query} onChange={(e) => {setQuery(e.target.value)}}/>
+                    <input type="search" required placeholder="Search" value={query} onChange={(e) => { setQuery(e.target.value) }} />
                 </label>
+
+                {isOpen && (
+                    <div className="absolute right-0 mt-2 w-80 bg-background border border-border rounded-lg shadow-xl max-h-80 overflow-y-auto z-50 divide-y divide-border">
+                        {movies.length > 0 ? (
+                            movies.map((movie) => (
+                                <div
+                                    key={movie._id.toString()}
+                                    onClick={() => {
+                                        setIsOpen(false);
+                                        setQuery("");
+                                        router.push(`/movies/${movie._id}`);
+                                    }}
+                                    className="flex items-center gap-3 p-3 hover:bg-muted cursor-pointer transition"
+                                >
+                                    <img src={movie.poster} alt={movie.title} className="w-10 h-14 object-cover rounded" />
+                                    <div className="flex flex-col text-sm">
+                                        <span className="font-semibold text-foreground">{movie.title}</span>
+                                        <span className="text-xs text-muted-foreground">{movie.year}</span>
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <div className="p-4 text-center text-sm text-muted-foreground">
+                                Not found
+                            </div>
+                        )}
+                    </div>
+                )}
 
                 <div className="flex cursor-pointer items-center space-x-1 text-sm font-medium transition hover:text-foreground">
                     <span>EN</span>
