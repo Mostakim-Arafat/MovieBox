@@ -88,49 +88,51 @@ function Navbar() {
 
 
                 {/* // search button */}
-                <label className="input">
-                    <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <g
-                            strokeLinejoin="round"
-                            strokeLinecap="round"
-                            strokeWidth="2.5"
-                            fill="none"
-                            stroke="currentColor"
-                        >
-                            <circle cx="11" cy="11" r="8"></circle>
-                            <path d="m21 21-4.3-4.3"></path>
-                        </g>
-                    </svg>
-                    <input type="search" required placeholder="Search" value={query} onChange={(e) => { setQuery(e.target.value) }} />
-                </label>
+                <div className="relative">
+                    <label className="input flex items-center gap-2">
+                        <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <g
+                                strokeLinejoin="round"
+                                strokeLinecap="round"
+                                strokeWidth="2.5"
+                                fill="none"
+                                stroke="currentColor"
+                            >
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <path d="m21 21-4.3-4.3"></path>
+                            </g>
+                        </svg>
+                        <input type="search" required placeholder="Search" value={query} onChange={(e) => { setQuery(e.target.value) }} />
+                    </label>
 
-                {isOpen && (
-                    <div className="absolute right-0 mt-2 w-80 bg-background border border-border rounded-lg shadow-xl max-h-80 overflow-y-auto z-50 divide-y divide-border">
-                        {movies.length > 0 ? (
-                            movies.map((movie) => (
-                                <div
-                                    key={movie._id.toString()}
-                                    onClick={() => {
-                                        setIsOpen(false);
-                                        setQuery("");
-                                        router.push(`/movies/${movie._id}`);
-                                    }}
-                                    className="flex items-center gap-3 p-3 hover:bg-muted cursor-pointer transition"
-                                >
-                                    <img src={movie.poster} alt={movie.title} className="w-10 h-14 object-cover rounded" />
-                                    <div className="flex flex-col text-sm">
-                                        <span className="font-semibold text-foreground">{movie.title}</span>
-                                        <span className="text-xs text-muted-foreground">{movie.year}</span>
+                    {isOpen && (
+                        <div className="absolute right-0 top-full mt-2 w-80 bg-zinc-950 border border-zinc-800 rounded-lg shadow-2xl max-h-80 overflow-y-auto z-50 divide-y divide-zinc-800">
+                            {movies.length > 0 ? (
+                                movies.map((movie) => (
+                                    <div
+                                        key={movie._id.toString()}
+                                        onClick={() => {
+                                            setIsOpen(false);
+                                            setQuery("");
+                                            router.push(`/movies/${movie._id}`);
+                                        }}
+                                        className="flex items-center gap-3 p-3 hover:bg-zinc-900 cursor-pointer transition"
+                                    >
+                                        <img src={movie.poster} alt={movie.title} className="w-10 h-14 object-cover rounded" />
+                                        <div className="flex flex-col text-sm">
+                                            <span className="font-semibold text-white">{movie.title}</span>
+                                            <span className="text-xs text-zinc-400">{movie.year}</span>
+                                        </div>
                                     </div>
+                                ))
+                            ) : (
+                                <div className="p-4 text-center text-sm text-zinc-400">
+                                    Not found
                                 </div>
-                            ))
-                        ) : (
-                            <div className="p-4 text-center text-sm text-muted-foreground">
-                                Not found
-                            </div>
-                        )}
-                    </div>
-                )}
+                            )}
+                        </div>
+                    )}
+                </div>
 
                 <div className="flex cursor-pointer items-center space-x-1 text-sm font-medium transition hover:text-foreground">
                     <span>EN</span>
