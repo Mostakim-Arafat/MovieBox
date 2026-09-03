@@ -7,7 +7,7 @@ import { MdOutlineExpandMore } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
 import { PiDotsSixVerticalFill } from "react-icons/pi";
 import { authClient } from "@/lib/auth-client";
-import ThemeToggle from "@/components/TToggle";
+import ThemeToggle from "@/UI/TToggle";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 

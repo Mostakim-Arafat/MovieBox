@@ -1,8 +1,8 @@
 import React from "react";
-import StatCard from "@/components/Admin/StatCard";
-import RevenueChart from "@/components/Admin/RevenueChart";
-import TrendingMoviesTable from "@/components/Admin/TrendingMoviesTable";
-import RecentUsersTable from "@/components/Admin/RecentUsersTable";
+import StatCard from "@/Components/Admin/StatCard";
+import RevenueChart from "@/Components/Admin/RevenueChart";
+import TrendingMoviesTable from "@/Components/Admin/TrendingMoviesTable";
+import RecentUsersTable from "@/Components/Admin/RecentUsersTable";
 
 const statsData = [
   {

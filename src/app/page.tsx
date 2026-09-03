@@ -3,8 +3,8 @@
 import FaqSection from "@/Components/Homepage/FaqSection";
 import BannerSection from "@/Components/Homepage/BannerSection";
 import TrendingNow from "@/Components/Homepage/TreandingNow";
-import PricingSection from "@/Components/PricingSection";
-import PaymentSection from "@/Components/PaymentSection";
+import PricingSection from "@/Components/Homepage/PricingSection";
+import PaymentSection from "@/Components/Homepage/PaymentSection";
 
 
 export default function Home() {
