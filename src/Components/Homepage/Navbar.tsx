@@ -56,9 +56,28 @@ function Navbar() {
                 <h1 className="flex items-center gap-2"><span>Menu</span><MdOutlineExpandMore size={20} /></h1>
             </div>
             <div className="hidden items-center space-x-6 lg:flex">
-                <span className="text-lg font-bold lowercase tracking-tight">
-                    Movie Box
-                </span>
+            <div className="flex min-w-[200px] flex-col items-start">
+            <Link href="/" className="group mb-4 flex items-center gap-2">
+              <svg
+                className="h-7 w-7 text-rose-600 transition-transform duration-300 group-hover:scale-110"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2.5}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"
+                />
+              </svg>
+              <span className="text-xl font-black tracking-wider text-foreground">
+                MOVIE<span className="text-rose-600">BOX</span>
+              </span>
+            </Link>
+          </div>
+
                 <div className="flex items-center space-x-1 rounded-full bg-muted p-1">
                     <Link
                         href={'/'}
