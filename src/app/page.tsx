@@ -4,7 +4,7 @@ import FaqSection from "@/Components/Homepage/FaqSection";
 import BannerSection from "@/Components/Homepage/BannerSection";
 import TrendingNow from "@/Components/Homepage/TreandingNow";
 import PricingSection from "@/Components/Homepage/PricingSection";
-import PaymentSection from "@/Components/Homepage/PaymentSection";
+
 
 
 export default function Home() {
@@ -14,7 +14,6 @@ export default function Home() {
        <TrendingNow></TrendingNow>
       <FaqSection />
       <PricingSection/>
-      <PaymentSection/>
     </div>
   );
 }
