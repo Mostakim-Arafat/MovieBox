@@ -3,12 +3,11 @@ import React from "react";
 interface StatCardProps {
   title: string;
   value: string;
-  change: string;
   isPositive: boolean;
   icon: React.ReactNode;
 }
 
-export default function StatCard({ title, value, change, isPositive, icon }: StatCardProps) {
+export default function StatCard({ title, value, isPositive, icon }: StatCardProps) {
   return (
     <div className="bg-zinc-900/60 backdrop-blur-xl border border-zinc-800 rounded-2xl p-5 hover:border-zinc-700 transition-all duration-300 group">
       <div className="flex items-start justify-between mb-4">
@@ -31,7 +30,7 @@ export default function StatCard({ title, value, change, isPositive, icon }: Sta
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
           </svg>
-          {change}
+         {/* dummy change data */}
         </span>
       </div>
       <p className="text-2xl font-bold text-zinc-100 tracking-tight">{value}</p>
