@@ -55,12 +55,16 @@ const quickActions = [
 export default function AdminDashboard() {
 
   const [movielist, setMovieList] = useState<any[]>([])
+  const [users, setUsers] = useState([])
   useEffect(  () => {
   
   const movies   = async () => {
    const data = await fetch('/api/movies')
      const data2 = await data.json()
      setMovieList(data2)
+   const data_user = await fetch('/api/users')
+   const data_u_2 = await data_user.json()
+     setUsers(data_u_2)
     
   }
   movies()
@@ -71,7 +75,7 @@ export default function AdminDashboard() {
 const statsData = [
   {
     title: "Total Users",
-    value: "45,231",
+    value: `${users.length}`,
     isPositive: true,
     icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
