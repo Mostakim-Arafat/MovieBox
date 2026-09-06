@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 type Plan = {
     id: string;
@@ -56,6 +57,10 @@ const plans: Plan[] = [
 
 export default function PricingSection() {
     const [selected, setSelected] = useState("premium");
+    const router = useRouter()
+    const handlepayment = () => {
+        router.push('/payment')
+    }
 
     return (
         <section className="w-full bg-gray-50 px-4 py-16 text-gray-900 sm:px-8 lg:px-12 dark:bg-black dark:text-white">
@@ -164,16 +169,19 @@ export default function PricingSection() {
                     })}
                 </div>
 
+               
                 <motion.button
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
                     viewport={{ once: true }}
                     transition={{ delay: 0.4 }}
                     whileTap={{ scale: 0.97 }}
+                    onClick={handlepayment}
                     className="mx-auto mt-10 block w-full max-w-xs rounded-lg bg-red-600 py-3.5 font-bold text-white transition hover:bg-red-700"
                 >
-                    Continue
+                    Continue 
                 </motion.button>
+               
             </div>
         </section>
     );
