@@ -57,10 +57,39 @@ const plans: Plan[] = [
 
 export default function PricingSection() {
     const [selected, setSelected] = useState("premium");
+    const [loading,setLoading] = useState(false)
     const router = useRouter()
-    const handlepayment = () => {
-        router.push('/payment')
+   
+
+    const handlepayment = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: 1050,
+          name: 'Jane Doe',
+          email: 'jane@example.com',
+          phone: '01811223344',
+          productName: 'Wireless Mouse'
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.gatewayUrl) {
+       
+        window.location.href = data.gatewayUrl;
+      } else {
+        alert('Could not initialize payment.');
+        setLoading(false);
+      }
+    } catch (err) {
+      console.error(err);
+      setLoading(false);
     }
+  };
 
     return (
         <section className="w-full bg-gray-50 px-4 py-16 text-gray-900 sm:px-8 lg:px-12 dark:bg-black dark:text-white">
