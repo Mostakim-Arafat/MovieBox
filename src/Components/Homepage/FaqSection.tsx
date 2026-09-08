@@ -47,8 +47,9 @@ export default function FaqSection() {
     setOpenIndex(openIndex === index ? null : index);
   };
 
-  return (
-    <section className="w-full border-t border-border bg-background px-6 py-24 text-foreground sm:px-12 lg:px-16">
+ // Updated opening tag with id="faq" and mobile responsive padding:
+return (
+  <section id="faq" className="w-full bg-black text-white py-16 sm:py-24 px-4 sm:px-12 lg:px-16 border-t border-zinc-900">
       <div className="mx-auto flex w-full max-w-3xl flex-col items-start">
         <h2 className="mb-2 text-left text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl md:text-4xl">
           Frequently Asked Questions
