@@ -1,73 +1,72 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
+
+// Static movie poster list defined outside the component for optimal React rendering and compilation
+const POSTER_COLUMNS = [
+  [
+    "https://images.unsplash.com/photo-1635805737707-575885ab0820?q=80&w=400", // Superhero mask
+    "https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?q=80&w=400", // Dark cityscape
+    "https://images.unsplash.com/photo-1608889175123-8ec330b86f84?q=80&w=400", // Glowing suit
+    "https://images.unsplash.com/photo-1569003339405-ea396a5a8a90?q=80&w=400", // Shield/hero
+    "https://images.unsplash.com/photo-1585647347483-22b66260dfff?q=80&w=400", // Magic wand
+  ],
+  [
+    "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=400", // Deep space
+    "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=400", // Spy suit
+    "https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=400", // Film camera
+    "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=400", // Theater hall
+    "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?q=80&w=400", // Theater seats
+  ],
+  [
+    "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400", // Neon street
+    "https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=400", // Cyberpunk character
+    "https://images.unsplash.com/photo-1542204172-e7052809f852?q=80&w=400", // Foggy forest
+    "https://images.unsplash.com/photo-1478720568477-151d9b21efb2?q=80&w=400", // Camera lens
+    "https://images.unsplash.com/photo-1505635552518-3448ff116af3?q=80&w=400", // Horror mask
+  ],
+  [
+    "https://images.unsplash.com/photo-1535016120720-40c646be5580?q=80&w=400", // Popcorn
+    "https://images.unsplash.com/photo-1501430654243-c934ccd2e1c0?q=80&w=400", // Action surfer
+    "https://images.unsplash.com/photo-1496345875659-11f7dd282d1d?q=80&w=400", // Adventure valley
+    "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=400", // Vintage detective
+    "https://images.unsplash.com/photo-1533928298208-27ff66555d8d?q=80&w=400", // City lights
+  ],
+  [
+    "https://images.unsplash.com/photo-1504701954957-2390f806e9f4?q=80&w=400", // Spooky trees
+    "https://images.unsplash.com/photo-1513151233558-d860c5398176?q=80&w=400", // Sparks/stage
+    "https://images.unsplash.com/photo-1559583985-c80d8ad9b29f?q=80&w=400", // Crime scene city
+    "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?q=80&w=400", // Projector film
+    "https://images.unsplash.com/photo-1568832359672-e36cf5d74f54?q=80&w=400", // Collage posters
+  ],
+  [
+    "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?q=80&w=400", // Stage lights
+    "https://images.unsplash.com/photo-1578849278619-e73505e9610f?q=80&w=400", // Popcorn box
+    "https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=400", // Abstract colors
+    "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=400", // Romance Eiffel
+    "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?q=80&w=400", // Drama painting
+  ],
+];
 
 export default function BannerSection() {
   const [email, setEmail] = useState("");
   const router = useRouter();
 
- // const handleSignup = (e: React.FormEvent) => {
-  //  e.preventDefault();
-  //  if (email.trim()) {
-  //    router.push(`/register?email=${encodeURIComponent(email.trim())}`);
-  //  }
+  const handleSignup = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (email.trim()) {
+      router.push(`/register?email=${encodeURIComponent(email.trim())}`);
+    }
   };
-
-  // Movie poster list from Unsplash to create a beautiful grid
-  const posterColumns = [
-    [
-      "https://images.unsplash.com/photo-1635805737707-575885ab0820?q=80&w=400",
-      "https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?q=80&w=400",
-      "https://images.unsplash.com/photo-1608889175123-8ec330b86f84?q=80&w=400",
-      "https://images.unsplash.com/photo-1569003339405-ea396a5a8a90?q=80&w=400",
-      "https://images.unsplash.com/photo-1585647347483-22b66260dfff?q=80&w=400",
-    ],
-    [
-      "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=400",
-      "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=400",
-      "https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=400",
-      "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=400",
-      "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?q=80&w=400",
-    ],
-    [
-      "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400",
-      "https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=400",
-      "https://images.unsplash.com/photo-1542204172-e7052809f852?q=80&w=400",
-      "https://images.unsplash.com/photo-1478720568477-151d9b21efb2?q=80&w=400",
-      "https://images.unsplash.com/photo-1505635552518-3448ff116af3?q=80&w=400",
-    ],
-    [
-      "https://images.unsplash.com/photo-1535016120720-40c646be5580?q=80&w=400",
-      "https://images.unsplash.com/photo-1501430654243-c934ccd2e1c0?q=80&w=400",
-      "https://images.unsplash.com/photo-1496345875659-11f7dd282d1d?q=80&w=400",
-      "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=400",
-      "https://images.unsplash.com/photo-1533928298208-27ff66555d8d?q=80&w=400",
-    ],
-    [
-      "https://images.unsplash.com/photo-1504701954957-2390f806e9f4?q=80&w=400",
-      "https://images.unsplash.com/photo-1513151233558-d860c5398176?q=80&w=400",
-      "https://images.unsplash.com/photo-1559583985-c80d8ad9b29f?q=80&w=400",
-      "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?q=80&w=400",
-      "https://images.unsplash.com/photo-1568832359672-e36cf5d74f54?q=80&w=400",
-    ],
-    [
-      "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?q=80&w=400",
-      "https://images.unsplash.com/photo-1578849278619-e73505e9610f?q=80&w=400",
-      "https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=400",
-      "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=400",
-      "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?q=80&w=400",
-    ],
-  ];
 
   return (
     <section className="relative w-full overflow-hidden bg-black text-white h-[95vh] md:h-[90vh] flex flex-col justify-between select-none">
       {/* 1. Backdrop Tilted Poster Grid */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         <div className="absolute w-[140%] h-[140%] -top-[20%] -left-[20%] grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3 md:gap-4.5 transform -rotate-[7deg] scale-105 opacity-[0.62] transition-opacity duration-700">
-          {posterColumns.map((column, colIdx) => (
+          {POSTER_COLUMNS.map((column, colIdx) => (
             <div
               key={colIdx}
               className={`flex flex-col gap-3 md:gap-4.5 ${
@@ -95,6 +94,8 @@ export default function BannerSection() {
 
       {/* 2. Responsive Brand Navbar */}
       <Navbar />
+
+      {/* 3. Hero Content */}
       <div className="relative z-20 flex-grow flex flex-col items-center justify-center text-center px-4 max-w-3xl mx-auto -mt-6 sm:-mt-12">
         <h1 className="text-2xl sm:text-5xl md:text-6xl font-extrabold leading-[1.15] sm:leading-[1.1] tracking-tight text-white max-w-2xl sm:max-w-3xl">
           Unlimited movies, TV shows, and more
