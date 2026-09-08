@@ -1,27 +1,62 @@
-'use client'
+import React from "react";
+import Link from "next/link";
+import StatCard from "@/components/Admin/StatCard";
+import RevenueChart from "@/components/Admin/RevenueChart";
+import TrendingMoviesTable from "@/components/Admin/TrendingMoviesTable";
+import RecentUsersTable from "@/components/Admin/RecentUsersTable";
 
-import React, { useEffect, useState } from "react";
-import StatCard from "@/Components/Admin/StatCard";
-import RevenueChart from "@/Components/Admin/RevenueChart";
-import TrendingMoviesTable from "@/Components/Admin/TrendingMoviesTable";
-import RecentUsersTable from "@/Components/Admin/RecentUsersTable";
-
-
+const statsData = [
+  {
+    title: "Total Users",
+    value: "45,231",
+    change: "12.5%",
+    isPositive: true,
+    icon: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+      </svg>
+    ),
+  },
+  {
+    title: "Total Movies",
+    value: "8,492",
+    change: "3.2%",
+    isPositive: true,
+    icon: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
+      </svg>
+    ),
+  },
+  {
+    title: "Monthly Revenue",
+    value: "$128,450",
+    change: "18.7%",
+    isPositive: true,
+    icon: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    ),
+  },
+  {
+    title: "Active Subscriptions",
+    value: "12,847",
+    change: "5.3%",
+    isPositive: true,
+    icon: (
+      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
+      </svg>
+    ),
+  },
+];
 
 const quickActions = [
   {
     title: "Add New Movie",
     description: "Upload a new title to the catalog",
     href: "/admin/movies/upload",
-    icon: (
-      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-      </svg>
-    ),
-  },
-  {
-    title: "Add New Movie",
-    description: "Upload a new title to the catalog",
     icon: (
       <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -58,77 +93,7 @@ const quickActions = [
   },
 ];
 
-
-
-
-
 export default function AdminDashboard() {
-
-  const [movielist, setMovieList] = useState<any[]>([])
-  const [users, setUsers] = useState([])
-  useEffect(  () => {
-  
-  const movies   = async () => {
-   const data = await fetch('/api/movies')
-     const data2 = await data.json()
-     setMovieList(data2)
-   const data_user = await fetch('/api/users')
-   const data_u_2 = await data_user.json()
-     setUsers(data_u_2)
-    
-  }
-  movies()
-  
-}, [])
-  
-
-const statsData = [
-  {
-    title: "Total Users",
-    value: `${users.length}`,
-    isPositive: true,
-    icon: (
-      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
-      </svg>
-    ),
-  },
-  {
-    title: "Total Movies",
-    value: `${movielist.length}`,
-    isPositive: true,
-    icon: (
-      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
-      </svg>
-    ),
-  },
-  {
-    title: "Monthly Revenue",
-    value: "$128,450",
-    isPositive: true,
-    icon: (
-      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-    ),
-  },
-  {
-    title: "Active Subscriptions",
-    value: "12,847",
-    isPositive: true,
-    icon: (
-      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
-      </svg>
-    ),
-  },
-];
-
-
-
-// console.log(movielist)
-
   return (
     <div className="space-y-8">
       {/* Welcome Header */}
@@ -161,22 +126,38 @@ const statsData = [
       <div>
         <h3 className="text-base font-bold text-zinc-100 mb-4">Quick Actions</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-          {quickActions.map((action) => (
-            <button
-              key={action.title}
-              className="flex items-start gap-4 bg-zinc-900/60 backdrop-blur-xl border border-zinc-800 rounded-2xl p-5 hover:border-rose-500/30 hover:bg-zinc-800/40 transition-all duration-300 text-left cursor-pointer group"
-            >
-              <div className="p-2.5 rounded-xl bg-zinc-800/60 text-zinc-400 group-hover:text-rose-500 group-hover:bg-rose-600/10 transition-all duration-300 shrink-0">
-                {action.icon}
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-zinc-200 group-hover:text-white transition-colors">
-                  {action.title}
-                </p>
-                <p className="text-xs text-zinc-500 mt-0.5">{action.description}</p>
-              </div>
-            </button>
-          ))}
+          {quickActions.map((action) => {
+            const content = (
+              <>
+                <div className="p-2.5 rounded-xl bg-zinc-800/60 text-zinc-400 group-hover:text-rose-500 group-hover:bg-rose-600/10 transition-all duration-300 shrink-0">
+                  {action.icon}
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-zinc-200 group-hover:text-white transition-colors">
+                    {action.title}
+                  </p>
+                  <p className="text-xs text-zinc-500 mt-0.5">{action.description}</p>
+                </div>
+              </>
+            );
+
+            const cardClasses =
+              "flex items-start gap-4 bg-zinc-900/60 backdrop-blur-xl border border-zinc-800 rounded-2xl p-5 hover:border-rose-500/30 hover:bg-zinc-800/40 transition-all duration-300 text-left cursor-pointer group";
+
+            if (action.href) {
+              return (
+                <Link key={action.title} href={action.href} className={cardClasses}>
+                  {content}
+                </Link>
+              );
+            }
+
+            return (
+              <button key={action.title} className={cardClasses}>
+                {content}
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>
