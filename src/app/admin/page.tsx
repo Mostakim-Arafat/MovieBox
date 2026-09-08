@@ -55,16 +55,21 @@ const quickActions = [
 export default function AdminDashboard() {
 
   const [movielist, setMovieList] = useState<any[]>([])
+  const [movies,setMovies] = useState([])
   const [users, setUsers] = useState([])
   useEffect(  () => {
   
-  const movies   = async () => {
-   const data = await fetch('/api/movies')
-     const data2 = await data.json()
+const movies   = async () => {
+  const data = await fetch('/api/movies')
+  const data2 = await data.json()
      setMovieList(data2)
-   const data_user = await fetch('/api/users')
-   const data_u_2 = await data_user.json()
+  const data_user = await fetch('/api/users')
+  const data_u_2 = await data_user.json()
      setUsers(data_u_2)
+  const data3 = await fetch('/api/trending')
+  const data_trending = await data3.json()
+     setMovies(data_trending)
+  
     
   }
   movies()
@@ -143,7 +148,7 @@ const statsData = [
 
       {/* Two-column grid: Trending + Recent Users */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        <TrendingMoviesTable />
+        <TrendingMoviesTable movies={movies}/>
         <RecentUsersTable users={users}/>
       </div>
 

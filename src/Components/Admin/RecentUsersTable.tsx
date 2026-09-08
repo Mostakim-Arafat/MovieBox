@@ -29,9 +29,9 @@ export default function RecentUsersTable({ users }: { users: User[] }) {
           <h3 className="text-base font-bold text-zinc-100">Recent Users</h3>
           <p className="text-sm text-zinc-500 mt-0.5">Latest signups</p>
         </div>
-        <button className="text-xs font-semibold text-rose-500 hover:text-rose-400 transition-colors cursor-pointer">
+        {/* <button className="text-xs font-semibold text-rose-500 hover:text-rose-400 transition-colors cursor-pointer">
           View All →
-        </button>
+        </button> */}
       </div>
 
       <div className="overflow-x-auto">
