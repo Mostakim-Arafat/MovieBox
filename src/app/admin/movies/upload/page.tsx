@@ -257,7 +257,7 @@ export default function MovieUploadPage() {
         </div>
 
         {/* Top Action Buttons */}
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
           <Link
             href="/admin/movies"
             className="px-4 py-2 rounded-lg text-sm font-medium text-zinc-300 hover:text-white bg-zinc-900 border border-zinc-800 hover:bg-zinc-800/60 transition-colors"
@@ -422,7 +422,7 @@ export default function MovieUploadPage() {
               </div>
 
               {/* Release Details Row */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
                 <div>
                   <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-300 mb-1.5">
                     Release Year *
