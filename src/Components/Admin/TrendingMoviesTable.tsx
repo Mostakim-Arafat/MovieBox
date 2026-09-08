@@ -1,3 +1,4 @@
+import { router } from "better-auth/api";
 import React from "react";
 
 interface TrendingMovie {
@@ -5,17 +6,10 @@ interface TrendingMovie {
   title: string;
   views: string;
   rating: number;
-  imageUrl: string;
+  poster: string;
 }
 
-const trendingMovies: TrendingMovie[] = [
-  { rank: 1, title: "Cocktail 2", views: "1.2M", rating: 4.8, imageUrl: "https://images.unsplash.com/photo-1542204172-e7052809f852?q=80&w=100" },
-  { rank: 2, title: "Detective Conan", views: "985K", rating: 4.7, imageUrl: "https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=100" },
-  { rank: 3, title: "Musafir Cafe", views: "876K", rating: 4.5, imageUrl: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=100" },
-  { rank: 4, title: "Lock Upp", views: "764K", rating: 4.3, imageUrl: "https://images.unsplash.com/photo-1505635552518-3448ff116af3?q=80&w=100" },
-  { rank: 5, title: "Operation Safed Sagar", views: "651K", rating: 4.6, imageUrl: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=100" },
-  { rank: 6, title: "The Last House", views: "542K", rating: 4.2, imageUrl: "https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?q=80&w=100" },
-];
+
 
 function StarRating({ rating }: { rating: number }) {
   return (
@@ -28,7 +22,8 @@ function StarRating({ rating }: { rating: number }) {
   );
 }
 
-export default function TrendingMoviesTable() {
+export default function TrendingMoviesTable({movies} : { movies : TrendingMovie[]}) {
+  const trendingMovies = movies
   return (
     <div className="bg-zinc-900/60 backdrop-blur-xl border border-zinc-800 rounded-2xl p-6">
       <div className="flex items-center justify-between mb-5">
@@ -36,9 +31,9 @@ export default function TrendingMoviesTable() {
           <h3 className="text-base font-bold text-zinc-100">Top Trending</h3>
           <p className="text-sm text-zinc-500 mt-0.5">Most viewed this month</p>
         </div>
-        <button className="text-xs font-semibold text-rose-500 hover:text-rose-400 transition-colors cursor-pointer">
+        {/* <button className="text-xs font-semibold text-rose-500 hover:text-rose-400 transition-colors cursor-pointer" onClick={() => {router.push('/admin/movieControl')}}>
           View All →
-        </button>
+        </button> */}
       </div>
 
       <div className="overflow-x-auto">
@@ -53,17 +48,17 @@ export default function TrendingMoviesTable() {
           </thead>
           <tbody className="divide-y divide-zinc-800/40">
             {trendingMovies.map((movie) => (
-              <tr key={movie.rank} className="hover:bg-zinc-800/30 transition-colors">
+              <tr key={movie.title} className="hover:bg-zinc-800/30 transition-colors">
                 <td className="py-3 pr-2">
                   <span className={`text-sm font-bold ${movie.rank <= 3 ? "text-rose-500" : "text-zinc-500"}`}>
-                    {movie.rank}
+                    {movie.rank || 2}
                   </span>
                 </td>
                 <td className="py-3 pr-4">
                   <div className="flex items-center gap-3">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src={movie.imageUrl}
+                      src={movie.poster}
                       alt={movie.title}
                       className="w-9 h-12 rounded-md object-cover border border-zinc-800 shrink-0"
                     />
@@ -71,10 +66,10 @@ export default function TrendingMoviesTable() {
                   </div>
                 </td>
                 <td className="py-3 pr-4 hidden sm:table-cell">
-                  <span className="text-sm text-zinc-400 font-medium">{movie.views}</span>
+                  <span className="text-sm text-zinc-400 font-medium">{movie.views || "20K"}</span>
                 </td>
                 <td className="py-3">
-                  <StarRating rating={movie.rating} />
+                  <StarRating rating={movie.rating || 5} />
                 </td>
               </tr>
             ))}
