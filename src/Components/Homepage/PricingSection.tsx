@@ -3,11 +3,12 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
 
 type Plan = {
     id: string;
     name: string;
-    price: string;
+    price: number;
     quality: string;
     resolution: string;
     devices: string;
@@ -19,7 +20,7 @@ const plans: Plan[] = [
     {
         id: "mobile",
         name: "Mobile",
-        price: "$2.99",
+        price: 2.99,
         quality: "Fair",
         resolution: "480p",
         devices: "Mobile, Tablet",
@@ -28,7 +29,7 @@ const plans: Plan[] = [
     {
         id: "basic",
         name: "Basic",
-        price: "$3.99",
+        price: 3.99,
         quality: "Good",
         resolution: "720p HD",
         devices: "TV, Computer, Mobile",
@@ -37,7 +38,7 @@ const plans: Plan[] = [
     {
         id: "standard",
         name: "Standard",
-        price: "$7.99",
+        price: 7.99,
         quality: "Great",
         resolution: "1080p Full HD",
         devices: "TV, Computer, Mobile, Tablet",
@@ -46,7 +47,7 @@ const plans: Plan[] = [
     {
         id: "premium",
         name: "Premium",
-        price: "$9.99",
+        price: 9.99,
         quality: "Best",
         resolution: "4K + HDR",
         devices: "All Devices",
@@ -57,10 +58,44 @@ const plans: Plan[] = [
 
 export default function PricingSection() {
     const [selected, setSelected] = useState("premium");
+    const [loading,setLoading] = useState(false)
     const router = useRouter()
-    const handlepayment = () => {
-        router.push('/payment')
+    const { data } = authClient.useSession()
+    const user = data?.user
+   
+    const currentPlan = plans.find( p => p.id === selected)
+
+    const handlepayment = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: currentPlan?.price,
+          name: user?.name,
+          email: user?.email,
+          phone: '01811223344',
+          productName: currentPlan?.name
+        }),
+      });
+
+      const data = await res.json();
+
+      console.log(data)
+
+      if (data.gatewayUrl) {
+       
+        window.location.href = data.gatewayUrl;
+      } else {
+        alert('Could not initialize payment.');
+        setLoading(false);
+      }
+    } catch (err) {
+      console.error(err);
+      setLoading(false);
     }
+  };
 
     return (
         <section className="w-full bg-gray-50 px-4 py-16 text-gray-900 sm:px-8 lg:px-12 dark:bg-black dark:text-white">
@@ -179,7 +214,7 @@ export default function PricingSection() {
                     onClick={handlepayment}
                     className="mx-auto mt-10 block w-full max-w-xs rounded-lg bg-red-600 py-3.5 font-bold text-white transition hover:bg-red-700"
                 >
-                    Continue 
+                   {loading ? "processing......." : "Continue"} 
                 </motion.button>
                
             </div>
