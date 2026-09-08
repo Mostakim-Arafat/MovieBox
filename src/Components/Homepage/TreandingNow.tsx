@@ -52,8 +52,10 @@ export default function TrendingNow() {
     el.scrollBy({ left: direction * amount, behavior: "smooth" });
   };
 
-  return (
-    <section className="w-full bg-background px-4 py-10 text-foreground sm:px-8 lg:px-12">
+ // Updated opening tag with id="trending" and mobile responsive padding:
+return (
+  <section id="trending" className="w-full bg-black text-white py-8 sm:py-12 px-3 sm:px-12 lg:px-16 relative overflow-visible z-30 -mt-10 sm:-mt-16">
+    
       <div className="mx-auto max-w-7xl">
         <h2 className="mb-5 text-xl font-bold tracking-tight sm:text-2xl">
           Trending Now
