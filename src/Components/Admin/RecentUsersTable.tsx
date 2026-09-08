@@ -1,21 +1,18 @@
 import React from "react";
 
-interface User {
+
+
+type User = {
+  id: string;
   name: string;
   email: string;
-  plan: "Free" | "Premium" | "Pro";
-  joinDate: string;
-  avatar: string;
-}
+  avater: string;
+  plan : string;
+  joinDate: string
+  // role: string;
+};
 
-const recentUsers: User[] = [
-  { name: "Sarah Johnson", email: "sarah.j@email.com", plan: "Premium", joinDate: "Sep 2, 2026", avatar: "SJ" },
-  { name: "Alex Rivera", email: "alex.r@email.com", plan: "Pro", joinDate: "Sep 1, 2026", avatar: "AR" },
-  { name: "Mike Chen", email: "mike.c@email.com", plan: "Free", joinDate: "Aug 31, 2026", avatar: "MC" },
-  { name: "Emily Davis", email: "emily.d@email.com", plan: "Premium", joinDate: "Aug 30, 2026", avatar: "ED" },
-  { name: "James Wilson", email: "james.w@email.com", plan: "Free", joinDate: "Aug 29, 2026", avatar: "JW" },
-  { name: "Priya Patel", email: "priya.p@email.com", plan: "Premium", joinDate: "Aug 28, 2026", avatar: "PP" },
-];
+
 
 const planStyles: Record<string, string> = {
   Free: "bg-zinc-800 text-zinc-300 border-zinc-700",
@@ -23,7 +20,8 @@ const planStyles: Record<string, string> = {
   Pro: "bg-amber-500/10 text-amber-400 border-amber-500/20",
 };
 
-export default function RecentUsersTable() {
+export default function RecentUsersTable({ users }: { users: User[] }) {
+  const recentUsers = users
   return (
     <div className="bg-zinc-900/60 backdrop-blur-xl border border-zinc-800 rounded-2xl p-6">
       <div className="flex items-center justify-between mb-5">
@@ -51,7 +49,7 @@ export default function RecentUsersTable() {
                 <td className="py-3 pr-4">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-gradient-to-br from-zinc-700 to-zinc-800 flex items-center justify-center text-xs font-bold text-zinc-300 shrink-0 border border-zinc-700">
-                      {user.avatar}
+                      {user.avater || "N/A"}
                     </div>
                     <div className="min-w-0">
                       <p className="text-sm font-semibold text-zinc-200 truncate">{user.name}</p>

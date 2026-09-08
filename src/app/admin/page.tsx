@@ -144,7 +144,7 @@ const statsData = [
       {/* Two-column grid: Trending + Recent Users */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         <TrendingMoviesTable />
-        <RecentUsersTable />
+        <RecentUsersTable users={users}/>
       </div>
 
       {/* Quick Actions */}
