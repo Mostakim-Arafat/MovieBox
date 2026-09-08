@@ -1,32 +1,63 @@
 import { NextResponse } from 'next/server';
 import axios from 'axios';
 
-export async function POST(request:any) {
+export async function GET(request: Request) {
   try {
-    const formData = await request.formData();
-    const val_id = formData.get('val_id');
-    const tran_id = formData.get('tran_id');
+    const { searchParams } = new URL(request.url);
+    // console.log(request)
+    const textBody = await request.text();
+    console.log(textBody)
+    const bodyParams = new URLSearchParams(textBody);
+    console.log(bodyParams)
+    let valId = bodyParams.get('val_id');
+    let tranId = bodyParams.get('tran_id');
+    // const valId = searchParams.get('val_id');
+    // const tranId = searchParams.get('tran_id');
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
-    // Call SSLCommerz Order Validation API to prevent spoofing
+    if (!valId) {
+      return NextResponse.redirect(`${baseUrl}/payment/failure`, { status: 303 });
+    }
+
+    const storeId = process.env.SSL_COMMERZ_STORE_ID;
+    const storePassword = process.env.SSL_COMMERZ_STORE_PASSWORD;
+
+    if (!storeId || !storePassword) {
+      return NextResponse.redirect(`${baseUrl}/payment/failure`, { status: 303 });
+    }
+
     const validationResponse = await axios.get(
-      `https://sandbox-gw.sslcommerz.com/validator/api/validationserverAPI.php?val_id=${val_id}&store_id=movie6a9d5427686a3&store_passwd=DgndTl9soIkX&format=json`
+      'https://sandbox-gw.sslcommerz.com/validator/api/validationserverAPI.php',
+      {
+        params: {
+          val_id: valId,
+          store_id: storeId,
+          store_passwd: storePassword,
+          format: 'json',
+        },
+      }
     );
 
     const validationData = validationResponse.data;
 
+    console.log(validationData)
+
     if (validationData.status === 'VALID' || validationData.status === 'VALIDATED') {
-      // TODO: Save order status as 'PAID' in your database using tran_id
-      
-      // Redirect user to success confirmation page
-      return NextResponse.redirect(`${baseUrl}/payment/success?tran_id=${tran_id}`, {
+      return NextResponse.redirect(`${baseUrl}/payment/success?tran_id=${tranId ?? ''}`, {
         status: 303,
       });
-    } else {
-      return NextResponse.redirect(`${baseUrl}/payment/failure`, { status: 303 });
     }
+
+    return NextResponse.redirect(`${baseUrl}/payment/failure`, { status: 303 });
   } catch (error) {
-    console.error('Validation Error:', error);
-    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/payment/failure`, { status: 303 });
+    console.error('SSLCommerz validation error:', error);
+    return NextResponse.redirect(
+      `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/payment/failure`,
+      { status: 303 }
+    );
   }
+}
+
+export async function POST(request: Request) {
+  return GET(request);
 }
