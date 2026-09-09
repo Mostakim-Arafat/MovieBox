@@ -96,7 +96,7 @@ export default function AdminSidebar({
       >
         {/* Logo & Mobile Close Button */}
         <div className="flex items-center justify-between px-5 py-5 border-b border-zinc-800/60">
-          <Link href="/admin" onClick={onCloseMobile} className="flex items-center gap-2.5 group min-w-0">
+          <Link href="/" onClick={onCloseMobile} className="flex items-center gap-2.5 group min-w-0">
             <svg
               className="h-7 w-7 text-rose-600 shrink-0 transition-transform group-hover:scale-110 duration-300"
               xmlns="http://www.w3.org/2000/svg"
