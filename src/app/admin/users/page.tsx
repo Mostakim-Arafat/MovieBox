@@ -19,9 +19,10 @@ export default function UserListAdmin() {
       try {
         const response = await fetch('/api/users');
         const data = await response.json();
-        setUsers(data);
+        setUsers(Array.isArray(data) ? data : (Array.isArray(data?.users) ? data.users : []));
       } catch (error) {
         console.error("Failed to fetch users:", error);
+        setUsers([]);
       } finally {
         setLoading(false);
       }
