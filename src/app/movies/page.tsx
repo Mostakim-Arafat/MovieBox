@@ -200,7 +200,7 @@ export default function  MoviesPage() {
 
 
     useEffect(() => {
-        fetch("/api/movies")
+        fetch("https://movie-box-teal-two.vercel.app/api/movies")
             .then((res) => res.json())
             .then((data: Movie[]) => {
                 setMovies(data);

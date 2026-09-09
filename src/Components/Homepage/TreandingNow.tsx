@@ -4,12 +4,20 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 
-export default function TrendingNow() {
+// ১. সঠিক টাইপ বা ইন্টারফেস ডিফাইন করা হলো
+interface TrendingItem {
+  _id: string;
+  title: string;
+  poster: string;
+}
 
+export default function TrendingNow() {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
-  const  [trending, setTrending] = useState<any[]>([])
+
+  // ২. any এর পরিবর্তে সঠিক TrendingItem[] টাইপ ব্যবহার করা হয়েছে
+  const [trending, setTrending] = useState<TrendingItem[]>([]);
 
   const updateScrollState = useCallback(() => {
     const el = scrollerRef.current;
@@ -34,11 +42,19 @@ export default function TrendingNow() {
   useEffect(() => {
     const fetchdata = async () => {
       try {
-        const data1 = await fetch('/api/trending');
+        const data1 = await fetch('https://movie-box-teal-two.vercel.app/api/trending');
         const data2 = await data1.json();
-        setTrending(data2);
+
+        // data2 যদি Array হয় তবেই set করবেন, অন্যথায় ফাঁকা Array [] রাখবেন
+        if (Array.isArray(data2)) {
+          setTrending(data2);
+        } else {
+          console.error("API response is not an array:", data2);
+          setTrending([]);
+        }
       } catch (error) {
         console.error("Failed to fetch trending data", error);
+        setTrending([]);
       }
     };
 
@@ -93,9 +109,7 @@ export default function TrendingNow() {
                     {rank}
                   </span>
                   <div
-                    className={`relative z-10 mb-1 ml-auto overflow-hidden rounded-md shadow-[0_8px_24px_rgba(0,0,0,0.45)] ring-1 ring-black/20 ${isDoubleDigit
-                      ? "h-[82%] w-[58%]"
-                      : "h-[86%] w-[62%]"
+                    className={`relative z-10 mb-1 ml-auto overflow-hidden rounded-md shadow-[0_8px_24px_rgba(0,0,0,0.45)] ring-1 ring-black/20 ${isDoubleDigit ? "h-[82%] w-[58%]" : "h-[86%] w-[62%]"
                       }`}
                   >
                     <Image

@@ -7,6 +7,8 @@ export async function GET() {
         const movies = await db.collection("trending").find({}).toArray();
         return NextResponse.json(movies);
     } catch (error) {
-        return NextResponse.json({ error: "Failed to fetch movies" }, { status: 500 });
+        console.error("Trending API error:", error);
+        const message = error instanceof Error ? error.message : "Unknown error";
+        return NextResponse.json({ error: "Failed to fetch trending", details: message }, { status: 500 });
     }
 }
