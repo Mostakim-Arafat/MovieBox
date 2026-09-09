@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -23,6 +23,15 @@ const navItems = [
       </svg>
     ),
   },
+  // {
+  //   label: "Upload Movie",
+  //   href: "/admin/upload",
+  //   icon: (
+  //     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+  //       <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+  //     </svg>
+  //   ),
+  // },
   {
     label: "Users",
     href: "/admin/users",
@@ -53,97 +62,133 @@ const navItems = [
   // },
 ];
 
-export default function AdminSidebar() {
+interface AdminSidebarProps {
+  mobileOpen: boolean;
+  onCloseMobile: () => void;
+  desktopCollapsed: boolean;
+  onToggleDesktopCollapse: () => void;
+}
+
+export default function AdminSidebar({
+  mobileOpen,
+  onCloseMobile,
+  desktopCollapsed,
+  onToggleDesktopCollapse,
+}: AdminSidebarProps) {
   const pathname = usePathname();
-  const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <aside
-      className={`fixed top-0 left-0 h-full bg-zinc-950 border-r border-zinc-800/60 z-50 flex flex-col transition-all duration-300 ${
-        collapsed ? "w-[72px]" : "w-[240px]"
-      }`}
-    >
-      {/* Logo */}
-      <div className="flex items-center gap-2.5 px-5 py-5 border-b border-zinc-800/60">
-        <Link href="/admin" className="flex items-center gap-2.5 group min-w-0">
-          <svg
-            className="h-7 w-7 text-rose-600 shrink-0 transition-transform group-hover:scale-110 duration-300"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2.5}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"
-            />
-          </svg>
-          {!collapsed && (
-            <span className="text-lg font-black tracking-wider text-white truncate">
-              MOVIE<span className="text-rose-600">BOX</span>
-            </span>
-          )}
-        </Link>
-      </div>
+    <>
+      {/* Mobile Backdrop Overlay */}
+      {mobileOpen && (
+        <div
+          onClick={onCloseMobile}
+          className="fixed inset-0 bg-black/75 backdrop-blur-sm z-40 lg:hidden transition-opacity duration-300"
+          aria-hidden="true"
+        />
+      )}
 
-      {/* Navigation */}
-      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-        {navItems.map((item) => {
-          const isActive = pathname === item.href;
-          return (
-            <Link
-              key={item.label}
-              href={item.href}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 group ${
-                isActive
-                  ? "bg-rose-600/10 text-rose-500 border border-rose-500/20"
-                  : "text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50 border border-transparent"
-              }`}
-              title={collapsed ? item.label : undefined}
+      {/* Sidebar Aside */}
+      <aside
+        className={`fixed top-0 left-0 h-full bg-zinc-950 border-r border-zinc-800/60 z-50 flex flex-col transition-all duration-300 ${
+          mobileOpen ? "translate-x-0 w-[240px]" : "-translate-x-full lg:translate-x-0"
+        } ${desktopCollapsed ? "lg:w-[72px]" : "lg:w-[240px]"}`}
+      >
+        {/* Logo & Mobile Close Button */}
+        <div className="flex items-center justify-between px-5 py-5 border-b border-zinc-800/60">
+          <Link href="/" onClick={onCloseMobile} className="flex items-center gap-2.5 group min-w-0">
+            <svg
+              className="h-7 w-7 text-rose-600 shrink-0 transition-transform group-hover:scale-110 duration-300"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2.5}
             >
-              <span className={`shrink-0 ${isActive ? "text-rose-500" : "text-zinc-500 group-hover:text-zinc-300"}`}>
-                {item.icon}
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"
+              />
+            </svg>
+            {(!desktopCollapsed || mobileOpen) && (
+              <span className="text-lg font-black tracking-wider text-white truncate">
+                MOVIE<span className="text-rose-600">BOX</span>
               </span>
-              {!collapsed && <span className="truncate">{item.label}</span>}
-            </Link>
-          );
-        })}
-      </nav>
+            )}
+          </Link>
 
-      {/* Footer */}
-      <div className="px-3 py-4 border-t border-zinc-800/60 space-y-2">
-        {/* Collapse Toggle */}
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800/50 transition-all cursor-pointer"
-          title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-        >
-          <svg
-            className={`w-5 h-5 shrink-0 transition-transform duration-300 ${collapsed ? "rotate-180" : ""}`}
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={1.8}
+          {/* Close button on mobile */}
+          <button
+            onClick={onCloseMobile}
+            className="lg:hidden p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800/60 transition-colors"
+            aria-label="Close sidebar"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5" />
-          </svg>
-          {!collapsed && <span>Collapse</span>}
-        </button>
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
 
-        {/* Back to site */}
-        <Link
-          href="/"
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800/50 transition-all"
-          title={collapsed ? "Back to Site" : undefined}
-        >
-          <svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
-          </svg>
-          {!collapsed && <span>Back to Site</span>}
-        </Link>
-      </div>
-    </aside>
+        {/* Navigation */}
+        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+          {navItems.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={item.label}
+                href={item.href}
+                onClick={onCloseMobile}
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 group ${
+                  isActive
+                    ? "bg-rose-600/10 text-rose-500 border border-rose-500/20"
+                    : "text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50 border border-transparent"
+                }`}
+                title={desktopCollapsed && !mobileOpen ? item.label : undefined}
+              >
+                <span className={`shrink-0 ${isActive ? "text-rose-500" : "text-zinc-500 group-hover:text-zinc-300"}`}>
+                  {item.icon}
+                </span>
+                {(!desktopCollapsed || mobileOpen) && <span className="truncate">{item.label}</span>}
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* Footer */}
+        <div className="px-3 py-4 border-t border-zinc-800/60 space-y-2">
+          {/* Collapse Toggle (Desktop only) */}
+          <button
+            onClick={onToggleDesktopCollapse}
+            className="hidden lg:flex w-full items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800/50 transition-all cursor-pointer"
+            title={desktopCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            <svg
+              className={`w-5 h-5 shrink-0 transition-transform duration-300 ${desktopCollapsed ? "rotate-180" : ""}`}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={1.8}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5" />
+            </svg>
+            {!desktopCollapsed && <span>Collapse</span>}
+          </button>
+
+          {/* Back to site */}
+          <Link
+            href="/"
+            onClick={onCloseMobile}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800/50 transition-all"
+            title={desktopCollapsed && !mobileOpen ? "Back to Site" : undefined}
+          >
+            <svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
+            </svg>
+            {(!desktopCollapsed || mobileOpen) && <span>Back to Site</span>}
+          </Link>
+        </div>
+      </aside>
+    </>
   );
 }
