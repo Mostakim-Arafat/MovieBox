@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import Navbar from "@/components/Navbar";
+import Navbar from "../Navbar";
 
 // Static movie poster list defined outside the component for optimal React rendering and compilation
 const POSTER_COLUMNS = [
@@ -92,8 +92,8 @@ export default function BannerSection() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_35%,rgba(0,0,0,0.75)_95%)] z-10" />
       </div>
 
-      {/* 2. Responsive Brand Navbar */}
-      <Navbar />
+      {/* 2. Responsive Brand Navbar (MovieBox logo and Sign In button hidden as requested) */}
+      <Navbar showLogo={false} showSignIn={false} />
 
       {/* 3. Hero Content */}
       <div className="relative z-20 flex-grow flex flex-col items-center justify-center text-center px-4 max-w-3xl mx-auto -mt-6 sm:-mt-12">
@@ -179,27 +179,6 @@ export default function BannerSection() {
         </svg>
       </div>
 
-      {/* Keyframe marquee animations */}
-      <style
-        dangerouslySetInnerHTML={{
-          __html: `
-        @keyframes marquee {
-          0% { transform: translateY(0); }
-          100% { transform: translateY(-50%); }
-        }
-        @keyframes marquee-reverse {
-          0% { transform: translateY(-50%); }
-          100% { transform: translateY(0); }
-        }
-        .animate-marquee-slow {
-          animation: marquee 60s linear infinite !important;
-        }
-        .animate-marquee-slow-reverse {
-          animation: marquee-reverse 60s linear infinite !important;
-        }
-      `,
-        }}
-      />
     </section>
   );
 }
