@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import toast, { Toaster } from "react-hot-toast";
 
 type Movie = {
     id: number | string;
@@ -155,16 +156,27 @@ export default function MovieDetailsPage() {
         if (list.includes(id)) {
             list = list.filter((x) => x !== id);
             setInList(false);
+            toast("Removed from My List", { icon: "↩️" });
         } else {
             list.push(id);
             setInList(true);
+            toast.success("Added to My List!");
         }
         localStorage.setItem("mylist", JSON.stringify(list));
     };
 
     const handleSubmitReview = (e: React.FormEvent) => {
         e.preventDefault();
-        if (!reviewName.trim() || reviewRating === 0 || !reviewComment.trim()) {
+        if (reviewRating === 0) {
+            toast.error("Please select a star rating before submitting.");
+            return;
+        }
+        if (!reviewName.trim()) {
+            toast.error("Please enter your name.");
+            return;
+        }
+        if (!reviewComment.trim()) {
+            toast.error("Please write your review.");
             return;
         }
 
@@ -183,6 +195,7 @@ export default function MovieDetailsPage() {
         setReviewName("");
         setReviewRating(0);
         setReviewComment("");
+        toast.success("Review submitted successfully!");
     };
 
     if (isLoading) {
@@ -236,6 +249,7 @@ export default function MovieDetailsPage() {
 
     return (
         <main className="min-h-screen bg-gray-50 text-gray-900 dark:bg-black dark:text-white">
+            <Toaster position="top-center" />
             {/* Hero banner */}
             <div className="relative h-[55vh] min-h-[360px] w-full overflow-hidden sm:h-[65vh]">
                 <PosterImage
