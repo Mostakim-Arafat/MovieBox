@@ -9,7 +9,7 @@ export default function TrendingNow() {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
-  const  [trending, setTrending] = useState<any[]>([])
+  const [trending, setTrending] = useState<any[]>([])
 
   const updateScrollState = useCallback(() => {
     const el = scrollerRef.current;
@@ -34,7 +34,7 @@ export default function TrendingNow() {
   useEffect(() => {
     const fetchdata = async () => {
       try {
-        const data1 = await fetch('/api/trending');
+        const data1 = await fetch("/api/proxy-trending")
         const data2 = await data1.json();
         setTrending(data2);
       } catch (error) {
