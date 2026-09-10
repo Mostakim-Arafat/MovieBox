@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-
+import Link from "next/link";
 
 type Movie = {
     id: number;
@@ -80,7 +80,6 @@ function MovieRow({
             const totalGap = GAP * (visibleCount - 1);
             let width = (containerWidth - totalGap) / visibleCount;
 
-            // ১-২টা থাকলে অতিরিক্ত বড় না হয়
             if (movies.length <= 2) {
                 width = Math.min(width, 280);
             }
@@ -188,7 +187,7 @@ function MovieRow({
     );
 }
 
-export default function  MoviesPage() {
+export default function MoviesPage() {
     const [movies, setMovies] = useState<Movie[]>([]);
     const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
     const [selectedGenre, setSelectedGenre] = useState<{
@@ -197,10 +196,8 @@ export default function  MoviesPage() {
     } | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
-
-
     useEffect(() => {
-        fetch("/api/movies")
+        fetch("/api/proxy-movies")
             .then((res) => res.json())
             .then((data: Movie[]) => {
                 setMovies(data);
@@ -209,7 +206,6 @@ export default function  MoviesPage() {
             .catch((err) => console.error(err));
     }, []);
 
-    // Genre map
     const genreMap: Record<string, Movie[]> = {};
     movies.forEach((movie) => {
         movie.genre.forEach((g) => {
@@ -218,7 +214,6 @@ export default function  MoviesPage() {
         });
     });
 
-    // Drama সবসময় প্রথমে, তারপর বাকিগুলো movie সংখ্যা অনুযায়ী (বেশি → কম)
     const genreOrder = Object.keys(genreMap).sort((a, b) => {
         if (a === "Drama") return -1;
         if (b === "Drama") return 1;
@@ -235,7 +230,6 @@ export default function  MoviesPage() {
                 </div>
             ) : (
                 <>
-                    {/* Hero Banner */}
                     {featured && (
                         <div className="relative h-[58vh] min-h-[360px] w-full overflow-hidden sm:h-[68vh]">
                             <PosterImage
@@ -282,7 +276,6 @@ export default function  MoviesPage() {
                         </div>
                     )}
 
-                    {/* Genre Rows */}
                     <div className="relative z-10 -mt-8 px-4 pb-16 sm:px-8 lg:px-12">
                         {genreOrder.map((genre) => (
                             <MovieRow
@@ -369,10 +362,18 @@ export default function  MoviesPage() {
                                         {selectedMovie.description}
                                     </p>
 
-                                    <div className="mt-7 flex gap-3">
+                                    <div className="mt-7 flex flex-wrap gap-3">
                                         <button className="flex-1 rounded-lg bg-red-600 px-6 py-3 font-bold text-white transition hover:bg-red-700 sm:flex-none">
                                             ▶ Watch Now
                                         </button>
+
+                                        <Link
+                                            href={"/movies/" + selectedMovie.id}
+                                            className="flex-1 rounded-lg border border-red-600 px-6 py-3 text-center font-bold text-red-500 transition hover:bg-red-600/10 sm:flex-none"
+                                        >
+                                            View Details
+                                        </Link>
+
                                         <button className="rounded-lg border border-neutral-700 px-6 py-3 font-bold text-neutral-300 transition hover:border-neutral-500 hover:text-white">
                                             + My List
                                         </button>
