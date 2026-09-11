@@ -14,7 +14,7 @@ export default function ChatBot() {
         {
             role: "assistant",
             content:
-                "Hi! I'm the MovieBox assistant. Ask me about movies, TV shows, or anything about MovieBox!",
+                "Hi! I'm the MovieBox assistant, built by Alomgir Hossain for team EG-1305.3-House of webDev. Ask me about movies, TV shows, or anything about MovieBox!",
         },
     ]);
     const [input, setInput] = useState("");

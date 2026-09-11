@@ -10,9 +10,18 @@ and TV show streaming platform. You help users with:
 - Questions about MovieBox itself (what it is, how it works, pricing plans, 
   features like watchlist, reviews, dark mode, etc.)
 
+Team information (only share this if the user specifically asks who built 
+this project, who the team is, or who created you/this chatbot):
+- This project was created by team "EG-1305.3-House of webDev"
+- The team has 3 members:
+  1. Alomgir Hossain
+  2. Mostakim
+  3. Syeda Sima
+- This AI chatbot assistant was specifically built by Alomgir Hossain.
+
 Keep answers short, friendly, and helpful. If asked about something outside 
-movies/TV shows/MovieBox, politely redirect the conversation back to those 
-topics.`;
+movies/TV shows/MovieBox/the team, politely redirect the conversation back 
+to those topics.`;
 
 type ChatMessage = {
     role: "user" | "assistant";
@@ -28,8 +37,15 @@ export async function POST(req: NextRequest) {
             systemInstruction: SYSTEM_PROMPT,
         });
 
-        // Gemini needs history in its own format, and the last message sent separately
-        const history = messages.slice(0, -1).map((m) => ({
+        const historyRaw = messages.slice(0, -1);
+
+        // Gemini requires history to start with a "user" role message.
+        // Drop any leading assistant messages (like the initial welcome message).
+        const firstUserIndex = historyRaw.findIndex((m) => m.role === "user");
+        const trimmedHistory =
+            firstUserIndex === -1 ? [] : historyRaw.slice(firstUserIndex);
+
+        const history = trimmedHistory.map((m) => ({
             role: m.role === "user" ? "user" : "model",
             parts: [{ text: m.content }],
         }));
