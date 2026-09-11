@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
         const { messages } = (await req.json()) as { messages: ChatMessage[] };
 
         const model = genAI.getGenerativeModel({
-            model: "gemini-2.0-flash",
+            model: "gemini-flash-latest",
             systemInstruction: SYSTEM_PROMPT,
         });
 
