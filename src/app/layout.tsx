@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "next-themes"
 import ClientLayout from "@/Components/Admin/Clientlayout";
+import ChatBot from "@/Components/Homepage/ChatBot";
 
 
 
@@ -34,6 +35,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <ThemeProvider attribute="class" enableSystem defaultTheme="system" disableTransitionOnChange>
           <ClientLayout>
             {children}
+            <ChatBot></ChatBot>
           </ClientLayout>
         </ThemeProvider>
       </body>
