@@ -1,14 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { MdOutlineExpandMore } from "react-icons/md";
+import { usePathname, useRouter } from "next/navigation";
+import { MdOutlineExpandMore, MdOutlineExpandLess } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
 import { PiDotsNineBold } from "react-icons/pi";
 import { authClient } from "@/lib/auth-client";
 import ThemeToggle from "@/UI/TToggle";
 import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
 
 interface Movie {
     _id: string | number;
@@ -16,6 +15,58 @@ interface Movie {
     poster?: string;
     year?: string | number;
 }
+
+interface LanguageOption {
+    code: string;
+    name: string;
+}
+
+// 5 Columns matching Amazon Prime Video language dropdown
+const LANGUAGE_COLUMNS: LanguageOption[][] = [
+    [
+        { code: "ID", name: "Bahasa Indonesia" },
+        { code: "MS", name: "Bahasa Melayu" },
+        { code: "DA", name: "Dansk" },
+        { code: "DE", name: "Deutsch" },
+        { code: "EN", name: "English" },
+        { code: "ES", name: "Español" },
+        { code: "ES-LA", name: "Español Latinoamérica" },
+        { code: "FR", name: "Français" },
+    ],
+    [
+        { code: "IT", name: "Italiano" },
+        { code: "HU", name: "Magyar" },
+        { code: "NL", name: "Nederlands" },
+        { code: "NO", name: "Norsk" },
+        { code: "PL", name: "Polski" },
+        { code: "PT-BR", name: "Português (Brasil)" },
+        { code: "PT-PT", name: "Português (Portugal)" },
+        { code: "RO", name: "Română" },
+    ],
+    [
+        { code: "FI", name: "Suomi" },
+        { code: "SV", name: "Svenska" },
+        { code: "TR", name: "Türkçe" },
+        { code: "FIL", name: "Wikang Filipino" },
+        { code: "CS", name: "Čeština" },
+        { code: "EL", name: "Ελληνικά" },
+        { code: "RU", name: "Русский" },
+        { code: "HE", name: "עברית" },
+    ],
+    [
+        { code: "AR", name: "العربية" },
+        { code: "HI", name: "हिन्दी" },
+        { code: "TA", name: "தமிழ்" },
+        { code: "TE", name: "తెలుగు" },
+        { code: "TH", name: "ไทย" },
+        { code: "JA", name: "日本語" },
+        { code: "ZH-CN", name: "简体中文" },
+        { code: "ZH-TW", name: "繁體中文" },
+    ],
+    [
+        { code: "KO", name: "한국어" },
+    ],
+];
 
 const GENRE_COL_LEFT = [
     "Action and adventure",
@@ -39,8 +90,19 @@ function Navbar() {
     const [query, setQuery] = useState("");
     const [isOpen, setIsOpen] = useState(false);
     const [movies, setMovies] = useState<Movie[]>([]);
+    
+    // Genres Modal State
     const [genresOpen, setGenresOpen] = useState(false);
     const genresRef = useRef<HTMLDivElement>(null);
+
+    // Language Modal State (Prime Video reference style)
+    const [langOpen, setLangOpen] = useState(false);
+    const [selectedLang, setSelectedLang] = useState<LanguageOption>({
+        code: "EN",
+        name: "English",
+    });
+    const langRef = useRef<HTMLDivElement>(null);
+
     const router = useRouter();
 
     const handleLogOut = async () => {
@@ -54,19 +116,23 @@ function Navbar() {
     const isMovies = pathname?.startsWith("/movies");
     const isTV = pathname?.startsWith("/tv");
 
-    // Close genres modal when clicking outside or pressing Escape
+    // Close genres/language modal when clicking outside or pressing Escape
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
             if (genresRef.current && !genresRef.current.contains(event.target as Node)) {
                 setGenresOpen(false);
             }
+            if (langRef.current && !langRef.current.contains(event.target as Node)) {
+                setLangOpen(false);
+            }
         }
         function handleKeyDown(event: KeyboardEvent) {
             if (event.key === "Escape") {
                 setGenresOpen(false);
+                setLangOpen(false);
             }
         }
-        if (genresOpen) {
+        if (genresOpen || langOpen) {
             document.addEventListener("mousedown", handleClickOutside);
             document.addEventListener("keydown", handleKeyDown);
         }
@@ -74,7 +140,7 @@ function Navbar() {
             document.removeEventListener("mousedown", handleClickOutside);
             document.removeEventListener("keydown", handleKeyDown);
         };
-    }, [genresOpen]);
+    }, [genresOpen, langOpen]);
 
     // Search fetch
     useEffect(() => {
@@ -189,7 +255,7 @@ function Navbar() {
                 </div>
             </div>
 
-            <div className="flex items-center space-x-5 text-muted-foreground relative">
+            <div className="flex items-center space-x-4 text-muted-foreground relative">
                 {/* Search input */}
                 <label className="input flex items-center gap-2">
                     <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -242,23 +308,86 @@ function Navbar() {
                     </div>
                 )}
 
-                {/* Language selector */}
-                <div className="flex cursor-pointer items-center space-x-1 text-sm font-medium transition hover:text-foreground">
-                    <span>EN</span>
-                    <MdOutlineExpandMore size={18} />
+                {/* 1. Language selector & Modal (Prime Video Reference Style) */}
+                <div className="relative" ref={langRef}>
+                    <button
+                        type="button"
+                        onClick={() => {
+                            setLangOpen((prev) => !prev);
+                            setGenresOpen(false);
+                        }}
+                        aria-label="Select Language"
+                        aria-expanded={langOpen}
+                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold transition-all duration-200 cursor-pointer select-none ${
+                            langOpen
+                                ? "bg-white text-zinc-950 shadow-md ring-1 ring-white/40"
+                                : "text-zinc-300 hover:text-white hover:bg-zinc-800/70"
+                        }`}
+                    >
+                        <span>{selectedLang.code}</span>
+                        {langOpen ? (
+                            <MdOutlineExpandLess size={18} />
+                        ) : (
+                            <MdOutlineExpandMore size={18} />
+                        )}
+                    </button>
+
+                    {/* Floating 5-Column Language Modal */}
+                    {langOpen && (
+                        <div
+                            role="dialog"
+                            aria-label="Language selection"
+                            className="absolute right-0 top-full mt-3 w-[92vw] sm:w-[640px] md:w-[740px] lg:w-[820px] max-w-[850px] bg-[#0c1017]/95 backdrop-blur-2xl border border-zinc-800/90 rounded-2xl p-6 sm:p-7 shadow-2xl shadow-black/80 z-50 animate-in fade-in zoom-in-95 duration-150"
+                        >
+                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-x-6 sm:gap-x-8 gap-y-3.5 sm:gap-y-4 max-h-[70vh] overflow-y-auto sm:overflow-visible pr-1 sm:pr-0 text-left">
+                                {LANGUAGE_COLUMNS.map((column, colIdx) => (
+                                    <div key={colIdx} className="flex flex-col space-y-3">
+                                        {column.map((lang) => {
+                                            const isCurrent = selectedLang.name === lang.name;
+                                            return (
+                                                <button
+                                                    key={lang.name}
+                                                    type="button"
+                                                    onClick={() => {
+                                                        setSelectedLang(lang);
+                                                        setLangOpen(false);
+                                                    }}
+                                                    className={`text-left text-sm transition-all duration-150 py-0.5 leading-snug cursor-pointer group flex items-center justify-between ${
+                                                        isCurrent
+                                                            ? "font-semibold text-white"
+                                                            : "font-normal text-zinc-300 hover:text-white"
+                                                    }`}
+                                                >
+                                                    <span className="group-hover:translate-x-0.5 transition-transform duration-150">
+                                                        {lang.name}
+                                                    </span>
+                                                    {isCurrent && (
+                                                        <span className="w-1.5 h-1.5 rounded-full bg-white ml-2 shrink-0 sm:hidden" />
+                                                    )}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
 
-                {/* 9-Dots Icon Button & Genres Modal (Prime Video reference style) */}
+                {/* 2. 9-Dots Icon Button & Genres Modal (Prime Video reference style) */}
                 <div className="relative" ref={genresRef}>
                     <button
                         type="button"
-                        onClick={() => setGenresOpen((prev) => !prev)}
+                        onClick={() => {
+                            setGenresOpen((prev) => !prev);
+                            setLangOpen(false);
+                        }}
                         aria-label="Browse Genres"
                         aria-expanded={genresOpen}
                         className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 cursor-pointer ${
                             genresOpen
                                 ? "bg-white text-black shadow-lg ring-2 ring-white/30"
-                                : "bg-neutral-850 hover:bg-neutral-800 text-neutral-300 hover:text-white border border-neutral-700/50"
+                                : "bg-neutral-800 hover:bg-neutral-700 text-neutral-300 hover:text-white border border-neutral-700/50"
                         }`}
                     >
                         <PiDotsNineBold size={20} />
