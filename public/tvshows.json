@@ -2,7 +2,7 @@
     {
         "id": 1,
         "title": "Breaking Bad",
-        "poster": "https://i.ibb.co/xxxxx/breaking-bad.jpg",
+        "poster": "https://i.ibb.co.com/fdsB2fZ8/image.png",
         "year": 2008,
         "genre": [
             "Crime",
@@ -19,7 +19,7 @@
     {
         "id": 2,
         "title": "Stranger Things",
-        "poster": "https://i.ibb.co/xxxxx/stranger-things.jpg",
+        "poster": "https://i.ibb.co.com/mVwMT6ph/image.png",
         "year": 2016,
         "genre": [
             "Sci-Fi",
@@ -36,7 +36,7 @@
     {
         "id": 3,
         "title": "The Boys",
-        "poster": "https://i.ibb.co/xxxxx/the-boys.jpg",
+        "poster": "https://i.ibb.co.com/C57ySKXG/image.png",
         "year": 2019,
         "genre": [
             "Action",
@@ -53,7 +53,7 @@
     {
         "id": 4,
         "title": "Money Heist",
-        "poster": "https://i.ibb.co/xxxxx/money-heist.jpg",
+        "poster": "https://i.ibb.co.com/4gf01vCL/image.png",
         "year": 2017,
         "genre": [
             "Crime",
@@ -70,7 +70,7 @@
     {
         "id": 5,
         "title": "Game of Thrones",
-        "poster": "https://i.ibb.co/xxxxx/game-of-thrones.jpg",
+        "poster": "https://i.ibb.co.com/BV7GC1YM/image.png",
         "year": 2011,
         "genre": [
             "Fantasy",
@@ -87,7 +87,7 @@
     {
         "id": 6,
         "title": "Wednesday",
-        "poster": "https://i.ibb.co/xxxxx/wednesday.jpg",
+        "poster": "https://i.ibb.co.com/V0rBnXgP/image.png",
         "year": 2022,
         "genre": [
             "Comedy",
@@ -104,7 +104,7 @@
     {
         "id": 7,
         "title": "Peaky Blinders",
-        "poster": "https://i.ibb.co/xxxxx/peaky-blinders.jpg",
+        "poster": "https://i.ibb.co.com/R42Dw7NW/image.png",
         "year": 2013,
         "genre": [
             "Crime",
@@ -120,7 +120,7 @@
     {
         "id": 8,
         "title": "The Crown",
-        "poster": "https://i.ibb.co/xxxxx/the-crown.jpg",
+        "poster": "https://i.ibb.co.com/4gSPkMzx/image.png",
         "year": 2016,
         "genre": [
             "Drama",
@@ -136,7 +136,7 @@
     {
         "id": 9,
         "title": "Dark",
-        "poster": "https://i.ibb.co/xxxxx/dark.jpg",
+        "poster": "https://i.ibb.co.com/g574vhg/image.png",
         "year": 2017,
         "genre": [
             "Sci-Fi",
@@ -153,7 +153,7 @@
     {
         "id": 10,
         "title": "The Witcher",
-        "poster": "https://i.ibb.co/xxxxx/the-witcher.jpg",
+        "poster": "https://i.ibb.co.com/vv4zBbG2/image.png",
         "year": 2019,
         "genre": [
             "Fantasy",
@@ -170,7 +170,7 @@
     {
         "id": 11,
         "title": "Squid Game",
-        "poster": "https://i.ibb.co/xxxxx/squid-game.jpg",
+        "poster": "https://i.ibb.co.com/bMJDLDQ7/image.png",
         "year": 2021,
         "genre": [
             "Thriller",
@@ -187,7 +187,7 @@
     {
         "id": 12,
         "title": "House of the Dragon",
-        "poster": "https://i.ibb.co/xxxxx/house-of-the-dragon.jpg",
+        "poster": "https://i.ibb.co.com/rK6GTyx8/image.png",
         "year": 2022,
         "genre": [
             "Fantasy",
@@ -204,7 +204,7 @@
     {
         "id": 13,
         "title": "Loki",
-        "poster": "https://i.ibb.co/xxxxx/loki.jpg",
+        "poster": "https://i.ibb.co.com/HDFfBCQv/image.png",
         "year": 2021,
         "genre": [
             "Sci-Fi",
@@ -221,7 +221,7 @@
     {
         "id": 14,
         "title": "Narcos",
-        "poster": "https://i.ibb.co/xxxxx/narcos.jpg",
+        "poster": "https://i.ibb.co.com/fYk1Nm0H/image.png",
         "year": 2015,
         "genre": [
             "Crime",
@@ -238,7 +238,7 @@
     {
         "id": 15,
         "title": "The Mandalorian",
-        "poster": "https://i.ibb.co/xxxxx/the-mandalorian.jpg",
+        "poster": "https://i.ibb.co.com/d4nMJP7X/image.png",
         "year": 2019,
         "genre": [
             "Sci-Fi",

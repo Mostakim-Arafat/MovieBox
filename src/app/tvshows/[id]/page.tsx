@@ -55,22 +55,6 @@ function PosterImage({
     );
 }
 
-// Generate mock episode list distributed evenly across seasons.
-function generateEpisodesBySeason(totalEpisodes: number, seasons: number) {
-    const perSeason = Math.floor(totalEpisodes / seasons);
-    const remainder = totalEpisodes % seasons;
-    const result: { season: number; episodes: number[] }[] = [];
-
-    for (let s = 1; s <= seasons; s++) {
-        const count = perSeason + (s <= remainder ? 1 : 0);
-        result.push({
-            season: s,
-            episodes: Array.from({ length: count }, (_, i) => i + 1),
-        });
-    }
-    return result;
-}
-
 function UpcomingModal({ onClose }: { onClose: () => void }) {
     return (
         <>
@@ -128,9 +112,10 @@ export default function TvShowDetailsPage() {
     const [allShows, setAllShows] = useState<Show[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [notFound, setNotFound] = useState(false);
-    const [activeTab, setActiveTab] = useState<
-        "overview" | "episodes" | "cast"
-    >("overview");
+
+    // Fixed: Properly declared activeTab state without duplicate declaration
+    const [activeTab, setActiveTab] = useState<"overview" | "episodes" | "cast">("overview");
+
     const [selectedSeason, setSelectedSeason] = useState(1);
     const [inList, setInList] = useState(false);
     const [showUpcomingModal, setShowUpcomingModal] = useState(false);
@@ -184,10 +169,7 @@ export default function TvShowDetailsPage() {
 
         try {
             if (navigator.share) {
-                await navigator.share({
-                    title: show?.title,
-                    url,
-                });
+                await navigator.share({ title: show?.title, url });
                 return;
             }
             await navigator.clipboard.writeText(url);
@@ -236,10 +218,11 @@ export default function TvShowDetailsPage() {
         )
         .slice(0, 6);
 
-    const seasonData = generateEpisodesBySeason(show.episodes, show.seasons);
-    const currentSeasonEpisodes =
-        seasonData.find((s) => s.season === selectedSeason)?.episodes || [];
-    const currentSeasonIsUpcoming = currentSeasonEpisodes.length === 0;
+    const episodesInSeasonOne = Math.min(show.episodes, 10);
+    const isSeasonAvailable = selectedSeason === 1;
+    const currentSeasonEpisodes = isSeasonAvailable
+        ? Array.from({ length: episodesInSeasonOne }, (_, i) => i + 1)
+        : [];
 
     const infoStats = [
         { label: "Rating", value: show.rating + " / 10", icon: "⭐" },
@@ -425,15 +408,17 @@ export default function TvShowDetailsPage() {
                             >
                                 {/* Season selector */}
                                 <div className="mb-5 flex gap-2 overflow-x-auto pb-2">
-                                    {seasonData.map((s) => {
-                                        const isUpcoming =
-                                            s.episodes.length === 0;
+                                    {Array.from(
+                                        { length: show.seasons },
+                                        (_, i) => i + 1
+                                    ).map((seasonNum) => {
+                                        const isUpcoming = seasonNum !== 1;
                                         return (
                                             <button
-                                                key={s.season}
+                                                key={seasonNum}
                                                 onClick={() => {
                                                     setSelectedSeason(
-                                                        s.season
+                                                        seasonNum
                                                     );
                                                     if (isUpcoming) {
                                                         setShowUpcomingModal(
@@ -441,12 +426,13 @@ export default function TvShowDetailsPage() {
                                                         );
                                                     }
                                                 }}
-                                                className={`relative shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition ${selectedSeason === s.season
+                                                className={`relative shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition ${selectedSeason ===
+                                                    seasonNum
                                                     ? "bg-red-600 text-white"
                                                     : "border border-gray-300 text-gray-700 hover:border-gray-500 dark:border-neutral-700 dark:text-neutral-300"
                                                     }`}
                                             >
-                                                Season {s.season}
+                                                Season {seasonNum}
                                                 {isUpcoming && (
                                                     <span className="ml-1 text-[10px] opacity-70">
                                                         •
@@ -458,7 +444,7 @@ export default function TvShowDetailsPage() {
                                 </div>
 
                                 {/* Episode list OR upcoming inline message */}
-                                {currentSeasonIsUpcoming ? (
+                                {!isSeasonAvailable ? (
                                     <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-300 py-12 text-center dark:border-neutral-800">
                                         <div className="relative mb-4 flex h-14 w-14 items-center justify-center">
                                             <div className="absolute inset-0 animate-[spin_2.5s_linear_infinite] rounded-full border-4 border-dashed border-red-500/30" />

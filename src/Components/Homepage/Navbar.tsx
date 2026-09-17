@@ -98,7 +98,7 @@ function Navbar() {
                         Movies
                     </Link>
                     <Link
-                        href={'/tv'}
+                        href={'/tvshows'}
                         className={`px-4 py-1.5 rounded-full text-sm transition ${isTV ? 'bg-foreground text-background font-semibold' : 'text-muted-foreground hover:text-foreground font-medium'}`}
                     >
                         TV shows
