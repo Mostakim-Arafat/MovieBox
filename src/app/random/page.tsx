@@ -3,10 +3,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 interface Movie {
-    id : string;
-    title : string;
-    poster_path : string;
-    release_date : string
+  id: string;
+  title: string;
+  poster_path: string;
+  release_date: string
 }
 
 export default async function random() {
@@ -17,9 +17,9 @@ export default async function random() {
   return (
     <main className="p-8">
       <h1 className="text-3xl font-bold mb-6">Trending Movies</h1>
-      
+
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
-        {movies.map((movie : Movie) => (
+        {movies.map((movie: Movie) => (
           <div key={movie.id} className="bg-gray-800 rounded-lg overflow-hidden shadow-lg">
             {/* TMDB Image Base URL setup */}
             <Image
@@ -35,6 +35,12 @@ export default async function random() {
             </div>
           </div>
         ))}
+        <iframe
+          src="https://player.mux.com/Dy401555Qion9udLXKxY7bbRaziOW00zbM1pTp5iGEm1A"
+          style={{ width: '100%', border: 'none', aspectRatio: '16 / 9' }}
+          allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+          allowFullScreen
+        ></iframe>
       </div>
     </main>
   );
