@@ -1,10 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState, Suspense } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import Navbar from "@/Components/Homepage/Navbar";
 
 type Movie = {
     id: number;
@@ -40,7 +38,6 @@ function PosterImage({
     }
 
     return (
-        // eslint-disable-next-line @next/next/no-img-element
         <img
             src={movie.poster}
             alt={movie.title}
@@ -137,7 +134,7 @@ function MovieRow({
 
                 <button
                     onClick={() => onSeeMore(genre, movies)}
-                    className="group flex items-center gap-1.5 rounded-full border border-white/20 bg-white/5 px-4 py-1.5 text-sm font-medium text-neutral-300 backdrop-blur-sm transition-all hover:border-white/40 hover:bg-white/10 hover:text-white cursor-pointer"
+                    className="group flex items-center gap-1.5 rounded-full border border-white/20 bg-white/5 px-4 py-1.5 text-sm font-medium text-neutral-300 backdrop-blur-sm transition-all hover:border-white/40 hover:bg-white/10 hover:text-white"
                 >
                     See more
                     <span className="transition-transform group-hover:translate-x-0.5">
@@ -190,7 +187,7 @@ function MovieRow({
     );
 }
 
-function MoviesContent() {
+export default function MoviesPage() {
     const [movies, setMovies] = useState<Movie[]>([]);
     const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
     const [selectedGenre, setSelectedGenre] = useState<{
@@ -198,34 +195,16 @@ function MoviesContent() {
         movies: Movie[];
     } | null>(null);
     const [isLoading, setIsLoading] = useState(true);
-    const searchParams = useSearchParams();
 
     useEffect(() => {
         fetch("/api/proxy-movies")
-            .then((res) => {
-                if (!res.ok) throw new Error("Failed to load movies");
-                return res.json();
-            })
+            .then((res) => res.json())
             .then((data: Movie[]) => {
                 setMovies(data);
                 setIsLoading(false);
-
-                // Auto-open genre modal if ?genre= is in URL from Navbar modal
-                const genreParam = searchParams.get("genre");
-                if (genreParam) {
-                    const matched = data.filter((m) =>
-                        m.genre.some((g) => g.toLowerCase() === genreParam.toLowerCase())
-                    );
-                    if (matched.length > 0) {
-                        setSelectedGenre({ name: genreParam, movies: matched });
-                    }
-                }
             })
-            .catch((err) => {
-                console.error(err);
-                setIsLoading(false);
-            });
-    }, [searchParams]);
+            .catch((err) => console.error(err));
+    }, []);
 
     const genreMap: Record<string, Movie[]> = {};
     movies.forEach((movie) => {
@@ -245,10 +224,8 @@ function MoviesContent() {
 
     return (
         <main className="min-h-screen bg-black text-white">
-            <Navbar />
-
             {isLoading ? (
-                <div className="flex min-h-[70vh] items-center justify-center">
+                <div className="flex min-h-screen items-center justify-center">
                     <div className="h-10 w-10 animate-spin rounded-full border-4 border-neutral-800 border-t-red-600" />
                 </div>
             ) : (
@@ -284,13 +261,13 @@ function MoviesContent() {
                                 <div className="mt-6 flex gap-3">
                                     <button
                                         onClick={() => setSelectedMovie(featured)}
-                                        className="flex items-center gap-2 rounded-lg bg-white px-6 py-3 font-bold text-black transition hover:bg-neutral-200 cursor-pointer"
+                                        className="flex items-center gap-2 rounded-lg bg-white px-6 py-3 font-bold text-black transition hover:bg-neutral-200"
                                     >
                                         ▶ Play
                                     </button>
                                     <button
                                         onClick={() => setSelectedMovie(featured)}
-                                        className="flex items-center gap-2 rounded-lg bg-white/15 px-6 py-3 font-bold text-white backdrop-blur-sm transition hover:bg-white/25 cursor-pointer"
+                                        className="flex items-center gap-2 rounded-lg bg-white/15 px-6 py-3 font-bold text-white backdrop-blur-sm transition hover:bg-white/25"
                                     >
                                         ℹ More Info
                                     </button>
@@ -343,7 +320,7 @@ function MoviesContent() {
                             <div className="relative w-full max-w-3xl overflow-hidden rounded-2xl bg-neutral-900 shadow-2xl ring-1 ring-white/10">
                                 <button
                                     onClick={() => setSelectedMovie(null)}
-                                    className="absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-black/60 text-white transition hover:bg-black/80 cursor-pointer"
+                                    className="absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-black/60 text-white transition hover:bg-black/80"
                                 >
                                     ✕
                                 </button>
@@ -386,7 +363,7 @@ function MoviesContent() {
                                     </p>
 
                                     <div className="mt-7 flex flex-wrap gap-3">
-                                        <button className="flex-1 rounded-lg bg-red-600 px-6 py-3 font-bold text-white transition hover:bg-red-700 sm:flex-none cursor-pointer">
+                                        <button className="flex-1 rounded-lg bg-red-600 px-6 py-3 font-bold text-white transition hover:bg-red-700 sm:flex-none">
                                             ▶ Watch Now
                                         </button>
 
@@ -397,7 +374,7 @@ function MoviesContent() {
                                             View Details
                                         </Link>
 
-                                        <button className="rounded-lg border border-neutral-700 px-6 py-3 font-bold text-neutral-300 transition hover:border-neutral-500 hover:text-white cursor-pointer">
+                                        <button className="rounded-lg border border-neutral-700 px-6 py-3 font-bold text-neutral-300 transition hover:border-neutral-500 hover:text-white">
                                             + My List
                                         </button>
                                     </div>
@@ -440,7 +417,7 @@ function MoviesContent() {
                                     </h2>
                                     <button
                                         onClick={() => setSelectedGenre(null)}
-                                        className="flex h-9 w-9 items-center justify-center rounded-full bg-black/60 text-white transition hover:bg-black/80 cursor-pointer"
+                                        className="flex h-9 w-9 items-center justify-center rounded-full bg-black/60 text-white transition hover:bg-black/80"
                                     >
                                         ✕
                                     </button>
@@ -485,19 +462,5 @@ function MoviesContent() {
                 )}
             </AnimatePresence>
         </main>
-    );
-}
-
-export default function MoviesPage() {
-    return (
-        <Suspense
-            fallback={
-                <div className="flex min-h-screen items-center justify-center bg-black">
-                    <div className="h-10 w-10 animate-spin rounded-full border-4 border-neutral-800 border-t-red-600" />
-                </div>
-            }
-        >
-            <MoviesContent />
-        </Suspense>
     );
 }
