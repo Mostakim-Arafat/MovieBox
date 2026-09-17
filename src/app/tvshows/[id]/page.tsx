@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import toast, { Toaster } from "react-hot-toast";
 
 type Show = {
     id: number;
@@ -53,7 +55,7 @@ function PosterImage({
     );
 }
 
-// Generate mock episode list distributed evenly across seasons
+// Generate mock episode list distributed evenly across seasons.
 function generateEpisodesBySeason(totalEpisodes: number, seasons: number) {
     const perSeason = Math.floor(totalEpisodes / seasons);
     const remainder = totalEpisodes % seasons;
@@ -69,6 +71,56 @@ function generateEpisodesBySeason(totalEpisodes: number, seasons: number) {
     return result;
 }
 
+function UpcomingModal({ onClose }: { onClose: () => void }) {
+    return (
+        <>
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={onClose}
+                className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm"
+            />
+            <motion.div
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            >
+                <div className="relative w-full max-w-sm overflow-hidden rounded-2xl bg-white p-8 text-center shadow-2xl dark:bg-neutral-900">
+                    <button
+                        onClick={onClose}
+                        className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-gray-600 transition hover:bg-gray-200 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
+                    >
+                        ✕
+                    </button>
+
+                    <div className="relative mx-auto mb-5 flex h-20 w-20 items-center justify-center">
+                        <div className="absolute inset-0 animate-[spin_2.5s_linear_infinite] rounded-full border-4 border-dashed border-red-500/30" />
+                        <div className="absolute inset-2 animate-[spin_1.2s_linear_infinite] rounded-full border-4 border-b-transparent border-l-transparent border-r-red-500 border-t-red-600" />
+                        <span className="text-3xl">🎬</span>
+                    </div>
+
+                    <h3 className="text-xl font-black">Coming Soon</h3>
+                    <p className="mt-2 text-sm text-gray-500 dark:text-neutral-400">
+                        This season hasn&apos;t been released yet. We&apos;re
+                        working on bringing new episodes to MovieBox &mdash;
+                        stay tuned!
+                    </p>
+
+                    <button
+                        onClick={onClose}
+                        className="mt-6 w-full rounded-full bg-red-600 px-6 py-2.5 text-sm font-bold text-white transition hover:bg-red-700"
+                    >
+                        Got it
+                    </button>
+                </div>
+            </motion.div>
+        </>
+    );
+}
+
 export default function TvShowDetailsPage() {
     const params = useParams();
     const router = useRouter();
@@ -76,12 +128,12 @@ export default function TvShowDetailsPage() {
     const [allShows, setAllShows] = useState<Show[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [notFound, setNotFound] = useState(false);
-
-    // Fixed type declaration syntax for activeTab
-    const [activeTab, setActiveTab] = useState<"overview" | "episodes" | "cast">("overview");
-
+    const [activeTab, setActiveTab] = useState<
+        "overview" | "episodes" | "cast"
+    >("overview");
     const [selectedSeason, setSelectedSeason] = useState(1);
     const [inList, setInList] = useState(false);
+    const [showUpcomingModal, setShowUpcomingModal] = useState(false);
 
     useEffect(() => {
         fetch("/tvshows.json")
@@ -118,11 +170,37 @@ export default function TvShowDetailsPage() {
         if (list.includes(id)) {
             list = list.filter((x) => x !== id);
             setInList(false);
+            toast("Removed from My List", { icon: "↩️" });
         } else {
             list.push(id);
             setInList(true);
+            toast.success("Added to My List!");
         }
         localStorage.setItem("mylist-tv", JSON.stringify(list));
+    };
+
+    const handleShare = async () => {
+        const url = window.location.href;
+
+        try {
+            if (navigator.share) {
+                await navigator.share({
+                    title: show?.title,
+                    url,
+                });
+                return;
+            }
+            await navigator.clipboard.writeText(url);
+            toast.success("Link copied to clipboard!");
+        } catch (error) {
+            toast.error("Couldn't share the link. Try again.");
+        }
+    };
+
+    const handleWatchNow = () => {
+        toast("Playback isn't connected yet — coming soon!", {
+            icon: "🎬",
+        });
     };
 
     if (isLoading) {
@@ -161,6 +239,7 @@ export default function TvShowDetailsPage() {
     const seasonData = generateEpisodesBySeason(show.episodes, show.seasons);
     const currentSeasonEpisodes =
         seasonData.find((s) => s.season === selectedSeason)?.episodes || [];
+    const currentSeasonIsUpcoming = currentSeasonEpisodes.length === 0;
 
     const infoStats = [
         { label: "Rating", value: show.rating + " / 10", icon: "⭐" },
@@ -171,6 +250,8 @@ export default function TvShowDetailsPage() {
 
     return (
         <main className="min-h-screen bg-gray-50 text-gray-900 dark:bg-black dark:text-white">
+            <Toaster position="top-center" />
+
             {/* Hero banner */}
             <div className="relative h-[55vh] min-h-[360px] w-full overflow-hidden sm:h-[65vh]">
                 <PosterImage
@@ -222,7 +303,10 @@ export default function TvShowDetailsPage() {
                     transition={{ duration: 0.4 }}
                     className="flex flex-wrap gap-3"
                 >
-                    <button className="flex items-center gap-2 rounded-full bg-red-600 px-8 py-3 font-bold text-white shadow-lg shadow-red-600/20 transition hover:bg-red-700">
+                    <button
+                        onClick={handleWatchNow}
+                        className="flex items-center gap-2 rounded-full bg-red-600 px-8 py-3 font-bold text-white shadow-lg shadow-red-600/20 transition hover:bg-red-700"
+                    >
                         ▶ Watch Now
                     </button>
                     <button
@@ -234,7 +318,10 @@ export default function TvShowDetailsPage() {
                     >
                         {inList ? "✓ In My List" : "+ My List"}
                     </button>
-                    <button className="flex items-center gap-2 rounded-full border border-gray-300 px-6 py-3 font-bold text-gray-700 transition hover:border-gray-500 dark:border-neutral-700 dark:text-neutral-300 dark:hover:border-neutral-500 dark:hover:text-white">
+                    <button
+                        onClick={handleShare}
+                        className="flex items-center gap-2 rounded-full border border-gray-300 px-6 py-3 font-bold text-gray-700 transition hover:border-gray-500 dark:border-neutral-700 dark:text-neutral-300 dark:hover:border-neutral-500 dark:hover:text-white"
+                    >
                         ↗ Share
                     </button>
                 </motion.div>
@@ -308,7 +395,7 @@ export default function TvShowDetailsPage() {
                                         </h2>
                                         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
                                             {similarShows.map((s) => (
-                                                <a
+                                                <Link
                                                     key={s.id}
                                                     href={"/tvshows/" + s.id}
                                                     className="group overflow-hidden rounded-lg"
@@ -320,7 +407,7 @@ export default function TvShowDetailsPage() {
                                                     <p className="mt-2 truncate text-sm font-medium">
                                                         {s.title}
                                                     </p>
-                                                </a>
+                                                </Link>
                                             ))}
                                         </div>
                                     </div>
@@ -338,46 +425,84 @@ export default function TvShowDetailsPage() {
                             >
                                 {/* Season selector */}
                                 <div className="mb-5 flex gap-2 overflow-x-auto pb-2">
-                                    {seasonData.map((s) => (
-                                        <button
-                                            key={s.season}
-                                            onClick={() =>
-                                                setSelectedSeason(s.season)
-                                            }
-                                            className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition ${selectedSeason === s.season
-                                                ? "bg-red-600 text-white"
-                                                : "border border-gray-300 text-gray-700 hover:border-gray-500 dark:border-neutral-700 dark:text-neutral-300"
-                                                }`}
-                                        >
-                                            Season {s.season}
-                                        </button>
-                                    ))}
+                                    {seasonData.map((s) => {
+                                        const isUpcoming =
+                                            s.episodes.length === 0;
+                                        return (
+                                            <button
+                                                key={s.season}
+                                                onClick={() => {
+                                                    setSelectedSeason(
+                                                        s.season
+                                                    );
+                                                    if (isUpcoming) {
+                                                        setShowUpcomingModal(
+                                                            true
+                                                        );
+                                                    }
+                                                }}
+                                                className={`relative shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition ${selectedSeason === s.season
+                                                    ? "bg-red-600 text-white"
+                                                    : "border border-gray-300 text-gray-700 hover:border-gray-500 dark:border-neutral-700 dark:text-neutral-300"
+                                                    }`}
+                                            >
+                                                Season {s.season}
+                                                {isUpcoming && (
+                                                    <span className="ml-1 text-[10px] opacity-70">
+                                                        •
+                                                    </span>
+                                                )}
+                                            </button>
+                                        );
+                                    })}
                                 </div>
 
-                                {/* Episode list */}
-                                <div className="space-y-3">
-                                    {currentSeasonEpisodes.map((ep) => (
-                                        <div
-                                            key={ep}
-                                            className="flex items-center gap-4 rounded-xl border border-gray-200 p-4 dark:border-neutral-800 dark:bg-neutral-900"
-                                        >
-                                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-red-600/10 font-bold text-red-600 dark:text-red-500">
-                                                {ep}
-                                            </div>
-                                            <div className="flex-1">
-                                                <p className="font-semibold">
-                                                    Episode {ep}
-                                                </p>
-                                                <p className="text-xs text-gray-500 dark:text-neutral-500">
-                                                    ~45 min
-                                                </p>
-                                            </div>
-                                            <button className="text-sm font-semibold text-red-600 dark:text-red-500">
-                                                ▶ Play
-                                            </button>
+                                {/* Episode list OR upcoming inline message */}
+                                {currentSeasonIsUpcoming ? (
+                                    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-300 py-12 text-center dark:border-neutral-800">
+                                        <div className="relative mb-4 flex h-14 w-14 items-center justify-center">
+                                            <div className="absolute inset-0 animate-[spin_2.5s_linear_infinite] rounded-full border-4 border-dashed border-red-500/30" />
+                                            <div className="absolute inset-1.5 animate-[spin_1.2s_linear_infinite] rounded-full border-4 border-b-transparent border-l-transparent border-r-red-500 border-t-red-600" />
+                                            <span className="text-xl">🎬</span>
                                         </div>
-                                    ))}
-                                </div>
+                                        <p className="font-semibold">
+                                            Season {selectedSeason} is
+                                            upcoming
+                                        </p>
+                                        <p className="mt-1 max-w-xs text-sm text-gray-500 dark:text-neutral-500">
+                                            Episodes for this season haven&apos;t
+                                            been released yet. Check back
+                                            soon!
+                                        </p>
+                                    </div>
+                                ) : (
+                                    <div className="space-y-3">
+                                        {currentSeasonEpisodes.map((ep) => (
+                                            <div
+                                                key={ep}
+                                                className="flex items-center gap-4 rounded-xl border border-gray-200 p-4 dark:border-neutral-800 dark:bg-neutral-900"
+                                            >
+                                                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-red-600/10 font-bold text-red-600 dark:text-red-500">
+                                                    {ep}
+                                                </div>
+                                                <div className="flex-1">
+                                                    <p className="font-semibold">
+                                                        Episode {ep}
+                                                    </p>
+                                                    <p className="text-xs text-gray-500 dark:text-neutral-500">
+                                                        ~45 min
+                                                    </p>
+                                                </div>
+                                                <button
+                                                    onClick={handleWatchNow}
+                                                    className="text-sm font-semibold text-red-600 dark:text-red-500"
+                                                >
+                                                    ▶ Play
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </motion.div>
                         )}
 
@@ -400,7 +525,7 @@ export default function TvShowDetailsPage() {
                                                 {emoji}
                                             </div>
                                             <p className="mt-3 text-sm font-semibold">
-                                                ast Member {i + 1}
+                                                Cast Member {i + 1}
                                             </p>
                                             <p className="text-xs text-gray-500 dark:text-neutral-500">
                                                 Main Role
@@ -413,6 +538,15 @@ export default function TvShowDetailsPage() {
                     </AnimatePresence>
                 </div>
             </div>
+
+            {/* Upcoming season modal */}
+            <AnimatePresence>
+                {showUpcomingModal && (
+                    <UpcomingModal
+                        onClose={() => setShowUpcomingModal(false)}
+                    />
+                )}
+            </AnimatePresence>
         </main>
     );
 }
