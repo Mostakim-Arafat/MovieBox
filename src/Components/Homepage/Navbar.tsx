@@ -114,7 +114,7 @@ function Navbar() {
 
     const isHome = pathname === "/" || pathname === "";
     const isMovies = pathname?.startsWith("/movies");
-    const isTV = pathname?.startsWith("/tv");
+    const isTV = pathname?.startsWith("/tvshows");
 
     // Close genres/language modal when clicking outside or pressing Escape
     useEffect(() => {
@@ -198,7 +198,7 @@ function Navbar() {
                             <Link href="/movies">Movies</Link>
                         </li>
                         <li>
-                            <Link href="/tv">TV shows</Link>
+                            <Link href="/tvshows">TV shows</Link>
                         </li>
                     </ul>
                 </details>
@@ -245,7 +245,7 @@ function Navbar() {
                         Movies
                     </Link>
                     <Link
-                        href={"/tv"}
+                        href={"/tvshows"}
                         className={`px-4 py-1.5 rounded-full text-sm transition ${
                             isTV ? "bg-foreground text-background font-semibold" : "text-muted-foreground hover:text-foreground font-medium"
                         }`}

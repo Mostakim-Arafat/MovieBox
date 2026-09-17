@@ -1,0 +1,255 @@
+[
+    {
+        "id": 1,
+        "title": "Breaking Bad",
+        "poster": "https://i.ibb.co.com/fdsB2fZ8/image.png",
+        "year": 2008,
+        "genre": [
+            "Crime",
+            "Drama",
+            "Thriller"
+        ],
+        "rating": 9.5,
+        "seasons": 5,
+        "episodes": 62,
+        "channel": "Netflix",
+        "shortDescription": "A chemistry teacher turns to making meth after a cancer diagnosis.",
+        "description": "A high school chemistry teacher diagnosed with terminal cancer turns to manufacturing methamphetamine to secure his family's financial future. What begins as a desperate act quickly spirals into a dangerous transformation, as he becomes entangled in the criminal underworld and slowly loses himself to greed, pride, and power."
+    },
+    {
+        "id": 2,
+        "title": "Stranger Things",
+        "poster": "https://i.ibb.co.com/mVwMT6ph/image.png",
+        "year": 2016,
+        "genre": [
+            "Sci-Fi",
+            "Horror",
+            "Drama"
+        ],
+        "rating": 8.7,
+        "seasons": 4,
+        "episodes": 34,
+        "channel": "Netflix",
+        "shortDescription": "Kids uncover supernatural mysteries in a small 80s town.",
+        "description": "When a young boy disappears in a small town, his friends, family, and local police are drawn into a mystery involving secret government experiments, terrifying supernatural forces, and a strange girl with extraordinary abilities. Set in the nostalgic backdrop of the 1980s, the show blends horror, friendship, and adventure."
+    },
+    {
+        "id": 3,
+        "title": "The Boys",
+        "poster": "https://i.ibb.co.com/C57ySKXG/image.png",
+        "year": 2019,
+        "genre": [
+            "Action",
+            "Comedy",
+            "Sci-Fi"
+        ],
+        "rating": 8.7,
+        "seasons": 4,
+        "episodes": 32,
+        "channel": "Amazon Prime",
+        "shortDescription": "Vigilantes fight corrupt, superpowered celebrities.",
+        "description": "In a world where superheroes are corporate-owned celebrities more concerned with fame and image than saving lives, a group of vigilantes sets out to expose and take down those who abuse their powers. Dark, violent, and deeply satirical, the show critiques celebrity culture and corporate greed."
+    },
+    {
+        "id": 4,
+        "title": "Money Heist",
+        "poster": "https://i.ibb.co.com/4gf01vCL/image.png",
+        "year": 2017,
+        "genre": [
+            "Crime",
+            "Drama",
+            "Thriller"
+        ],
+        "rating": 8.2,
+        "seasons": 5,
+        "episodes": 41,
+        "channel": "Netflix",
+        "shortDescription": "A mastermind plans the greatest heist in history.",
+        "description": "A criminal mastermind known as The Professor recruits a group of eight strangers to carry out an elaborate heist on the Royal Mint of Spain, and later the Bank of Spain. As police close in, hostages become allies, loyalties are tested, and the group must outsmart the authorities at every turn."
+    },
+    {
+        "id": 5,
+        "title": "Game of Thrones",
+        "poster": "https://i.ibb.co.com/BV7GC1YM/image.png",
+        "year": 2011,
+        "genre": [
+            "Fantasy",
+            "Drama",
+            "Action"
+        ],
+        "rating": 9.2,
+        "seasons": 8,
+        "episodes": 73,
+        "channel": "HBO",
+        "shortDescription": "Noble families battle for control of the Iron Throne.",
+        "description": "Nine noble families fight for control over the mythical lands of Westeros, while an ancient enemy returns after being dormant for thousands of years. Political intrigue, shifting alliances, and brutal power struggles define this sprawling fantasy epic based on the novels by George R.R. Martin."
+    },
+    {
+        "id": 6,
+        "title": "Wednesday",
+        "poster": "https://i.ibb.co.com/V0rBnXgP/image.png",
+        "year": 2022,
+        "genre": [
+            "Comedy",
+            "Horror",
+            "Mystery"
+        ],
+        "rating": 8.1,
+        "seasons": 1,
+        "episodes": 8,
+        "channel": "Netflix",
+        "shortDescription": "Wednesday Addams investigates a supernatural mystery at Nevermore Academy.",
+        "description": "Wednesday Addams navigates her years as a student at Nevermore Academy, attempting to master her emerging psychic ability, thwart a monstrous killing spree that has terrorized the local town, and solve a mystery that embroiled her parents 25 years ago — all while forming new relationships."
+    },
+    {
+        "id": 7,
+        "title": "Peaky Blinders",
+        "poster": "https://i.ibb.co.com/R42Dw7NW/image.png",
+        "year": 2013,
+        "genre": [
+            "Crime",
+            "Drama"
+        ],
+        "rating": 8.8,
+        "seasons": 6,
+        "episodes": 36,
+        "channel": "BBC",
+        "shortDescription": "A gangster family rises to power in post-war Birmingham.",
+        "description": "Set in 1919 Birmingham, England, this crime drama follows the Shelby crime family and their gang, the Peaky Blinders, as they navigate the criminal underworld, class conflict, and post-war trauma while building an empire that stretches from local pubs to the halls of Parliament."
+    },
+    {
+        "id": 8,
+        "title": "The Crown",
+        "poster": "https://i.ibb.co.com/4gSPkMzx/image.png",
+        "year": 2016,
+        "genre": [
+            "Drama",
+            "History"
+        ],
+        "rating": 8.6,
+        "seasons": 6,
+        "episodes": 60,
+        "channel": "Netflix",
+        "shortDescription": "The reign of Queen Elizabeth II, from her wedding to modern times.",
+        "description": "This lavish historical drama chronicles the reign of Queen Elizabeth II, exploring the personal and political events that shaped the second half of the twentieth century, from her wedding in 1947 through decades of gripping historical events and family drama within the royal household."
+    },
+    {
+        "id": 9,
+        "title": "Dark",
+        "poster": "https://i.ibb.co.com/g574vhg/image.png",
+        "year": 2017,
+        "genre": [
+            "Sci-Fi",
+            "Mystery",
+            "Thriller"
+        ],
+        "rating": 8.8,
+        "seasons": 3,
+        "episodes": 26,
+        "channel": "Netflix",
+        "shortDescription": "A time-travel mystery unravels secrets across four generations.",
+        "description": "A family saga with a supernatural twist, set in a German town where the disappearance of two children exposes the relationships among four families. As the mystery deepens, a wormhole spanning three generations is discovered, unraveling a puzzle involving time travel, fate, and destiny."
+    },
+    {
+        "id": 10,
+        "title": "The Witcher",
+        "poster": "https://i.ibb.co.com/vv4zBbG2/image.png",
+        "year": 2019,
+        "genre": [
+            "Fantasy",
+            "Action",
+            "Adventure"
+        ],
+        "rating": 8.0,
+        "seasons": 3,
+        "episodes": 24,
+        "channel": "Netflix",
+        "shortDescription": "A monster hunter navigates a world more monstrous than the beasts he fights.",
+        "description": "Geralt of Rivia, a solitary monster hunter, struggles to find his place in a world where people often prove more wicked than beasts. As his destiny intertwines with a powerful sorceress and a young princess with a dangerous secret, their paths become inextricably linked."
+    },
+    {
+        "id": 11,
+        "title": "Squid Game",
+        "poster": "https://i.ibb.co.com/bMJDLDQ7/image.png",
+        "year": 2021,
+        "genre": [
+            "Thriller",
+            "Drama",
+            "Mystery"
+        ],
+        "rating": 8.0,
+        "seasons": 2,
+        "episodes": 17,
+        "channel": "Netflix",
+        "shortDescription": "Desperate contestants play deadly childhood games for money.",
+        "description": "Hundreds of cash-strapped contestants accept an invitation to compete in children's games for a tempting prize, but the stakes are deadly. Behind the innocent-looking games lies a brutal fight for survival, and dark secrets about the organizers slowly come to light."
+    },
+    {
+        "id": 12,
+        "title": "House of the Dragon",
+        "poster": "https://i.ibb.co.com/rK6GTyx8/image.png",
+        "year": 2022,
+        "genre": [
+            "Fantasy",
+            "Drama",
+            "Action"
+        ],
+        "rating": 8.4,
+        "seasons": 2,
+        "episodes": 18,
+        "channel": "HBO",
+        "shortDescription": "The Targaryen civil war tears the dragon-riding dynasty apart.",
+        "description": "Set 200 years before the events of Game of Thrones, this prequel tells the story of House Targaryen and the beginning of its downfall through a devastating civil war known as the Dance of the Dragons, exploring succession, betrayal, and the price of power among dragon-riders."
+    },
+    {
+        "id": 13,
+        "title": "Loki",
+        "poster": "https://i.ibb.co.com/HDFfBCQv/image.png",
+        "year": 2021,
+        "genre": [
+            "Sci-Fi",
+            "Action",
+            "Comedy"
+        ],
+        "rating": 8.2,
+        "seasons": 2,
+        "episodes": 12,
+        "channel": "Disney+",
+        "shortDescription": "The God of Mischief is recruited to fix the timeline.",
+        "description": "After stealing the Tesseract, Loki finds himself brought before the mysterious Time Variance Authority, an organization that polices the timeline. Given a choice, Loki helps fix a fracture in the flow of time and prevent an even greater threat to the universe."
+    },
+    {
+        "id": 14,
+        "title": "Narcos",
+        "poster": "https://i.ibb.co.com/fYk1Nm0H/image.png",
+        "year": 2015,
+        "genre": [
+            "Crime",
+            "Drama",
+            "Biography"
+        ],
+        "rating": 8.8,
+        "seasons": 3,
+        "episodes": 30,
+        "channel": "Netflix",
+        "shortDescription": "The rise and fall of Colombian drug lord Pablo Escobar.",
+        "description": "A chronicled dramatization of the rise and fall of drug kingpin Pablo Escobar and the brutal war fought between rival cartels and law enforcement to control the world's cocaine trade, told through the eyes of DEA agents working to bring him down."
+    },
+    {
+        "id": 15,
+        "title": "The Mandalorian",
+        "poster": "https://i.ibb.co.com/d4nMJP7X/image.png",
+        "year": 2019,
+        "genre": [
+            "Sci-Fi",
+            "Action",
+            "Adventure"
+        ],
+        "rating": 8.6,
+        "seasons": 3,
+        "episodes": 24,
+        "channel": "Disney+",
+        "shortDescription": "A lone bounty hunter protects a mysterious child in the outer reaches of the galaxy.",
+        "description": "After the fall of the Galactic Empire, a lone gunfighter makes his way through the lawless outer reaches of the galaxy, taking on bounty hunting jobs. His life changes forever when he encounters a mysterious, powerful child he must protect from those who wish to use it for their own gain."
+    }
+]
