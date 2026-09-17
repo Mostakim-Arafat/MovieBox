@@ -400,7 +400,7 @@ export default function TvShowDetailsPage() {
                                                 {emoji}
                                             </div>
                                             <p className="mt-3 text-sm font-semibold">
-                                                Cast Member {i + 1}
+                                                ast Member {i + 1}
                                             </p>
                                             <p className="text-xs text-gray-500 dark:text-neutral-500">
                                                 Main Role
