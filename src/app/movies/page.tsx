@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 
 type Movie = {
-    id: number;
+    _id: string;
     title: string;
     poster: string;
     year: number;
@@ -154,7 +154,7 @@ function MovieRow({
             >
                 {movies.map((movie) => (
                     <motion.div
-                        key={movie.id}
+                        key={movie._id}
                         onClick={() => onSelect(movie)}
                         whileHover={{ scale: 1.05, y: -4 }}
                         whileTap={{ scale: 0.97 }}
@@ -368,7 +368,7 @@ export default function MoviesPage() {
                                         </button>
 
                                         <Link
-                                            href={"/movies/" + selectedMovie.id}
+                                            href={"/movies/" + selectedMovie._id}
                                             className="flex-1 rounded-lg border border-red-600 px-6 py-3 text-center font-bold text-red-500 transition hover:bg-red-600/10 sm:flex-none"
                                         >
                                             View Details
@@ -426,7 +426,7 @@ export default function MoviesPage() {
                                 <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
                                     {selectedGenre.movies.map((movie) => (
                                         <motion.div
-                                            key={movie.id}
+                                            key={movie._id}
                                             onClick={() => {
                                                 setSelectedGenre(null);
                                                 setSelectedMovie(movie);

@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -162,9 +161,24 @@ export default function MovieUploadPage() {
     setErrorMessage("");
   };
 
+
+
+
+
+
+
+
+
+
+
+
+
+
   // Form Submit / Mock Upload
-  const handleFormSubmit = (e: React.FormEvent, submitStatus: "Published" | "Draft") => {
+  const handleFormSubmit = async (e: React.FormEvent, submitStatus: "Published" | "Draft") => {
     e.preventDefault();
+
+
     setErrorMessage("");
 
     if (!title.trim()) {
@@ -178,38 +192,53 @@ export default function MovieUploadPage() {
 
     setStatus(submitStatus);
     setIsUploading(true);
-    setUploadProgress(10);
-    setUploadStage("Validating movie assets and metadata...");
 
-    const timer1 = setTimeout(() => {
-      setUploadProgress(35);
-      setUploadStage("Uploading poster and promotional banner...");
-    }, 600);
+    try {
+      const response = await fetch("/api/movies", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: title.trim(),
+          poster: posterPreview,
+          year: Number(releaseYear),
+          releaseDate,
+          ageRating,
+          language,
+          subtitles,
+          genre: selectedGenres,
+          rating: 0,
+          duration: `${durationHours}h ${durationMinutes}m`,
+          description: synopsis.trim(),
+        }),
+      });
 
-    const timer2 = setTimeout(() => {
-      setUploadProgress(70);
-      setUploadStage("Processing video stream & generating multi-bitrate encodes...");
-    }, 1400);
+      if (!response.ok) throw new Error("Failed to save movie");
 
-    const timer3 = setTimeout(() => {
-      setUploadProgress(95);
-      setUploadStage("Writing metadata into MovieBox catalog...");
-    }, 2200);
-
-    const timer4 = setTimeout(() => {
-      setUploadProgress(100);
-      setUploadStage("Complete!");
-      setIsUploading(false);
       setUploadSuccess(true);
-    }, 2800);
-
-    return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
-      clearTimeout(timer3);
-      clearTimeout(timer4);
-    };
+      setUploadProgress(100);
+    } catch (error) {
+      console.error(error);
+      setErrorMessage("Could not save the movie. Please try again.");
+    } finally {
+      setIsUploading(false);
+    }
   };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   const resetForm = () => {
     setTitle("");

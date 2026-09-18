@@ -5,9 +5,10 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import toast, { Toaster } from "react-hot-toast";
+import { ObjectId } from "mongodb";
 
 type Movie = {
-    id: number | string;
+    _id: ObjectId;
     title: string;
     poster: string;
     year: number;
@@ -122,7 +123,7 @@ export default function MovieDetailsPage() {
             .then((data: Movie[]) => {
                 setAllMovies(data);
                 const found = data.find(
-                    (m) => String(m.id) === String(params.id)
+                    (m) => m._id === String(params.id)
                 );
                 if (found) {
                     setMovie(found);
@@ -227,7 +228,7 @@ export default function MovieDetailsPage() {
     const similarMovies = allMovies
         .filter(
             (m) =>
-                m.id !== movie.id &&
+                m._id !== movie._id &&
                 m.genre.some((g) => movie.genre.includes(g))
         )
         .slice(0, 6);
@@ -386,8 +387,8 @@ export default function MovieDetailsPage() {
                                         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
                                             {similarMovies.map((m) => (
                                                 <Link
-                                                    key={m.id}
-                                                    href={"/movies/" + m.id}
+                                                    key={m._id}
+                                                    href={"/movies/" + m._id}
                                                     className="group overflow-hidden rounded-lg"
                                                 >
                                                     <PosterImage
