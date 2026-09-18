@@ -114,16 +114,16 @@ export default function MovieUploadPage() {
   };
 
   // Keywords Tag Handling
-  const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if ((e.key === "Enter" || e.key === ",") && tagsInput.trim()) {
-      e.preventDefault();
-      const val = tagsInput.trim().replace(/^,|,$/g, "");
-      if (val && !tagsList.includes(val)) {
-        setTagsList([...tagsList, val]);
-      }
-      setTagsInput("");
-    }
-  };
+  // const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  //   if ((e.key === "Enter" || e.key === ",") && tagsInput.trim()) {
+  //     e.preventDefault();
+  //     const val = tagsInput.trim().replace(/^,|,$/g, "");
+  //     if (val && !tagsList.includes(val)) {
+  //       setTagsList([...tagsList, val]);
+  //     }
+  //     setTagsInput("");
+  //   }
+  // };
 
   const removeTag = (indexToRemove: number) => {
     setTagsList(tagsList.filter((_, i) => i !== indexToRemove));
@@ -264,14 +264,14 @@ export default function MovieUploadPage() {
           >
             Cancel
           </Link>
-          <button
+          {/* <button
             type="button"
             disabled={isUploading}
             onClick={(e) => handleFormSubmit(e, "Draft")}
             className="px-4 py-2 rounded-lg text-sm font-medium text-zinc-200 bg-zinc-800 hover:bg-zinc-700 transition-colors disabled:opacity-50 cursor-pointer"
           >
             Save Draft
-          </button>
+          </button> */}
           <button
             type="button"
             disabled={isUploading}
@@ -360,10 +360,10 @@ export default function MovieUploadPage() {
       {/* Main Upload Form Layout */}
       <form onSubmit={(e) => handleFormSubmit(e, "Published")} className="space-y-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
+
           {/* Left 2 Columns: Metadata & Descriptions */}
           <div className="lg:col-span-2 space-y-6">
-            
+
             {/* 1. General Information Card */}
             <div className="bg-zinc-900/60 backdrop-blur-xl border border-zinc-800 rounded-2xl p-6 space-y-5">
               <div className="border-b border-zinc-800/80 pb-3 flex items-center justify-between">
@@ -390,7 +390,7 @@ export default function MovieUploadPage() {
                   />
                 </div>
 
-                <div className="sm:col-span-2">
+                {/* <div className="sm:col-span-2">
                   <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-300 mb-1.5">
                     Tagline / Catchphrase
                   </label>
@@ -401,7 +401,7 @@ export default function MovieUploadPage() {
                     placeholder="e.g. Mankind was born on Earth. It was never meant to die here."
                     className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2.5 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition-all"
                   />
-                </div>
+                </div> */}
               </div>
 
               {/* Synopsis */}
@@ -542,11 +542,10 @@ export default function MovieUploadPage() {
                         key={genre}
                         type="button"
                         onClick={() => toggleGenre(genre)}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer select-none ${
-                          isSelected
-                            ? "bg-rose-600 text-white shadow-md shadow-rose-900/30 border border-rose-500"
-                            : "bg-zinc-950 text-zinc-400 border border-zinc-800 hover:border-zinc-700 hover:text-zinc-200"
-                        }`}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer select-none ${isSelected
+                          ? "bg-rose-600 text-white shadow-md shadow-rose-900/30 border border-rose-500"
+                          : "bg-zinc-950 text-zinc-400 border border-zinc-800 hover:border-zinc-700 hover:text-zinc-200"
+                          }`}
                       >
                         {isSelected ? "✓ " : "+ "}
                         {genre}
@@ -557,7 +556,7 @@ export default function MovieUploadPage() {
               </div>
 
               {/* Keywords / Search Tags */}
-              <div>
+              {/* <div>
                 <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-300 mb-1.5">
                   Keywords / Search Tags (Type & hit Enter)
                 </label>
@@ -586,7 +585,7 @@ export default function MovieUploadPage() {
                     className="flex-1 min-w-[120px] bg-transparent text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none px-2"
                   />
                 </div>
-              </div>
+              </div> */}
             </div>
 
             {/* 3. Cast & Crew Card */}
@@ -712,7 +711,7 @@ export default function MovieUploadPage() {
 
           {/* Right Column: Visual Artwork, Status & Publishing Options */}
           <div className="space-y-6">
-            
+
             {/* 1. Poster Artwork Upload (2:3 Aspect) */}
             <div className="bg-zinc-900/60 backdrop-blur-xl border border-zinc-800 rounded-2xl p-6 space-y-4">
               <div className="border-b border-zinc-800/80 pb-2">
@@ -776,7 +775,7 @@ export default function MovieUploadPage() {
             </div>
 
             {/* 2. Backdrop Banner (16:9 Aspect) */}
-            <div className="bg-zinc-900/60 backdrop-blur-xl border border-zinc-800 rounded-2xl p-6 space-y-4">
+            {/* <div className="bg-zinc-900/60 backdrop-blur-xl border border-zinc-800 rounded-2xl p-6 space-y-4">
               <div className="border-b border-zinc-800/80 pb-2">
                 <h2 className="text-base font-bold text-zinc-100">Hero Backdrop Banner</h2>
                 <p className="text-xs text-zinc-500">Wide banner ratio 16:9 (e.g. 1920×1080 px)</p>
@@ -792,7 +791,7 @@ export default function MovieUploadPage() {
 
               {backdropPreview ? (
                 <div className="relative group rounded-xl overflow-hidden border border-zinc-700 bg-zinc-950">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                 
                   <img
                     src={backdropPreview}
                     alt="Backdrop Preview"
@@ -827,10 +826,10 @@ export default function MovieUploadPage() {
                   <p className="text-[11px] text-zinc-500 mt-1">16:9 Landscape Artwork</p>
                 </div>
               )}
-            </div>
+            </div> */}
 
             {/* 3. Audio & Video Quality Badges */}
-            <div className="bg-zinc-900/60 backdrop-blur-xl border border-zinc-800 rounded-2xl p-6 space-y-4">
+            {/* <div className="bg-zinc-900/60 backdrop-blur-xl border border-zinc-800 rounded-2xl p-6 space-y-4">
               <div className="border-b border-zinc-800/80 pb-2">
                 <h2 className="text-base font-bold text-zinc-100">Quality & Formats</h2>
                 <p className="text-xs text-zinc-500">Select supported badge formats</p>
@@ -855,16 +854,16 @@ export default function MovieUploadPage() {
                   );
                 })}
               </div>
-            </div>
+            </div> */}
 
             {/* 4. Display Toggles & Publishing Controls */}
-            <div className="bg-zinc-900/60 backdrop-blur-xl border border-zinc-800 rounded-2xl p-6 space-y-5">
+            {/* <div className="bg-zinc-900/60 backdrop-blur-xl border border-zinc-800 rounded-2xl p-6 space-y-5">
               <div className="border-b border-zinc-800/80 pb-2">
                 <h2 className="text-base font-bold text-zinc-100">Catalog Placement</h2>
                 <p className="text-xs text-zinc-500">Configure homepage visibility</p>
               </div>
 
-              {/* Featured toggle */}
+             
               <label className="flex items-center justify-between cursor-pointer group">
                 <div>
                   <p className="text-sm font-semibold text-zinc-200 group-hover:text-white">
@@ -880,7 +879,7 @@ export default function MovieUploadPage() {
                 />
               </label>
 
-              {/* Trending toggle */}
+              
               <label className="flex items-center justify-between cursor-pointer group">
                 <div>
                   <p className="text-sm font-semibold text-zinc-200 group-hover:text-white">
@@ -896,7 +895,7 @@ export default function MovieUploadPage() {
                 />
               </label>
 
-              {/* Status Selector */}
+              
               <div>
                 <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-300 mb-1.5">
                   Publishing Status
@@ -912,7 +911,7 @@ export default function MovieUploadPage() {
                 </select>
               </div>
 
-              {/* Bottom Submit Buttons */}
+             
               <div className="pt-2 space-y-2">
                 <button
                   type="submit"
@@ -926,7 +925,7 @@ export default function MovieUploadPage() {
                 </button>
               </div>
 
-            </div>
+            </div> */}
 
           </div>
 
