@@ -5,9 +5,11 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import toast, { Toaster } from "react-hot-toast";
+import { ObjectId } from "mongodb";
+import WatchModal from "@/Components/Movie/watchModal";
 
 type Movie = {
-    id: number | string;
+    _id: ObjectId;
     title: string;
     poster: string;
     year: number;
@@ -15,6 +17,7 @@ type Movie = {
     rating: number;
     duration: string;
     description: string;
+    muxPlaybackId : string;
 };
 
 type Review = {
@@ -116,13 +119,15 @@ export default function MovieDetailsPage() {
     const [reviewRating, setReviewRating] = useState(0);
     const [reviewComment, setReviewComment] = useState("");
 
+    const [isPlaying, setIsPlaying] = useState(false);
+
     useEffect(() => {
         fetch("/api/proxy-movies")
             .then((res) => res.json())
             .then((data: Movie[]) => {
                 setAllMovies(data);
                 const found = data.find(
-                    (m) => String(m.id) === String(params.id)
+                    (m) => String(m._id) === String(params.id)
                 );
                 if (found) {
                     setMovie(found);
@@ -227,7 +232,7 @@ export default function MovieDetailsPage() {
     const similarMovies = allMovies
         .filter(
             (m) =>
-                m.id !== movie.id &&
+                String(m._id) !== String(movie._id) &&
                 m.genre.some((g) => movie.genre.includes(g))
         )
         .slice(0, 6);
@@ -299,9 +304,28 @@ export default function MovieDetailsPage() {
                     transition={{ duration: 0.4 }}
                     className="flex flex-wrap gap-3"
                 >
-                    <button className="flex items-center gap-2 rounded-full bg-red-600 px-8 py-3 font-bold text-white shadow-lg shadow-red-600/20 transition hover:bg-red-700">
-                        ▶ Watch Now
+
+
+
+                    <button
+                        onClick={() => setIsPlaying(true)}
+                        disabled={!movie.muxPlaybackId}
+                        className="px-6 py-3 rounded-xl font-semibold text-white bg-rose-600 hover:bg-rose-700 shadow-lg shadow-rose-900/30 transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z" />
+                        </svg>
+                        {movie.muxPlaybackId ? "Watch Now" : "Video Unavailable"}
                     </button>
+
+                    <WatchModal
+                        isOpen={isPlaying}
+                        onClose={() => setIsPlaying(false)}
+                        muxPlaybackId={movie.muxPlaybackId}
+                        title={movie.title}
+                    />
+
+
                     <button
                         onClick={toggleMyList}
                         className={`flex items-center gap-2 rounded-full border px-8 py-3 font-bold transition ${inList
@@ -386,8 +410,8 @@ export default function MovieDetailsPage() {
                                         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
                                             {similarMovies.map((m) => (
                                                 <Link
-                                                    key={m.id}
-                                                    href={"/movies/" + m.id}
+                                                    key={String(m._id)}
+                                                    href={"/movies/" + String(m._id)}
                                                     className="group overflow-hidden rounded-lg"
                                                 >
                                                     <PosterImage

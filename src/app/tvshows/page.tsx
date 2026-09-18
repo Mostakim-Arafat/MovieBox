@@ -186,6 +186,7 @@ export default function TvShowsPage() {
                 setIsLoading(false);
             })
             .catch((err) => console.error(err));
+
     }, []);
 
     const genreMap: Record<string, Show[]> = {};
