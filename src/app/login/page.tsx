@@ -11,30 +11,30 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
- 
+
   const [error, setError] = useState("");
   const router = useRouter()
-  
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     setError("");
 
-   const result = await signIn.email({email,password})
-    if(result.error){
+    const result = await signIn.email({ email, password })
+    if (result.error) {
       setError(result.error.message ?? "login failed")
       return
     }
-    
+
     router.push("/")
   };
 
-  const handleGoogleSignIn = async() => {
-     const data = await authClient.signIn.social({
-    provider: "google",
-  });
-  // console.log(data)
+  const handleGoogleSignIn = async () => {
+    const data = await authClient.signIn.social({
+      provider: "google",
+    });
+    // console.log(data)
   };
 
   return (
