@@ -3,14 +3,17 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useSession } from "@/lib/auth-client";
 
 export default function BannerSection() {
   const [email, setEmail] = useState("");
   const router = useRouter();
-   
+  const { data: session, isPending } = useSession();
+
+
   // const handleSignup = (e: React.FormEvent) => {
   //   e.preventDefault();
-    
+
   //   if (email.trim()) {
   //     router.push(`/register?email=${encodeURIComponent(email.trim())}`);
   //   }
@@ -64,23 +67,22 @@ export default function BannerSection() {
 
   return (
     <section className="relative w-full overflow-hidden bg-black text-white h-[95vh] md:h-[90vh] flex flex-col justify-between select-none">
-      
+
       {/* 1. Backdrop Tilted Poster Grid */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         <div className="absolute w-[140%] h-[140%] -top-[20%] -left-[20%] grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3 md:gap-4.5 transform -rotate-[7deg] scale-105 opacity-[0.62] transition-opacity duration-700">
           {posterColumns.map((column, colIdx) => (
-            <div 
-              key={colIdx} 
-              className={`flex flex-col gap-3 md:gap-4.5 ${
-                colIdx % 2 === 0 ? "animate-marquee-slow" : "animate-marquee-slow-reverse"
-              }`}
+            <div
+              key={colIdx}
+              className={`flex flex-col gap-3 md:gap-4.5 ${colIdx % 2 === 0 ? "animate-marquee-slow" : "animate-marquee-slow-reverse"
+                }`}
             >
               {[...column, ...column].map((imgUrl, imgIdx) => (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img 
-                  key={imgIdx} 
-                  src={imgUrl} 
-                  alt="Movie Backdrop" 
+                <img
+                  key={imgIdx}
+                  src={imgUrl}
+                  alt="Movie Backdrop"
                   className="w-full aspect-[2/3] rounded-lg bg-zinc-900 border border-zinc-800/20 overflow-hidden shadow-lg object-cover select-none"
                   loading="lazy"
                 />
@@ -88,14 +90,14 @@ export default function BannerSection() {
             </div>
           ))}
         </div>
-        
+
         {/* Cinematic Vignette Overlay Gradients */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/85 z-10" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_35%,rgba(0,0,0,0.75)_95%)] z-10" />
       </div>
 
       {/* 2. Simple Brand Header */}
-     
+
 
       {/* 3. Hero Copy & Call To Action */}
       <div className="relative z-20 flex-grow flex flex-col items-center justify-center text-center px-4 max-w-3xl mx-auto -mt-6 sm:-mt-12">
@@ -153,43 +155,49 @@ export default function BannerSection() {
             </svg>
           </button>
         </form> */}
-         <button
-            onClick={() => {router.push('/login')}}
-            className="mt-4 bg-rose-600 hover:bg-rose-700 text-white font-bold text-base sm:text-lg px-6 py-3.5 sm:py-0 rounded-lg flex items-center justify-center gap-1.5 transition-all duration-200 shadow-md shadow-rose-900/10 active:scale-[0.98] cursor-pointer whitespace-nowrap"
+        <button
+          onClick={() => {
+            if (session?.user) {
+              router.push("/movies");
+            } else {
+              router.push("/login");
+            }
+          }}
+          className="mt-4 bg-rose-600 hover:bg-rose-700 text-white font-bold text-base sm:text-lg px-6 py-3.5 sm:py-0 rounded-lg flex items-center justify-center gap-1.5 transition-all duration-200 shadow-md shadow-rose-900/10 active:scale-[0.98] cursor-pointer whitespace-nowrap"
+        >
+          {isPending ? "Loading..." : session?.user ? "Explore Movies" : "Get Started"}
+          <svg
+            className="w-4 h-4 text-white transform transition-transform group-hover:translate-x-1"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2.5}
           >
-            Get Started
-            <svg
-              className="w-4 h-4 text-white transform transition-transform group-hover:translate-x-1"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2.5}
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
       </div>
 
       {/* 4. Curved Glowing Bottom Divider */}
       <div className="relative z-20 w-full h-[60px] sm:h-[80px] md:h-[100px] pointer-events-none select-none overflow-visible">
-        <svg 
-          viewBox="0 0 1440 100" 
-          fill="none" 
+        <svg
+          viewBox="0 0 1440 100"
+          fill="none"
           preserveAspectRatio="none"
           xmlns="http://www.w3.org/2000/svg"
           className="absolute bottom-0 left-0 w-full h-full overflow-visible z-20"
         >
           {/* Solid Black mask below the curve */}
           <path d="M0 100 C 360 10, 1080 10, 1440 100 L 1440 101 L 0 101 Z" fill="#000000" />
-          
+
           {/* Curved neon glow stroke */}
-          <path 
-            d="M0 100 C 360 10, 1080 10, 1440 100" 
-            stroke="url(#rose-glow-gradient)" 
-            strokeWidth="5" 
+          <path
+            d="M0 100 C 360 10, 1080 10, 1440 100"
+            stroke="url(#rose-glow-gradient)"
+            strokeWidth="5"
             className="drop-shadow-[0_0_8px_rgba(225,29,72,0.4)]"
           />
-          
+
           <defs>
             <linearGradient id="rose-glow-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%" stopColor="rgba(225, 29, 72, 0)" />
@@ -203,7 +211,8 @@ export default function BannerSection() {
       </div>
 
       {/* 5. Injected keyframe animations */}
-      <style dangerouslySetInnerHTML={{__html: `
+      <style dangerouslySetInnerHTML={{
+        __html: `
         @keyframes marquee {
           0% { transform: translateY(0); }
           100% { transform: translateY(-50%); }
