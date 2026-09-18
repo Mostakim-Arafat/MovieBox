@@ -363,9 +363,9 @@ export default function MoviesPage() {
                                     </p>
 
                                     <div className="mt-7 flex flex-wrap gap-3">
-                                        <button className="flex-1 rounded-lg bg-red-600 px-6 py-3 font-bold text-white transition hover:bg-red-700 sm:flex-none">
+                                        {/* <button className="flex-1 rounded-lg bg-red-600 px-6 py-3 font-bold text-white transition hover:bg-red-700 sm:flex-none">
                                             ▶ Watch Now
-                                        </button>
+                                        </button> */}
 
                                         <Link
                                             href={"/movies/" + selectedMovie._id}
