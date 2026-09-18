@@ -123,7 +123,7 @@ export default function MovieDetailsPage() {
             .then((data: Movie[]) => {
                 setAllMovies(data);
                 const found = data.find(
-                    (m) => m._id === String(params.id)
+                    (m) => String(m._id) === String(params.id)
                 );
                 if (found) {
                     setMovie(found);
@@ -228,7 +228,7 @@ export default function MovieDetailsPage() {
     const similarMovies = allMovies
         .filter(
             (m) =>
-                m._id !== movie._id &&
+                String(m._id) !== String(movie._id) &&
                 m.genre.some((g) => movie.genre.includes(g))
         )
         .slice(0, 6);
@@ -387,8 +387,8 @@ export default function MovieDetailsPage() {
                                         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
                                             {similarMovies.map((m) => (
                                                 <Link
-                                                    key={m._id}
-                                                    href={"/movies/" + m._id}
+                                                    key={String(m._id)}
+                                                    href={"/movies/" + String(m._id)}
                                                     className="group overflow-hidden rounded-lg"
                                                 >
                                                     <PosterImage
