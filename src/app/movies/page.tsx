@@ -195,6 +195,7 @@ export default function MoviesPage() {
         movies: Movie[];
     } | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [isNavigating, setIsNavigating] = useState(false);
 
     useEffect(() => {
         fetch("/api/movies")
@@ -369,6 +370,10 @@ export default function MoviesPage() {
 
                                         <Link
                                             href={"/movies/" + selectedMovie._id}
+                                            onClick={() => {
+                                                setSelectedMovie(null);
+                                                setIsNavigating(true);
+                                            }}
                                             className="flex-1 rounded-lg border border-red-600 px-6 py-3 text-center font-bold text-red-500 transition hover:bg-red-600/10 sm:flex-none"
                                         >
                                             View Details
@@ -384,6 +389,18 @@ export default function MoviesPage() {
                     </>
                 )}
             </AnimatePresence>
+
+            {isNavigating && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 px-4 backdrop-blur-sm">
+                    <div className="flex flex-col items-center text-center text-white">
+                        <div className="relative flex h-16 w-16 items-center justify-center">
+                            <div className="absolute inset-0 animate-spin rounded-full border-4 border-neutral-700 border-t-red-600" />
+                            <span className="text-xl">🎬</span>
+                        </div>
+                        <p className="mt-4 text-sm font-semibold">Loading movie details...</p>
+                    </div>
+                </div>
+            )}
 
             {/* See more Modal */}
             <AnimatePresence>
