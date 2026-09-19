@@ -220,7 +220,7 @@ export default function MoviesPage() {
         return genreMap[b].length - genreMap[a].length;
     });
 
-    const featured = movies[0];
+    const featured = movies[16];
 
     return (
         <main className="min-h-screen bg-black text-white">
