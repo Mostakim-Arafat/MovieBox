@@ -2,7 +2,7 @@ import { betterAuth } from "better-auth";
 import { MongoClient } from "mongodb";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 
-const client = new MongoClient(process.env.MONGO_URL as string);
+const client = new MongoClient(process.env.MONGO_URL || "mongodb://127.0.0.1:27017/Moviebox");
 const db = client.db("Moviebox");
 
 export const auth = betterAuth({
@@ -10,8 +10,20 @@ export const auth = betterAuth({
     // Optional: if you don't provide a client, database transactions won't be enabled.
     client
   }),
-  user : {
-    modelName : "users"
+  user: {
+    modelName: "users",
+    additionalFields: {
+      phone: {
+        type: "string",
+        required: false,
+        defaultValue: "",
+      },
+      location: {
+        type: "string",
+        required: false,
+        defaultValue: "",
+      },
+    },
   },
     emailAndPassword: { 
     enabled: true, 
