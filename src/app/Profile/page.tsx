@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useRef, useState, useEffect } from "react";
+import { ChangeEvent, useRef, useState, useEffect, useCallback } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
@@ -17,23 +17,69 @@ export default function UserProfilePage() {
     const [activeTab, setActiveTab] = useState("profile");
     const [isEditing, setIsEditing] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
+    const [isLoadingProfile, setIsLoadingProfile] = useState(true);
 
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const router = useRouter();
 
-     const {data} = authClient.useSession()
-    console.log(data?.user?.name)
+    const { data, isPending } = authClient.useSession();
 
     const [user, setUser] = useState<UserData>({
-        name: data?.user?.name ?? "",
-        email: data?.user?.email ?? "",
-        phone: "+880 1XXX-XXXXXX",
-        location: "dhaka",
-        avatar: data?.user?.image ?? ""
+        name: "",
+        email: "",
+        phone: "",
+        location: "",
+        avatar: "",
     });
 
-   
-
     const [formData, setFormData] = useState<UserData>(user);
+
+    const fetchUserProfile = useCallback(async () => {
+        try {
+            setIsLoadingProfile(true);
+            const res = await fetch("/api/users/profile");
+            if (res.ok) {
+                const profileData = await res.json();
+                const updated: UserData = {
+                    name: profileData.name || data?.user?.name || "",
+                    email: profileData.email || data?.user?.email || "",
+                    phone: profileData.phone || "",
+                    location: profileData.location || "",
+                    avatar: profileData.avatar || data?.user?.image || "",
+                };
+                setUser(updated);
+                setFormData(updated);
+            } else if (res.status === 401) {
+                router.push("/login");
+            }
+        } catch (error) {
+            console.error("Failed to fetch user profile:", error);
+            if (data?.user) {
+                const fallback: UserData = {
+                    name: data.user.name || "",
+                    email: data.user.email || "",
+                    phone: "",
+                    location: "",
+                    avatar: data.user.image || "",
+                };
+                setUser(fallback);
+                setFormData(fallback);
+            }
+        } finally {
+            setIsLoadingProfile(false);
+        }
+    }, [data?.user, router]);
+
+    useEffect(() => {
+        if (isPending) return;
+        if (!data?.user) {
+            router.push("/login");
+            return;
+        }
+
+        fetchUserProfile();
+    }, [data?.user, isPending, router, fetchUserProfile]);
 
     const handleChange = (
         e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -58,7 +104,7 @@ export default function UserProfilePage() {
             const apiKey = process.env.NEXT_PUBLIC_IMGBB_API_KEY;
 
             if (!apiKey) {
-                toast.error("imgbb API key is missing. Check .env.local", {
+                toast.error("ImgBB API key is missing. You can also paste an image URL directly.", {
                     id: uploadToast,
                 });
                 setIsUploading(false);
@@ -76,12 +122,12 @@ export default function UserProfilePage() {
                 }
             );
 
-            const data = await res.json();
+            const imgData = await res.json();
 
-            if (data.success) {
-                const imageUrl = data.data.url as string;
+            if (imgData.success) {
+                const imageUrl = imgData.data.url as string;
                 setFormData((prev) => ({ ...prev, avatar: imageUrl }));
-                toast.success("Photo uploaded!", { id: uploadToast });
+                toast.success("Photo uploaded successfully!", { id: uploadToast });
             } else {
                 toast.error("Upload failed. Try again.", { id: uploadToast });
             }
@@ -95,10 +141,64 @@ export default function UserProfilePage() {
         }
     };
 
-    const handleSave = () => {
-        setUser(formData);
-        setIsEditing(false);
-        toast.success("Profile updated successfully!");
+    const handleSave = async () => {
+        if (!formData.name?.trim()) {
+            toast.error("Full Name cannot be empty.");
+            return;
+        }
+
+        setIsSaving(true);
+        const saveToast = toast.loading("Saving profile changes...");
+
+        try {
+            const res = await fetch("/api/users/profile", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    name: formData.name,
+                    phone: formData.phone,
+                    location: formData.location,
+                    avatar: formData.avatar,
+                }),
+            });
+
+            const result = await res.json();
+
+            if (!res.ok) {
+                throw new Error(result.error || "Failed to update profile");
+            }
+
+            const savedUser: UserData = {
+                name: result.user.name,
+                email: result.user.email,
+                phone: result.user.phone,
+                location: result.user.location,
+                avatar: result.user.avatar,
+            };
+
+            setUser(savedUser);
+            setFormData(savedUser);
+            setIsEditing(false);
+            toast.success("Profile updated successfully!", { id: saveToast });
+
+            try {
+                if (typeof (authClient as any).updateUser === "function") {
+                    await (authClient as any).updateUser({
+                        name: savedUser.name,
+                        image: savedUser.avatar,
+                    });
+                }
+            } catch (err) {
+                // Non-critical session refresh
+            }
+        } catch (error: any) {
+            console.error("Save error:", error);
+            toast.error(error?.message || "Failed to save profile.", { id: saveToast });
+        } finally {
+            setIsSaving(false);
+        }
     };
 
     const handleCancel = () => {
@@ -106,13 +206,17 @@ export default function UserProfilePage() {
         setIsEditing(false);
         toast("Changes discarded", { icon: "↩️" });
     };
-    const router = useRouter();
 
-    useEffect(() => {
-        if (!data?.user) {
-            router.push('/login');
-        }
-    }, [data?.user, router]);
+    if (isPending || isLoadingProfile) {
+        return (
+            <div className="flex min-h-screen items-center justify-center bg-background text-foreground">
+                <div className="flex flex-col items-center gap-3">
+                    <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+                    <p className="text-sm text-muted-foreground">Loading profile...</p>
+                </div>
+            </div>
+        );
+    }
 
     if (!data?.user) {
         return null;
@@ -216,10 +320,10 @@ export default function UserProfilePage() {
                                                 </button>
                                                 <button
                                                     onClick={handleSave}
-                                                    disabled={isUploading}
+                                                    disabled={isUploading || isSaving}
                                                     className="flex-1 rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50 sm:flex-none sm:text-base"
                                                 >
-                                                    Save Changes
+                                                    {isSaving ? "Saving..." : "Save Changes"}
                                                 </button>
                                             </div>
                                         )}
@@ -233,7 +337,7 @@ export default function UserProfilePage() {
                                                 }`}
                                         >
                                             <img
-                                                src={isEditing ? formData.avatar : user.avatar}
+                                                src={isEditing ? formData.avatar || "./random.png" : user.avatar || "./random.png"}
                                                 alt="Profile"
                                                 className={`h-24 w-24 rounded-full object-cover sm:h-28 sm:w-28 ${isEditing
                                                         ? "opacity-90 transition group-hover:opacity-50"
@@ -260,7 +364,7 @@ export default function UserProfilePage() {
                                             <h3 className="font-semibold">Profile Picture</h3>
                                             <p className="mt-1 wrap-break-word text-sm text-muted-foreground">
                                                 {isEditing
-                                                    ? "Click on the photo to upload a new one."
+                                                    ? "Click on the photo to upload a new one, or enter an Image URL below."
                                                     : "Click Edit Profile to change your photo."}
                                             </p>
                                         </div>
@@ -270,18 +374,19 @@ export default function UserProfilePage() {
                                     <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
                                         <div>
                                             <label className="mb-2 block text-sm font-medium text-foreground">
-                                                Full Name
+                                                Full Name *
                                             </label>
                                             <input
                                                 type="text"
                                                 name="name"
+                                                required
+                                                placeholder="Your full name"
                                                 value={isEditing ? formData.name : user.name}
                                                 onChange={handleChange}
                                                 disabled={!isEditing}
                                                 className="w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary disabled:cursor-not-allowed disabled:opacity-70 sm:text-base"
                                             />
                                         </div>
-
 
                                         <div>
                                             <label className="mb-2 block text-sm font-medium text-foreground">
@@ -290,11 +395,13 @@ export default function UserProfilePage() {
                                             <input
                                                 type="email"
                                                 name="email"
-                                                value={isEditing ? formData.email : user.email}
-                                                onChange={handleChange}
-                                                disabled={!isEditing}
-                                                className="w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary disabled:cursor-not-allowed disabled:opacity-70 sm:text-base"
+                                                value={user.email}
+                                                disabled={true}
+                                                className="w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground outline-none opacity-60 cursor-not-allowed sm:text-base"
                                             />
+                                            <p className="mt-1 text-xs text-muted-foreground">
+                                                Email is associated with your account login and cannot be edited directly.
+                                            </p>
                                         </div>
 
                                         <div>
@@ -304,6 +411,7 @@ export default function UserProfilePage() {
                                             <input
                                                 type="text"
                                                 name="phone"
+                                                placeholder="+880 1XXX-XXXXXX"
                                                 value={isEditing ? formData.phone : user.phone}
                                                 onChange={handleChange}
                                                 disabled={!isEditing}
@@ -318,6 +426,7 @@ export default function UserProfilePage() {
                                             <input
                                                 type="text"
                                                 name="location"
+                                                placeholder="e.g. Dhaka, Bangladesh"
                                                 value={isEditing ? formData.location : user.location}
                                                 onChange={handleChange}
                                                 disabled={!isEditing}
@@ -325,6 +434,24 @@ export default function UserProfilePage() {
                                             />
                                         </div>
 
+                                        {isEditing && (
+                                            <div className="sm:col-span-2">
+                                                <label className="mb-2 block text-sm font-medium text-foreground">
+                                                    Avatar Image URL (Optional)
+                                                </label>
+                                                <input
+                                                    type="url"
+                                                    name="avatar"
+                                                    placeholder="https://example.com/avatar.jpg"
+                                                    value={formData.avatar}
+                                                    onChange={handleChange}
+                                                    className="w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary sm:text-base"
+                                                />
+                                                <p className="mt-1 text-xs text-muted-foreground">
+                                                    You can upload via clicking the profile avatar above or paste a direct image URL here.
+                                                </p>
+                                            </div>
+                                        )}
                                     </div>
                                 </>
                             )}
@@ -504,6 +631,4 @@ export default function UserProfilePage() {
             </main>
         </>
     );
-
-    
 }
