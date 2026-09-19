@@ -37,21 +37,21 @@ export default function MovieUploadPage() {
   const [title, setTitle] = useState("");
   const [tagline, setTagline] = useState("");
   const [synopsis, setSynopsis] = useState("");
-  const [releaseYear, setReleaseYear] = useState(new Date().getFullYear().toString());
+  const [releaseYear, setReleaseYear] = useState("");
   const [releaseDate, setReleaseDate] = useState("");
-  const [durationHours, setDurationHours] = useState("2");
-  const [durationMinutes, setDurationMinutes] = useState("15");
-  const [ageRating, setAgeRating] = useState("PG-13");
-  const [language, setLanguage] = useState("English");
-  const [subtitles, setSubtitles] = useState("English, Spanish, French");
+  const [durationHours, setDurationHours] = useState("");
+  const [durationMinutes, setDurationMinutes] = useState("");
+  const [ageRating, setAgeRating] = useState("");
+  const [language, setLanguage] = useState("");
+  const [subtitles, setSubtitles] = useState("");
 
   // Categorization
-  const [selectedGenres, setSelectedGenres] = useState<string[]>(["Action", "Sci-Fi"]);
+  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [director, setDirector] = useState("");
   const [castInput, setCastInput] = useState("");
   const [castList, setCastList] = useState<string[]>([]);
   const [tagsInput, setTagsInput] = useState("");
-  const [tagsList, setTagsList] = useState<string[]>(["Trending", "Blockbuster"]);
+  const [tagsList, setTagsList] = useState<string[]>([]);
 
   // Media
   const [posterPreview, setPosterPreview] = useState<string | null>(null);
@@ -180,17 +180,24 @@ export default function MovieUploadPage() {
     e.preventDefault();
     setErrorMessage("");
 
-    // 1. Validation Checks
-    if (!title.trim()) {
-      setErrorMessage("Movie title is required.");
-      return;
-    }
-    if (selectedGenres.length === 0) {
-      setErrorMessage("Please select at least one genre.");
-      return;
-    }
-    if (!videoUrl.trim()) {
-      setErrorMessage("Please provide a valid streaming/video URL.");
+    // Validate all active catalog fields before starting the Mux upload.
+    const missingFields: string[] = [];
+    if (!title.trim()) missingFields.push("Movie title");
+    if (!synopsis.trim()) missingFields.push("Synopsis / Storyline");
+    if (!releaseYear) missingFields.push("Release year");
+    if (!releaseDate) missingFields.push("Release date");
+    if (!durationHours || !durationMinutes) missingFields.push("Duration");
+    if (!ageRating) missingFields.push("Rating");
+    if (!language.trim()) missingFields.push("Audio language");
+    if (!subtitles.trim()) missingFields.push("Available subtitles");
+    if (selectedGenres.length === 0) missingFields.push("At least one genre");
+    if (!director.trim()) missingFields.push("Director");
+    if (castList.length === 0) missingFields.push("At least one cast member");
+    if (!posterPreview) missingFields.push("Poster artwork");
+    if (!videoUrl.trim()) missingFields.push("Video URL");
+
+    if (missingFields.length > 0) {
+      setErrorMessage(`Please complete the required fields: ${missingFields.join(", ")}.`);
       return;
     }
 
@@ -255,9 +262,11 @@ export default function MovieUploadPage() {
       setUploadProgress(100);
       setUploadStage("Complete!");
       setUploadSuccess(true);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error(error);
-      setErrorMessage(error.message || "Could not save the movie. Please try again.");
+      setErrorMessage(
+        error instanceof Error ? error.message : "Could not save the movie. Please try again."
+      );
     } finally {
       setIsUploading(false);
     }
@@ -290,7 +299,15 @@ export default function MovieUploadPage() {
     setVideoUrl("");
     setCastList([]);
     setTagsList(["Trending"]);
-    setSelectedGenres(["Action"]);
+    setSelectedGenres([]);
+    setReleaseYear("");
+    setReleaseDate("");
+    setDurationHours("");
+    setDurationMinutes("");
+    setAgeRating("");
+    setLanguage("");
+    setSubtitles("");
+    setDirector("");
     setUploadSuccess(false);
     setUploadProgress(0);
   };
@@ -481,6 +498,7 @@ export default function MovieUploadPage() {
                 </div>
                 <textarea
                   rows={4}
+                  required
                   value={synopsis}
                   onChange={(e) => setSynopsis(e.target.value)}
                   placeholder="Provide an overview of the film, plot premise, and themes..."
@@ -496,6 +514,7 @@ export default function MovieUploadPage() {
                   </label>
                   <input
                     type="number"
+                    required
                     min="1900"
                     max="2035"
                     value={releaseYear}
@@ -510,6 +529,7 @@ export default function MovieUploadPage() {
                   </label>
                   <input
                     type="date"
+                    required
                     value={releaseDate}
                     onChange={(e) => setReleaseDate(e.target.value)}
                     className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-100 focus:outline-none focus:border-rose-500"
@@ -523,6 +543,7 @@ export default function MovieUploadPage() {
                   <div className="flex items-center gap-1.5">
                     <input
                       type="number"
+                      required
                       min="0"
                       max="10"
                       value={durationHours}
@@ -532,6 +553,7 @@ export default function MovieUploadPage() {
                     <span className="text-xs text-zinc-400">h</span>
                     <input
                       type="number"
+                      required
                       min="0"
                       max="59"
                       value={durationMinutes}
@@ -547,6 +569,7 @@ export default function MovieUploadPage() {
                     Rating
                   </label>
                   <select
+                    required
                     value={ageRating}
                     onChange={(e) => setAgeRating(e.target.value)}
                     className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-100 focus:outline-none focus:border-rose-500"
@@ -568,6 +591,7 @@ export default function MovieUploadPage() {
                   </label>
                   <input
                     type="text"
+                    required
                     value={language}
                     onChange={(e) => setLanguage(e.target.value)}
                     placeholder="e.g. English (Original)"
@@ -580,6 +604,7 @@ export default function MovieUploadPage() {
                   </label>
                   <input
                     type="text"
+                    required
                     value={subtitles}
                     onChange={(e) => setSubtitles(e.target.value)}
                     placeholder="e.g. English, French, Spanish, German"
@@ -669,6 +694,7 @@ export default function MovieUploadPage() {
                   </label>
                   <input
                     type="text"
+                    required
                     value={director}
                     onChange={(e) => setDirector(e.target.value)}
                     placeholder="e.g. Christopher Nolan"
@@ -698,6 +724,7 @@ export default function MovieUploadPage() {
                     ))}
                     <input
                       type="text"
+                      required={castList.length === 0}
                       value={castInput}
                       onChange={(e) => setCastInput(e.target.value)}
                       onKeyDown={handleAddCast}
@@ -766,6 +793,7 @@ export default function MovieUploadPage() {
               <div>
                 <input
                   type="url"
+                  required
                   value={videoUrl}
                   onChange={(e) => setVideoUrl(e.target.value)}
                   placeholder="https://cdn.moviebox.com/stream/movie-master.m3u8"
@@ -790,6 +818,7 @@ export default function MovieUploadPage() {
                 type="file"
                 ref={posterInputRef}
                 accept="image/*"
+                required={!posterPreview}
                 className="hidden"
                 onChange={(e) => handlePosterChange(e.target.files?.[0])}
               />
