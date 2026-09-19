@@ -89,6 +89,7 @@ const GENRE_COL_RIGHT = [
 function Navbar() {
     const [query, setQuery] = useState("");
     const [isOpen, setIsOpen] = useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [movies, setMovies] = useState<Movie[]>([]);
     
     // Genres Modal State
@@ -186,27 +187,106 @@ function Navbar() {
     };
 
     return (
-        <nav className="relative z-50 flex items-center justify-between border-b border-border bg-background/95 px-6 py-3 text-foreground backdrop-blur-sm">
-            <div className="lg:hidden">
-                <details className="dropdown">
-                    <summary className="btn m-1">Menu </summary>
-                    <ul className="menu dropdown-content bg-base-100 rounded-box z-50 w-52 p-2 shadow-sm">
-                        <li>
-                            <Link href="/">Home</Link>
-                        </li>
-                        <li>
-                            <Link href="/movies">Movies</Link>
-                        </li>
-                        <li>
-                            <Link href="/tvshows">TV shows</Link>
-                        </li>
-                    </ul>
-                </details>
+        <nav className="relative z-50 flex w-full min-w-0 flex-col border-b border-border bg-background/95 px-3 py-2 text-foreground backdrop-blur-sm sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:py-3">
+            <div className="flex w-full items-center justify-between lg:hidden">
+                <button
+                    type="button"
+                    onClick={() => setMobileMenuOpen((previous) => !previous)}
+                    aria-label="Toggle navigation menu"
+                    aria-expanded={mobileMenuOpen}
+                    className="flex h-10 w-10 items-center justify-center rounded-md text-foreground transition hover:bg-muted"
+                >
+                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        {mobileMenuOpen ? (
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        ) : (
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                        )}
+                    </svg>
+                </button>
+
+                <Link href="/" className="group flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
+                    <svg
+                        className="h-6 w-6 text-rose-600 transition-transform duration-300 group-hover:scale-110"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2.5}
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"
+                        />
+                    </svg>
+                    <span className="text-lg font-black tracking-wider text-foreground">
+                        MOVIE<span className="text-rose-600">BOX</span>
+                    </span>
+                </Link>
+
+                {data?.user ? (
+                    <details className="relative lg:hidden">
+                        <summary
+                            className="flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-full text-foreground transition hover:bg-muted [&::-webkit-details-marker]:hidden"
+                            aria-label="Open profile menu"
+                        >
+                            <CgProfile size={23} aria-hidden="true" />
+                        </summary>
+                        <ul className="absolute right-0 top-full z-50 mt-2 w-44 rounded-lg border border-border bg-background p-2 text-sm shadow-xl">
+                            <li>
+                                <Link href="/Profile" className="block rounded-md px-3 py-2 transition hover:bg-muted">
+                                    Profile
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/history" className="block rounded-md px-3 py-2 transition hover:bg-muted">
+                                    Watch History
+                                </Link>
+                            </li>
+                            <li>
+                                <button
+                                    type="button"
+                                    onClick={handleLogOut}
+                                    className="block w-full rounded-md px-3 py-2 text-left text-amber-600 transition hover:bg-muted"
+                                >
+                                    Logout
+                                </button>
+                            </li>
+                        </ul>
+                    </details>
+                ) : (
+                    <Link href="/login" className="rounded-md bg-blue-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-blue-700">
+                        Sign in
+                    </Link>
+                )}
             </div>
 
-            <div className="hidden items-center space-x-6 lg:flex">
-                <div className="flex min-w-[200px] flex-col items-start">
-                    <Link href="/" className="group mb-4 flex items-center gap-2">
+            {mobileMenuOpen && (
+                <div className="w-full border-t border-border py-2 lg:hidden">
+                    <div className="grid grid-cols-2 gap-1 text-sm">
+                        {[
+                            ["Home", "/"],
+                            ["Movies", "/movies"],
+                            ["TV shows", "/tvshows"],
+                            ["Genres", "/movies"],
+                        ].map(([label, href]) => (
+                            <Link
+                                key={label}
+                                href={href}
+                                onClick={() => setMobileMenuOpen(false)}
+                                className="rounded-md px-3 py-2.5 text-muted-foreground transition hover:bg-muted hover:text-foreground"
+                            >
+                                {label}
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            <div className="hidden min-w-0 shrink-0 items-center gap-4 lg:flex">
+                <div className="flex min-w-0 flex-col items-start">
+                    <Link href="/" className="group flex items-center gap-2">
                         <svg
                             className="h-7 w-7 text-rose-600 transition-transform duration-300 group-hover:scale-110"
                             xmlns="http://www.w3.org/2000/svg"
@@ -227,7 +307,7 @@ function Navbar() {
                     </Link>
                 </div>
 
-                <div className="flex items-center space-x-1 rounded-full bg-muted p-1">
+                <div className="flex shrink-0 items-center space-x-1 rounded-full bg-muted p-1">
                     <Link
                         href={"/"}
                         className={`px-4 py-1.5 rounded-full text-sm transition ${
@@ -255,9 +335,9 @@ function Navbar() {
                 </div>
             </div>
 
-            <div className="flex items-center space-x-4 text-muted-foreground relative">
+            <div className="relative flex min-w-0 w-full flex-wrap items-center justify-end gap-2 text-muted-foreground lg:w-auto lg:flex-1 lg:flex-nowrap lg:gap-3">
                 {/* Search input */}
-                <label className="input flex items-center gap-2">
+                <label className="input flex min-w-0 flex-1 items-center gap-2 lg:w-[clamp(140px,18vw,240px)] lg:flex-none">
                     <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <g
                             strokeLinejoin="round"
@@ -275,6 +355,7 @@ function Navbar() {
                         placeholder="Search"
                         value={query}
                         onChange={(e) => handleSearchChange(e.target.value)}
+                        className="min-w-0 w-full"
                     />
                 </label>
 
@@ -309,7 +390,7 @@ function Navbar() {
                 )}
 
                 {/* 1. Language selector & Modal (Prime Video Reference Style) */}
-                <div className="relative" ref={langRef}>
+                <div className="relative hidden lg:block" ref={langRef}>
                     <button
                         type="button"
                         onClick={() => {
@@ -375,7 +456,7 @@ function Navbar() {
                 </div>
 
                 {/* 2. 9-Dots Icon Button & Genres Modal (Prime Video reference style) */}
-                <div className="relative" ref={genresRef}>
+                <div className="relative hidden lg:block" ref={genresRef}>
                     <button
                         type="button"
                         onClick={() => {
@@ -435,17 +516,19 @@ function Navbar() {
                     )}
                 </div>
 
-                <ThemeToggle />
+                <div className="hidden lg:block">
+                    <ThemeToggle />
+                </div>
 
                 {data?.user ? (
-                    <div className="flex items-center gap-4">
+                    <div className="hidden shrink-0 items-center gap-3 lg:flex">
                         <details className="dropdown dropdown-end dropdown-bottom">
                             <summary className="btn btn-ghost btn-circle avatar flex items-center justify-center list-none cursor-pointer">
                                 <CgProfile size={22} className="text-foreground" />
                             </summary>
                             <ul className="menu dropdown-content bg-base-100 rounded-box z-50 w-52 p-2 shadow-xl mt-2 border border-border">
                                 <li>
-                                    <Link href={"/profile"} aria-label="Profile" className="transition hover:text-foreground">
+                                    <Link href={"/Profile"} aria-label="Profile" className="transition hover:text-foreground">
                                         Profile
                                     </Link>
                                 </li>
@@ -462,7 +545,7 @@ function Navbar() {
                 ) : (
                     <Link
                         href={"/login"}
-                        className="rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 shrink-0"
+                        className="hidden shrink-0 rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 lg:block"
                     >
                         Join MovieBox
                     </Link>

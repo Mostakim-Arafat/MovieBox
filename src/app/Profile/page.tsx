@@ -122,12 +122,12 @@ export default function UserProfilePage() {
         <>
             <Toaster position="top-center" />
 
-            <main className="min-h-screen bg-background px-4 py-6 text-foreground sm:px-6 sm:py-10">
-                <div className="mx-auto max-w-6xl">
+            <main className="min-h-screen bg-background px-3 py-5 text-foreground sm:px-6 sm:py-10">
+                <div className="mx-auto min-w-0 max-w-6xl">
                     {/* Header */}
-                    <div className="mb-6 flex items-start justify-between gap-4 sm:mb-8">
-                        <div>
-                            <h1 className="text-2xl font-bold sm:text-3xl">
+                    <div className="mb-6 flex min-w-0 items-start justify-between gap-4 sm:mb-8">
+                        <div className="min-w-0">
+                            <h1 className="wrap-break-word text-2xl font-bold sm:text-3xl">
                                 My Profile
                             </h1>
                             <p className="mt-2 text-sm text-muted-foreground sm:text-base">
@@ -137,9 +137,9 @@ export default function UserProfilePage() {
                     </div>
 
                     {/* Main Grid: Sidebar + Content */}
-                    <div className="grid gap-6 lg:grid-cols-[280px_1fr] lg:gap-8">
+                    <div className="grid min-w-0 gap-4 sm:gap-6 lg:grid-cols-[280px_minmax(0,1fr)] lg:gap-8">
                         {/* Sidebar */}
-                        <aside className="h-fit rounded-2xl border border-border bg-card p-5">
+                        <aside className="h-fit min-w-0 rounded-2xl border border-border bg-card p-4 sm:p-5">
                             <div className="flex flex-col items-center text-center">
                                 <img
                                     src={user.avatar || "./random.png"}
@@ -151,7 +151,7 @@ export default function UserProfilePage() {
                                 </h2>
                             </div>
 
-                            <div className="mt-6 flex gap-2 overflow-x-auto lg:mt-8 lg:flex-col lg:gap-2 lg:overflow-visible">
+                            <div className="mt-6 grid gap-2 lg:mt-8 lg:flex lg:flex-col">
                                 <button
                                     onClick={() => setActiveTab("profile")}
                                     className={`shrink-0 whitespace-nowrap rounded-lg px-4 py-3 text-left text-sm transition sm:text-base ${activeTab === "profile"
@@ -185,12 +185,12 @@ export default function UserProfilePage() {
                         </aside>
 
                         {/* Content */}
-                        <section className="rounded-2xl border border-border bg-card p-5 sm:p-6 md:p-8">
+                        <section className="min-w-0 rounded-2xl border border-border bg-card p-4 sm:p-6 md:p-8">
                             {/* PROFILE TAB */}
                             {activeTab === "profile" && (
                                 <>
                                     <div className="flex flex-col items-start justify-between gap-4 border-b border-border pb-6 sm:flex-row sm:items-center">
-                                        <div>
+                                        <div className="min-w-0">
                                             <h2 className="text-xl font-bold sm:text-2xl">
                                                 Profile Information
                                             </h2>
@@ -226,7 +226,7 @@ export default function UserProfilePage() {
                                     </div>
 
                                     {/* Avatar Upload */}
-                                    <div className="mt-8 flex flex-col gap-5 sm:flex-row sm:items-center">
+                                    <div className="mt-8 flex min-w-0 flex-col gap-5 sm:flex-row sm:items-center">
                                         <div
                                             onClick={handleAvatarClick}
                                             className={`group relative h-24 w-24 shrink-0 rounded-full sm:h-28 sm:w-28 ${isEditing ? "cursor-pointer" : ""
@@ -256,9 +256,9 @@ export default function UserProfilePage() {
                                             />
                                         </div>
 
-                                        <div>
+                                        <div className="min-w-0">
                                             <h3 className="font-semibold">Profile Picture</h3>
-                                            <p className="mt-1 text-sm text-muted-foreground">
+                                            <p className="mt-1 wrap-break-word text-sm text-muted-foreground">
                                                 {isEditing
                                                     ? "Click on the photo to upload a new one."
                                                     : "Click Edit Profile to change your photo."}
