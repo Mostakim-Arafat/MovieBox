@@ -1,13 +1,16 @@
+
 import { MongoClient } from "mongodb";
 
-const uri = process.env.MONGO_URL as string;
+const uri = process.env.MONGO_URL || "mongodb://127.0.0.1:27017/Moviebox";
 
-console.log("MONGO_URL exists:", !!process.env.MONGO_URL);
-
-const client = new MongoClient(uri);
-const clientPromise = client.connect();
+let client: MongoClient | null = null;
+let clientPromise: Promise<MongoClient> | null = null;
 
 export async function getDatabase() {
+    if (!clientPromise) {
+        client = new MongoClient(uri);
+        clientPromise = client.connect();
+    }
     const dbClient = await clientPromise;
     return dbClient.db("Moviebox");
 }
