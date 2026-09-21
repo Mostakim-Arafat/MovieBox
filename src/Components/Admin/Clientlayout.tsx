@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 import Navbar from "@/Components/Homepage/Navbar";
@@ -9,11 +9,10 @@ import Footer from "@/Components/Homepage/Footer";
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const searchParams = useSearchParams();
   const isAdmin = pathname?.startsWith('/admin');
 
   useEffect(() => {
-    const adminMessage = searchParams.get("admin");
+    const adminMessage = new URLSearchParams(window.location.search).get("admin");
 
     if (adminMessage === "access-denied") {
       toast.error("Only administrators can access the dashboard");
@@ -24,7 +23,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     }
 
     router.replace(pathname || "/");
-  }, [pathname, router, searchParams]);
+  }, [pathname, router]);
 
   return (
     <>
