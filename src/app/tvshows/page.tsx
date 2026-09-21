@@ -1,10 +1,19 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useEffect, useRef, useState, useMemo, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { useSearchParams, useRouter } from "next/navigation";
-import { LayoutGrid, Rows3, Search, ArrowUpDown, X } from "lucide-react";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import {
+    Search,
+    ArrowUpDown,
+    X,
+    Play,
+    Info,
+    Tv,
+    Sparkles,
+} from "lucide-react";
 import Pagination from "@/UI/Pagination";
 
 type Show = {
@@ -30,17 +39,14 @@ function PosterImage({
 }) {
     const [imgError, setImgError] = useState(false);
 
-    if (imgError) {
+    if (imgError || !show?.poster) {
         return (
             <div
-                className={
-                    "flex flex-col items-center justify-center gap-2 bg-gradient-to-br from-neutral-800 via-neutral-900 to-black p-4 text-center " +
-                    className
-                }
+                className={`flex flex-col items-center justify-center gap-2 bg-gradient-to-br from-neutral-800 via-neutral-900 to-black p-4 text-center ${className}`}
             >
-                <span className="text-4xl opacity-60">📺</span>
-                <span className="text-xs font-medium text-neutral-500">
-                    {show.title}
+                <Tv className="w-8 h-8 text-neutral-500" />
+                <span className="line-clamp-2 text-xs font-medium text-neutral-400">
+                    {show?.title || "TV Show"}
                 </span>
             </div>
         );
@@ -56,239 +62,145 @@ function PosterImage({
     );
 }
 
-function ShowRow({
-    genre,
-    shows,
-    onSeeMore,
-}: {
-    genre: string;
-    shows: Show[];
-    onSeeMore: (genre: string, list: Show[]) => void;
-}) {
-    const rowRef = useRef<HTMLDivElement>(null);
-    const [cardWidth, setCardWidth] = useState<number | null>(null);
-
-    const isDragging = useRef(false);
-    const startX = useRef(0);
-    const startScrollLeft = useRef(0);
-
-    const GAP = 12;
-    const MIN_WIDTH = 130;
-    const MAX_WIDTH = 320;
-    const FIXED_WIDTH = 170;
-
-    useEffect(() => {
-        const el = rowRef.current;
-        if (!el) return;
-
-        const calculate = () => {
-            const containerWidth = el.offsetWidth;
-            const count = shows.length;
-            const totalGap = GAP * (count - 1);
-            const evenWidth = (containerWidth - totalGap) / count;
-
-            if (evenWidth >= MIN_WIDTH) {
-                setCardWidth(Math.min(evenWidth, MAX_WIDTH));
-            } else {
-                setCardWidth(FIXED_WIDTH);
-            }
-        };
-
-        calculate();
-        const observer = new ResizeObserver(calculate);
-        observer.observe(el);
-        return () => observer.disconnect();
-    }, [shows.length]);
-
-    const handleMouseDown = (e: React.MouseEvent) => {
-        const el = rowRef.current;
-        if (!el) return;
-        isDragging.current = true;
-        startX.current = e.pageX - el.offsetLeft;
-        startScrollLeft.current = el.scrollLeft;
-        el.style.cursor = "grabbing";
-    };
-
-    const stopDragging = () => {
-        isDragging.current = false;
-        if (rowRef.current) rowRef.current.style.cursor = "grab";
-    };
-
-    const handleMouseMove = (e: React.MouseEvent) => {
-        const el = rowRef.current;
-        if (!el || !isDragging.current) return;
-        e.preventDefault();
-        const x = e.pageX - el.offsetLeft;
-        const walk = x - startX.current;
-        el.scrollLeft = startScrollLeft.current - walk;
-    };
-
-    return (
-        <div className="mb-10">
-            <div className="mb-4 flex items-center justify-between gap-4">
-                <h2 className="text-xl font-bold tracking-tight sm:text-2xl">
-                    {genre}
-                </h2>
-                <button
-                    type="button"
-                    onClick={() => onSeeMore(genre, shows)}
-                    className="group flex items-center gap-1.5 rounded-full border border-white/20 bg-white/5 px-4 py-1.5 text-sm font-medium text-neutral-300 backdrop-blur-sm transition-all hover:border-white/40 hover:bg-white/10 hover:text-white cursor-pointer"
-                >
-                    See more
-                    <span className="transition-transform group-hover:translate-x-0.5">
-                        →
-                    </span>
-                </button>
-            </div>
-
-            <div
-                ref={rowRef}
-                onMouseDown={handleMouseDown}
-                onMouseUp={stopDragging}
-                onMouseLeave={stopDragging}
-                onMouseMove={handleMouseMove}
-                className="scrollbar-hide flex cursor-grab gap-3 overflow-x-auto pb-3 select-none"
-            >
-                {shows.map((show) => (
-                    <motion.div
-                        key={show.id}
-                        whileHover={{ scale: 1.05 }}
-                        transition={{
-                            type: "spring",
-                            stiffness: 260,
-                            damping: 20,
-                        }}
-                        style={{
-                            width: cardWidth ? cardWidth + "px" : undefined,
-                        }}
-                        className="group relative shrink-0 overflow-hidden rounded-lg"
-                    >
-                        <Link href={"/tvshows/" + show.id} className="block w-full h-full">
-                            <PosterImage
-                                show={show}
-                                className="aspect-[2/3] w-full object-cover"
-                            />
-
-                            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/80 to-transparent px-2 pb-2 pt-10">
-                                <p className="truncate text-xs font-semibold text-white sm:text-sm">
-                                    {show.title}
-                                </p>
-                                <p className="mt-0.5 line-clamp-1 text-[10px] text-neutral-400 sm:text-xs">
-                                    {show.shortDescription}
-                                </p>
-                                <div className="mt-1 flex items-center gap-2 text-[10px] text-yellow-400 sm:text-xs">
-                                    <span>⭐ {show.rating}</span>
-                                    <span className="text-neutral-500">•</span>
-                                    <span className="text-neutral-400">
-                                        {show.seasons} Season
-                                        {show.seasons > 1 ? "s" : ""}
-                                    </span>
-                                </div>
-                            </div>
-                        </Link>
-                    </motion.div>
-                ))}
-            </div>
-        </div>
-    );
-}
-
 function TvShowsContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
+    const pathname = usePathname();
 
-    const initialGenre = searchParams.get("genre") || "All";
-
+    // Data state
     const [shows, setShows] = useState<Show[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [selectedShow, setSelectedShow] = useState<Show | null>(null);
+    const [isNavigating, setIsNavigating] = useState(false);
 
-    // View mode: 'rows' or 'grid'
-    const [viewMode, setViewMode] = useState<"rows" | "grid">(
-        initialGenre !== "All" ? "grid" : "rows"
-    );
+    // URL Param Initializations
+    const initialGenre = searchParams.get("genre") || "All";
+    const initialPage = parseInt(searchParams.get("page") || "1", 10) || 1;
+    const initialSearch = searchParams.get("search") || "";
+    const initialSort =
+        (searchParams.get("sort") as "rating" | "year" | "seasons" | "title") || "rating";
 
-    // Grid filters and pagination
+    // Filtering, Sorting, and Pagination State
     const [activeGenre, setActiveGenre] = useState<string>(initialGenre);
-    const [searchTerm, setSearchTerm] = useState<string>("");
-    const [sortBy, setSortBy] = useState<"rating" | "year" | "seasons" | "title">("rating");
-    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [searchTerm, setSearchTerm] = useState<string>(initialSearch);
+    const [sortBy, setSortBy] = useState<"rating" | "year" | "seasons" | "title">(initialSort);
+    const [currentPage, setCurrentPage] = useState<number>(initialPage);
     const [pageSize, setPageSize] = useState<number>(12);
 
-    // See More modal state
-    const [selectedGenre, setSelectedGenre] = useState<{
-        name: string;
-        shows: Show[];
-    } | null>(null);
-    const [modalPage, setModalPage] = useState(1);
-    const MODAL_PAGE_SIZE = 12;
+    const catalogSectionRef = useRef<HTMLDivElement>(null);
 
-    const catalogTopRef = useRef<HTMLDivElement>(null);
-
+    // Fetch shows from /tvshows.json
     useEffect(() => {
+        let isMounted = true;
         fetch("/tvshows.json")
             .then((res) => res.json())
             .then((data: Show[]) => {
-                setShows(Array.isArray(data) ? data : []);
-                setIsLoading(false);
+                if (isMounted) {
+                    setShows(Array.isArray(data) ? data : []);
+                    setIsLoading(false);
+                }
             })
             .catch((err) => {
-                console.error(err);
-                setIsLoading(false);
+                console.error("Failed to load tvshows:", err);
+                if (isMounted) setIsLoading(false);
             });
+
+        return () => {
+            isMounted = false;
+        };
     }, []);
 
-    // Sync with URL genre param
+    // Sync state with URL searchParams
     useEffect(() => {
-        const urlGenre = searchParams.get("genre");
-        if (urlGenre) {
-            setActiveGenre(urlGenre);
-            setViewMode("grid");
-            setCurrentPage(1);
-        }
+        const g = searchParams.get("genre") || "All";
+        const p = parseInt(searchParams.get("page") || "1", 10) || 1;
+        const s = searchParams.get("search") || "";
+        const sort =
+            (searchParams.get("sort") as "rating" | "year" | "seasons" | "title") || "rating";
+
+        setActiveGenre(g);
+        setCurrentPage(p);
+        setSearchTerm(s);
+        setSortBy(sort);
     }, [searchParams]);
 
-    const genreMap: Record<string, Show[]> = useMemo(() => {
-        const map: Record<string, Show[]> = {};
-        shows.forEach((show) => {
-            if (Array.isArray(show.genre)) {
-                show.genre.forEach((g) => {
-                    if (!map[g]) map[g] = [];
-                    map[g].push(show);
-                });
+    // Update URL helper without full page reload
+    const updateUrlParams = (updates: {
+        page?: number;
+        genre?: string;
+        search?: string;
+        sort?: string;
+    }) => {
+        const nextGenre = updates.genre !== undefined ? updates.genre : activeGenre;
+        const nextPage = updates.page !== undefined ? updates.page : currentPage;
+        const nextSearch = updates.search !== undefined ? updates.search : searchTerm;
+        const nextSort = updates.sort !== undefined ? updates.sort : sortBy;
+
+        const params = new URLSearchParams();
+        if (nextGenre && nextGenre !== "All") params.set("genre", nextGenre);
+        if (nextPage > 1) params.set("page", String(nextPage));
+        if (nextSearch.trim()) params.set("search", nextSearch.trim());
+        if (nextSort && nextSort !== "rating") params.set("sort", nextSort);
+
+        const qs = params.toString();
+        router.push(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+    };
+
+    // Extract all unique genres
+    const allGenresList = useMemo(() => {
+        const genres = new Set<string>();
+        shows.forEach((s) => {
+            if (Array.isArray(s.genre)) {
+                s.genre.forEach((g) => genres.add(g));
             }
         });
-        return map;
+        const sorted = Array.from(genres).sort();
+        return ["All", ...sorted];
     }, [shows]);
 
-    const genreOrder = useMemo(() => Object.keys(genreMap), [genreMap]);
-    const allGenresList = useMemo(() => ["All", ...genreOrder], [genreOrder]);
+    // Featured series for Hero banner
+    const featured = useMemo(() => {
+        if (shows.length === 0) return null;
+        const sorted = [...shows].sort((a, b) => (b.rating || 0) - (a.rating || 0));
+        return sorted[0] || shows[0];
+    }, [shows]);
 
-    const featured = shows[0];
+    // Top trending picks for Spotlight carousel
+    const trendingPicks = useMemo(() => {
+        return [...shows]
+            .sort((a, b) => (b.rating || 0) - (a.rating || 0))
+            .slice(0, 10);
+    }, [shows]);
 
-    // Filter & Sort for Grid View
+    // Filter and sort shows for the catalog
     const filteredShows = useMemo(() => {
-        let result = [...shows];
+        let list = [...shows];
 
+        // Genre filter
         if (activeGenre !== "All") {
-            result = result.filter(
+            const target = activeGenre.toLowerCase();
+            list = list.filter(
                 (s) =>
                     Array.isArray(s.genre) &&
-                    s.genre.some((g) => g.toLowerCase() === activeGenre.toLowerCase())
+                    s.genre.some((g) => g.toLowerCase() === target)
             );
         }
 
+        // Search query filter
         if (searchTerm.trim()) {
             const q = searchTerm.toLowerCase();
-            result = result.filter(
-                (s) =>
-                    s.title.toLowerCase().includes(q) ||
-                    (s.channel && s.channel.toLowerCase().includes(q)) ||
-                    (s.shortDescription && s.shortDescription.toLowerCase().includes(q)) ||
-                    (s.description && s.description.toLowerCase().includes(q))
-            );
+            list = list.filter((s) => {
+                const titleMatch = s.title?.toLowerCase().includes(q);
+                const channelMatch = s.channel?.toLowerCase().includes(q);
+                const descMatch = (s.shortDescription || s.description)?.toLowerCase().includes(q);
+                const genreMatch = Array.isArray(s.genre) && s.genre.some((g) => g.toLowerCase().includes(q));
+                const yearMatch = String(s.year).includes(q);
+                return Boolean(titleMatch || channelMatch || descMatch || genreMatch || yearMatch);
+            });
         }
 
-        result.sort((a, b) => {
+        // Sorting
+        list.sort((a, b) => {
             if (sortBy === "rating") return (b.rating || 0) - (a.rating || 0);
             if (sortBy === "year") return (b.year || 0) - (a.year || 0);
             if (sortBy === "seasons") return (b.seasons || 0) - (a.seasons || 0);
@@ -296,169 +208,239 @@ function TvShowsContent() {
             return 0;
         });
 
-        return result;
+        return list;
     }, [shows, activeGenre, searchTerm, sortBy]);
 
-    // Paginated items
-    const totalPages = Math.ceil(filteredShows.length / pageSize) || 1;
+    // Calculate Pagination
+    const totalPages = Math.max(1, Math.ceil(filteredShows.length / pageSize));
+    const safeCurrentPage = Math.min(currentPage, totalPages);
+
     const paginatedShows = useMemo(() => {
-        const start = (currentPage - 1) * pageSize;
+        const start = (safeCurrentPage - 1) * pageSize;
         return filteredShows.slice(start, start + pageSize);
-    }, [filteredShows, currentPage, pageSize]);
+    }, [filteredShows, safeCurrentPage, pageSize]);
 
-    const handlePageChange = (page: number) => {
-        setCurrentPage(page);
-        if (catalogTopRef.current) {
-            catalogTopRef.current.scrollIntoView({ behavior: "smooth" });
+    // Handlers
+    const handlePageChange = (newPage: number) => {
+        setCurrentPage(newPage);
+        updateUrlParams({ page: newPage });
+        if (catalogSectionRef.current) {
+            catalogSectionRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
         }
     };
 
-    const handleGenreSelect = (g: string) => {
-        setActiveGenre(g);
+    const handleGenreChange = (newGenre: string) => {
+        setActiveGenre(newGenre);
         setCurrentPage(1);
-        if (g === "All") {
-            router.push("/tvshows");
-        } else {
-            router.push(`/tvshows?genre=${encodeURIComponent(g)}`);
-        }
+        updateUrlParams({ genre: newGenre, page: 1 });
     };
 
-    // Modal pagination
-    const modalTotalPages = selectedGenre
-        ? Math.ceil(selectedGenre.shows.length / MODAL_PAGE_SIZE) || 1
-        : 1;
-    const modalPaginatedShows = useMemo(() => {
-        if (!selectedGenre) return [];
-        const start = (modalPage - 1) * MODAL_PAGE_SIZE;
-        return selectedGenre.shows.slice(start, start + MODAL_PAGE_SIZE);
-    }, [selectedGenre, modalPage]);
+    const handleSearchChange = (term: string) => {
+        setSearchTerm(term);
+        setCurrentPage(1);
+        updateUrlParams({ search: term, page: 1 });
+    };
+
+    const handleSortChange = (newSort: "rating" | "year" | "seasons" | "title") => {
+        setSortBy(newSort);
+        setCurrentPage(1);
+        updateUrlParams({ sort: newSort, page: 1 });
+    };
+
+    const handlePageSizeChange = (newSize: number) => {
+        setPageSize(newSize);
+        setCurrentPage(1);
+        updateUrlParams({ page: 1 });
+    };
+
+    const handleResetFilters = () => {
+        setActiveGenre("All");
+        setSearchTerm("");
+        setSortBy("rating");
+        setCurrentPage(1);
+        router.push(pathname, { scroll: false });
+    };
 
     return (
-        <main className="min-h-screen bg-black text-white">
+        <main className="min-h-screen bg-black text-white selection:bg-rose-600 selection:text-white pb-20">
             {isLoading ? (
-                <div className="flex min-h-screen items-center justify-center">
-                    <div className="h-10 w-10 animate-spin rounded-full border-4 border-neutral-800 border-t-red-600" />
+                <div className="flex min-h-[70vh] items-center justify-center">
+                    <div className="flex flex-col items-center gap-4">
+                        <div className="h-12 w-12 animate-spin rounded-full border-4 border-neutral-800 border-t-rose-600" />
+                        <p className="text-sm font-medium text-neutral-400 animate-pulse">
+                            Loading TV series...
+                        </p>
+                    </div>
                 </div>
             ) : (
                 <>
-                    {/* Hero / Featured Banner in Rows View */}
-                    {featured && viewMode === "rows" && (
-                        <div className="relative h-[60vh] min-h-[380px] w-full overflow-hidden sm:h-[70vh]">
+                    {/* Hero Spotlight Banner */}
+                    {featured && activeGenre === "All" && !searchTerm && (
+                        <div className="relative h-[65vh] min-h-[420px] max-h-[640px] w-full overflow-hidden sm:h-[72vh]">
                             <PosterImage
                                 show={featured}
-                                className="h-full w-full object-cover object-top opacity-60"
+                                className="h-full w-full object-cover object-top opacity-70 scale-105 transition-transform duration-1000"
                             />
 
-                            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
-                            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/20 to-transparent" />
+                            {/* Cinema Gradients */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+                            <div className="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent" />
 
-                            <div className="absolute bottom-0 left-0 right-0 px-4 pb-10 sm:px-8 sm:pb-14 lg:px-12">
-                                <span className="mb-3 inline-block rounded-full bg-red-600/90 px-3 py-1 text-xs font-bold uppercase tracking-wider">
-                                    Featured Series
-                                </span>
-                                <h1 className="max-w-2xl text-3xl font-black leading-tight sm:text-5xl">
+                            <div className="absolute bottom-0 left-0 right-0 px-4 pb-12 sm:px-8 sm:pb-16 lg:px-12 max-w-5xl">
+                                <div className="flex items-center gap-2 mb-3">
+                                    <span className="inline-flex items-center gap-1.5 rounded-full bg-rose-600 px-3 py-1 text-xs font-bold uppercase tracking-wider text-white shadow-lg shadow-rose-600/40">
+                                        <Sparkles className="w-3 h-3" /> Featured Series
+                                    </span>
+                                    {featured.channel && (
+                                        <span className="rounded-full bg-white/10 backdrop-blur-md px-3 py-1 text-xs font-semibold text-neutral-300">
+                                            {featured.channel}
+                                        </span>
+                                    )}
+                                </div>
+
+                                <h1 className="text-3xl font-black leading-tight text-white sm:text-5xl lg:text-6xl drop-shadow-md">
                                     {featured.title}
                                 </h1>
-                                <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-neutral-300">
-                                    <span className="flex items-center gap-1 font-semibold text-yellow-400">
+
+                                <div className="mt-3.5 flex flex-wrap items-center gap-3 text-sm text-neutral-300 font-medium">
+                                    <span className="flex items-center gap-1 font-bold text-yellow-400">
                                         ⭐ {featured.rating}
                                     </span>
+                                    <span>•</span>
                                     <span>{featured.year}</span>
                                     <span>•</span>
                                     <span>
-                                        {featured.seasons} Season
-                                        {featured.seasons > 1 ? "s" : ""}
+                                        {featured.seasons} Season{featured.seasons > 1 ? "s" : ""}
                                     </span>
-                                    <span>•</span>
-                                    <span>{featured.channel}</span>
+                                    {featured.episodes && (
+                                        <>
+                                            <span>•</span>
+                                            <span>{featured.episodes} Episodes</span>
+                                        </>
+                                    )}
+                                    {featured.genre && (
+                                        <>
+                                            <span>•</span>
+                                            <span className="text-neutral-400">
+                                                {featured.genre.join(", ")}
+                                            </span>
+                                        </>
+                                    )}
                                 </div>
-                                <p className="mt-4 max-w-xl text-sm leading-relaxed text-neutral-300 sm:text-base">
-                                    {featured.shortDescription}
+
+                                <p className="mt-4 max-w-2xl text-sm leading-relaxed text-neutral-300 sm:text-base line-clamp-3">
+                                    {featured.shortDescription || featured.description}
                                 </p>
-                                <div className="mt-6 flex gap-3">
+
+                                <div className="mt-7 flex flex-wrap items-center gap-3.5">
                                     <Link
                                         href={"/tvshows/" + featured.id}
-                                        className="flex items-center gap-2 rounded-lg bg-white px-6 py-3 font-bold text-black transition hover:bg-neutral-200"
+                                        onClick={() => setIsNavigating(true)}
+                                        className="flex items-center gap-2 rounded-xl bg-rose-600 px-7 py-3.5 font-bold text-white shadow-lg shadow-rose-600/30 hover:bg-rose-500 hover:scale-105 active:scale-95 transition-all cursor-pointer"
                                     >
-                                        Play
+                                        <Play className="w-4 h-4 fill-white" />
+                                        Watch Now
                                     </Link>
 
-                                    <Link
-                                        href={"/tvshows/" + featured.id}
-                                        className="flex items-center gap-2 rounded-lg bg-white/15 px-6 py-3 font-bold text-white backdrop-blur-sm transition hover:bg-white/25"
+                                    <button
+                                        type="button"
+                                        onClick={() => setSelectedShow(featured)}
+                                        className="flex items-center gap-2 rounded-xl bg-white/15 backdrop-blur-md px-6 py-3.5 font-bold text-white hover:bg-white/25 active:scale-95 transition-all cursor-pointer border border-white/10"
                                     >
-                                        More Info
-                                    </Link>
+                                        <Info className="w-4 h-4" />
+                                        Details
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     )}
 
-                    {/* Catalog Controls Header */}
-                    <div
-                        ref={catalogTopRef}
-                        className="sticky top-0 z-20 bg-neutral-950/90 backdrop-blur-md border-b border-neutral-800/80 px-4 py-4 sm:px-8 lg:px-12"
-                    >
-                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                            {/* View Switcher */}
-                            <div className="flex items-center gap-2">
-                                <div className="inline-flex rounded-xl bg-neutral-900 p-1 border border-neutral-800">
-                                    <button
-                                        type="button"
-                                        onClick={() => setViewMode("rows")}
-                                        className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                                            viewMode === "rows"
-                                                ? "bg-rose-600 text-white shadow"
-                                                : "text-neutral-400 hover:text-white"
-                                        }`}
-                                    >
-                                        <Rows3 className="w-3.5 h-3.5" />
-                                        Curated Rows
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => setViewMode("grid")}
-                                        className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                                            viewMode === "grid"
-                                                ? "bg-rose-600 text-white shadow"
-                                                : "text-neutral-400 hover:text-white"
-                                        }`}
-                                    >
-                                        <LayoutGrid className="w-3.5 h-3.5" />
-                                        Browse TV Shows
-                                    </button>
+                    {/* Spotlight Row / Highlights */}
+                    {activeGenre === "All" && !searchTerm && trendingPicks.length > 0 && (
+                        <div className="relative z-10 px-4 pt-6 pb-8 sm:px-8 lg:px-12">
+                            <div className="flex items-center justify-between mb-4">
+                                <div>
+                                    <h2 className="text-lg sm:text-xl font-bold tracking-tight text-white flex items-center gap-2">
+                                        <span className="w-2 h-2 rounded-full bg-rose-500" />
+                                        Popular TV Series
+                                    </h2>
+                                    <p className="text-xs text-neutral-400 mt-0.5">
+                                        Critically acclaimed binges and fan favorites
+                                    </p>
                                 </div>
-
-                                {viewMode === "grid" && (
-                                    <span className="text-xs text-neutral-400 hidden sm:inline">
-                                        ({filteredShows.length} series)
-                                    </span>
-                                )}
                             </div>
 
-                            {/* Search & Sort Controls in Grid View */}
-                            {viewMode === "grid" && (
+                            <div className="scrollbar-hide flex gap-4 overflow-x-auto pb-4 select-none">
+                                {trendingPicks.map((show) => (
+                                    <motion.div
+                                        key={show.id}
+                                        onClick={() => setSelectedShow(show)}
+                                        whileHover={{ scale: 1.05, y: -4 }}
+                                        whileTap={{ scale: 0.96 }}
+                                        className="group relative w-[160px] sm:w-[190px] shrink-0 cursor-pointer overflow-hidden rounded-xl bg-neutral-900 border border-neutral-800/80 shadow-lg hover:border-neutral-600 transition-all"
+                                    >
+                                        <PosterImage
+                                            show={show}
+                                            className="aspect-[2/3] w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                        />
+                                        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/85 to-transparent px-3 pb-3 pt-10">
+                                            <p className="truncate text-xs font-bold text-white sm:text-sm">
+                                                {show.title}
+                                            </p>
+                                            <div className="mt-1 flex items-center justify-between text-[11px] text-neutral-400 font-medium">
+                                                <span className="text-yellow-400 font-semibold">
+                                                    ⭐ {show.rating}
+                                                </span>
+                                                <span>{show.seasons}S</span>
+                                            </div>
+                                            {show.channel && (
+                                                <p className="mt-1 line-clamp-1 text-[10px] text-neutral-400">
+                                                    {show.channel}
+                                                </p>
+                                            )}
+                                        </div>
+                                    </motion.div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* All TV Shows Catalog Section with Direct Pagination */}
+                    <div
+                        ref={catalogSectionRef}
+                        className="px-4 pt-6 sm:px-8 lg:px-12 scroll-mt-6"
+                    >
+                        {/* Section Title & Filter Header */}
+                        <div className="border-b border-neutral-800 pb-5">
+                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                <div>
+                                    <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white flex items-center gap-3">
+                                        {activeGenre === "All" ? "All TV Shows" : `${activeGenre} Shows`}
+                                        <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-neutral-800 text-neutral-300 border border-neutral-700/60">
+                                            {filteredShows.length} {filteredShows.length === 1 ? "series" : "series"}
+                                        </span>
+                                    </h2>
+                                    <p className="text-xs sm:text-sm text-neutral-400 mt-1">
+                                        Browse all series with season details, networks, and full pagination.
+                                    </p>
+                                </div>
+
+                                {/* Search Bar & Sort Dropdown */}
                                 <div className="flex flex-wrap items-center gap-2.5">
-                                    {/* Quick Search */}
-                                    <div className="relative flex-1 sm:w-56 md:w-64">
+                                    {/* Search Input */}
+                                    <div className="relative flex-1 sm:w-64 max-w-sm">
                                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
                                         <input
                                             type="text"
                                             value={searchTerm}
-                                            onChange={(e) => {
-                                                setSearchTerm(e.target.value);
-                                                setCurrentPage(1);
-                                            }}
+                                            onChange={(e) => handleSearchChange(e.target.value)}
                                             placeholder="Search TV shows, networks..."
-                                            className="w-full bg-neutral-900 border border-neutral-800 rounded-lg pl-9 pr-8 py-1.5 text-xs text-neutral-200 placeholder-neutral-500 focus:outline-none focus:border-rose-500 transition-colors"
+                                            className="w-full bg-neutral-900 border border-neutral-800 rounded-xl pl-9 pr-8 py-2 text-xs text-neutral-200 placeholder-neutral-500 focus:outline-none focus:border-rose-500 transition-colors shadow-inner"
                                         />
                                         {searchTerm && (
                                             <button
                                                 type="button"
-                                                onClick={() => {
-                                                    setSearchTerm("");
-                                                    setCurrentPage(1);
-                                                }}
+                                                onClick={() => handleSearchChange("")}
                                                 className="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-white cursor-pointer"
                                             >
                                                 <X className="w-3.5 h-3.5" />
@@ -467,43 +449,40 @@ function TvShowsContent() {
                                     </div>
 
                                     {/* Sort Dropdown */}
-                                    <div className="flex items-center gap-1.5 bg-neutral-900 border border-neutral-800 rounded-lg px-2.5 py-1.5 text-xs text-neutral-300">
+                                    <div className="flex items-center gap-1.5 bg-neutral-900 border border-neutral-800 rounded-xl px-3 py-2 text-xs text-neutral-300">
                                         <ArrowUpDown className="w-3.5 h-3.5 text-neutral-500" />
                                         <select
                                             value={sortBy}
-                                            onChange={(e) => {
-                                                setSortBy(
+                                            onChange={(e) =>
+                                                handleSortChange(
                                                     e.target.value as
                                                         | "rating"
                                                         | "year"
                                                         | "seasons"
                                                         | "title"
-                                                );
-                                                setCurrentPage(1);
-                                            }}
+                                                )
+                                            }
                                             className="bg-transparent text-xs text-neutral-200 focus:outline-none cursor-pointer"
                                         >
-                                            <option value="rating" className="bg-neutral-900">
-                                                Top Rated
+                                            <option value="rating" className="bg-neutral-900 text-neutral-200">
+                                                Top Rated ⭐
                                             </option>
-                                            <option value="year" className="bg-neutral-900">
-                                                Release Year
+                                            <option value="seasons" className="bg-neutral-900 text-neutral-200">
+                                                Most Seasons 📺
                                             </option>
-                                            <option value="seasons" className="bg-neutral-900">
-                                                Most Seasons
+                                            <option value="year" className="bg-neutral-900 text-neutral-200">
+                                                Newest Release 📅
                                             </option>
-                                            <option value="title" className="bg-neutral-900">
-                                                Title (A-Z)
+                                            <option value="title" className="bg-neutral-900 text-neutral-200">
+                                                Title (A to Z) 🔤
                                             </option>
                                         </select>
                                     </div>
                                 </div>
-                            )}
-                        </div>
+                            </div>
 
-                        {/* Genre Filter Pills in Grid View */}
-                        {viewMode === "grid" && (
-                            <div className="mt-3.5 flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide">
+                            {/* Genre Filter Pills */}
+                            <div className="mt-4 flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide">
                                 {allGenresList.map((genre) => {
                                     const isSelected =
                                         activeGenre.toLowerCase() === genre.toLowerCase();
@@ -511,10 +490,10 @@ function TvShowsContent() {
                                         <button
                                             key={genre}
                                             type="button"
-                                            onClick={() => handleGenreSelect(genre)}
-                                            className={`shrink-0 px-3.5 py-1 rounded-full text-xs font-medium transition-all cursor-pointer ${
+                                            onClick={() => handleGenreChange(genre)}
+                                            className={`shrink-0 px-4 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                                                 isSelected
-                                                    ? "bg-white text-black font-semibold shadow"
+                                                    ? "bg-rose-600 text-white shadow-md shadow-rose-600/30 border border-rose-500"
                                                     : "bg-neutral-900 border border-neutral-800 text-neutral-400 hover:text-white hover:border-neutral-700"
                                             }`}
                                         >
@@ -523,48 +502,25 @@ function TvShowsContent() {
                                     );
                                 })}
                             </div>
-                        )}
-                    </div>
-
-                    {/* Content Section */}
-                    {viewMode === "rows" ? (
-                        /* Curated Rows */
-                        <div className="relative z-10 mt-6 px-4 pb-16 sm:px-8 lg:px-12">
-                            {genreOrder.map((genre) => (
-                                <ShowRow
-                                    key={genre}
-                                    genre={genre}
-                                    shows={genreMap[genre] || []}
-                                    onSeeMore={(name, list) => {
-                                        setSelectedGenre({ name, shows: list });
-                                        setModalPage(1);
-                                    }}
-                                />
-                            ))}
                         </div>
-                    ) : (
-                        /* Paginated TV Shows Grid */
-                        <div className="px-4 py-8 sm:px-8 lg:px-12">
+
+                        {/* TV Shows Grid */}
+                        <div className="py-8">
                             {paginatedShows.length === 0 ? (
-                                <div className="py-20 text-center text-neutral-500">
-                                    <p className="text-4xl mb-3">📺</p>
-                                    <p className="text-lg font-medium text-neutral-300">
-                                        No TV shows found
+                                <div className="py-24 text-center text-neutral-500">
+                                    <Tv className="w-12 h-12 mx-auto mb-3 opacity-40" />
+                                    <p className="text-lg font-bold text-neutral-300">
+                                        No TV shows matched your search
                                     </p>
-                                    <p className="text-sm mt-1">
-                                        Try adjusting your genre filter or search query.
+                                    <p className="text-sm mt-1 text-neutral-500">
+                                        Try changing your search keywords or choosing another genre.
                                     </p>
                                     <button
                                         type="button"
-                                        onClick={() => {
-                                            setActiveGenre("All");
-                                            setSearchTerm("");
-                                            setCurrentPage(1);
-                                            router.push("/tvshows");
-                                        }}
-                                        className="mt-4 px-4 py-2 rounded-lg bg-neutral-800 text-xs font-semibold text-white hover:bg-neutral-700 transition cursor-pointer"
+                                        onClick={handleResetFilters}
+                                        className="mt-5 px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-xs font-bold text-white transition cursor-pointer shadow-lg shadow-rose-600/30"
                                     >
-                                        Reset Filters
+                                        Reset All Filters
                                     </button>
                                 </div>
                             ) : (
@@ -573,62 +529,63 @@ function TvShowsContent() {
                                         {paginatedShows.map((show) => (
                                             <motion.div
                                                 key={show.id}
+                                                onClick={() => setSelectedShow(show)}
                                                 whileHover={{ scale: 1.04, y: -4 }}
-                                                whileTap={{ scale: 0.98 }}
+                                                whileTap={{ scale: 0.97 }}
                                                 transition={{
                                                     type: "spring",
                                                     stiffness: 400,
                                                     damping: 26,
                                                 }}
-                                                className="group relative cursor-pointer overflow-hidden rounded-xl bg-neutral-900 border border-neutral-800/80 shadow-md hover:border-neutral-700 transition-all"
+                                                className="group relative cursor-pointer overflow-hidden rounded-xl bg-neutral-900 border border-neutral-800/80 shadow-md hover:border-neutral-600 transition-all"
                                             >
-                                                <Link
-                                                    href={"/tvshows/" + show.id}
-                                                    className="block w-full h-full"
-                                                >
-                                                    <PosterImage
-                                                        show={show}
-                                                        className="aspect-[2/3] w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                                    />
-                                                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/80 to-transparent px-3 pb-3 pt-12">
-                                                        <p className="truncate text-xs font-bold text-white sm:text-sm">
-                                                            {show.title}
-                                                        </p>
-                                                        <div className="mt-1 flex items-center justify-between text-[11px] text-neutral-400">
-                                                            <span className="font-semibold text-yellow-400">
-                                                                ⭐ {show.rating}
-                                                            </span>
-                                                            <span>
-                                                                {show.seasons} season
-                                                                {show.seasons > 1 ? "s" : ""}
-                                                            </span>
-                                                        </div>
+                                                <PosterImage
+                                                    show={show}
+                                                    className="aspect-[2/3] w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                                />
+
+                                                {/* Overlay / Bottom gradient */}
+                                                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/85 to-transparent px-3 pb-3 pt-12">
+                                                    <p className="truncate text-xs font-bold text-white sm:text-sm">
+                                                        {show.title}
+                                                    </p>
+
+                                                    <div className="mt-1 flex items-center justify-between text-[11px] text-neutral-400 font-medium">
+                                                        <span className="font-semibold text-yellow-400 flex items-center gap-0.5">
+                                                            ⭐ {show.rating}
+                                                        </span>
+                                                        <span>
+                                                            {show.seasons} season{show.seasons > 1 ? "s" : ""}
+                                                        </span>
+                                                    </div>
+
+                                                    <div className="mt-1 flex items-center gap-1.5 flex-wrap">
                                                         {show.channel && (
-                                                            <div className="mt-1.5">
-                                                                <span className="inline-block text-[9px] px-1.5 py-0.5 rounded bg-white/10 text-neutral-300 backdrop-blur-sm">
-                                                                    {show.channel}
-                                                                </span>
-                                                            </div>
+                                                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/10 text-neutral-300">
+                                                                {show.channel}
+                                                            </span>
+                                                        )}
+                                                        {show.genre && show.genre[0] && (
+                                                            <span className="text-[10px] text-neutral-500">
+                                                                {show.genre[0]}
+                                                            </span>
                                                         )}
                                                     </div>
-                                                </Link>
+                                                </div>
                                             </motion.div>
                                         ))}
                                     </div>
 
-                                    {/* Pagination Controls */}
-                                    <div className="mt-10 border-t border-neutral-800 pt-6">
+                                    {/* Primary Pagination Bar */}
+                                    <div className="mt-12 border-t border-neutral-800/80 pt-6">
                                         <Pagination
-                                            currentPage={currentPage}
+                                            currentPage={safeCurrentPage}
                                             totalPages={totalPages}
                                             onPageChange={handlePageChange}
                                             totalItems={filteredShows.length}
                                             pageSize={pageSize}
                                             pageSizeOptions={[8, 12, 18, 24]}
-                                            onPageSizeChange={(size) => {
-                                                setPageSize(size);
-                                                setCurrentPage(1);
-                                            }}
+                                            onPageSizeChange={handlePageSizeChange}
                                             showPageSize={true}
                                             showSummary={true}
                                             itemName="TV series"
@@ -637,104 +594,139 @@ function TvShowsContent() {
                                 </>
                             )}
                         </div>
-                    )}
+                    </div>
                 </>
             )}
 
-            {/* See More Modal with Pagination */}
+            {/* Quick TV Show Detail Modal */}
             <AnimatePresence>
-                {selectedGenre && (
+                {selectedShow && (
                     <>
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             transition={{ duration: 0.2 }}
-                            onClick={() => setSelectedGenre(null)}
-                            className="fixed inset-0 z-40 bg-black/90 backdrop-blur-sm"
+                            onClick={() => setSelectedShow(null)}
+                            className="fixed inset-0 z-40 bg-black/85 backdrop-blur-md"
                         />
 
                         <motion.div
-                            initial={{ opacity: 0, y: 50 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: 30 }}
+                            initial={{ opacity: 0, scale: 0.92, y: 30 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.92, y: 20 }}
                             transition={{
                                 type: "spring",
-                                stiffness: 360,
-                                damping: 34,
-                                mass: 0.95,
+                                stiffness: 380,
+                                damping: 32,
+                                mass: 0.9,
                             }}
-                            className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto p-4 pt-12 sm:p-8"
+                            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
                         >
-                            <div className="relative w-full max-w-6xl rounded-2xl bg-neutral-900 p-6 shadow-2xl ring-1 ring-white/10 sm:p-8">
-                                <div className="mb-6 flex items-center justify-between">
-                                    <div>
-                                        <h2 className="text-2xl font-bold text-white sm:text-3xl">
-                                            {selectedGenre.name} Series
-                                        </h2>
-                                        <p className="text-xs text-neutral-400 mt-1">
-                                            {selectedGenre.shows.length} shows available
-                                        </p>
-                                    </div>
-                                    <button
-                                        type="button"
-                                        onClick={() => setSelectedGenre(null)}
-                                        className="flex h-9 w-9 items-center justify-center rounded-full bg-black/60 text-white transition hover:bg-black/80 cursor-pointer"
-                                    >
-                                        ✕
-                                    </button>
+                            <div className="relative w-full max-w-3xl overflow-hidden rounded-2xl bg-neutral-900 shadow-2xl ring-1 ring-white/10">
+                                <button
+                                    onClick={() => setSelectedShow(null)}
+                                    aria-label="Close modal"
+                                    className="absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-black/60 text-white transition hover:bg-black/90 cursor-pointer"
+                                >
+                                    ✕
+                                </button>
+
+                                <div className="relative h-56 w-full sm:h-72">
+                                    <PosterImage
+                                        show={selectedShow}
+                                        className="h-full w-full object-cover object-top"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-neutral-900 via-neutral-900/40 to-transparent" />
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-                                    {modalPaginatedShows.map((show) => (
-                                        <motion.div
-                                            key={show.id}
-                                            whileHover={{ scale: 1.05, y: -3 }}
-                                            whileTap={{ scale: 0.97 }}
-                                            transition={{
-                                                type: "spring",
-                                                stiffness: 420,
-                                                damping: 28,
-                                                mass: 0.8,
+                                <div className="p-6 sm:p-8">
+                                    <div className="flex items-center gap-2 mb-1">
+                                        {selectedShow.channel && (
+                                            <span className="rounded bg-rose-600/20 text-rose-400 border border-rose-500/30 px-2 py-0.5 text-xs font-semibold">
+                                                {selectedShow.channel}
+                                            </span>
+                                        )}
+                                        <span className="text-xs text-neutral-400">
+                                            {selectedShow.year}
+                                        </span>
+                                    </div>
+
+                                    <h2 className="text-2xl font-black text-white sm:text-3xl">
+                                        {selectedShow.title}
+                                    </h2>
+
+                                    <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-neutral-400">
+                                        <span className="flex items-center gap-1 font-semibold text-yellow-400">
+                                            ⭐ {selectedShow.rating}
+                                        </span>
+                                        <span>•</span>
+                                        <span>
+                                            {selectedShow.seasons} Season{selectedShow.seasons > 1 ? "s" : ""}
+                                        </span>
+                                        {selectedShow.episodes && (
+                                            <>
+                                                <span>•</span>
+                                                <span>{selectedShow.episodes} Episodes</span>
+                                            </>
+                                        )}
+                                    </div>
+
+                                    <div className="mt-4 flex flex-wrap gap-2">
+                                        {selectedShow.genre &&
+                                            selectedShow.genre.map((g) => (
+                                                <span
+                                                    key={g}
+                                                    className="rounded-full border border-neutral-700 bg-neutral-800 px-3 py-1 text-xs text-neutral-300"
+                                                >
+                                                    {g}
+                                                </span>
+                                            ))}
+                                    </div>
+
+                                    <p className="mt-5 text-sm leading-relaxed text-neutral-300 sm:text-base">
+                                        {selectedShow.description || selectedShow.shortDescription}
+                                    </p>
+
+                                    <div className="mt-7 flex flex-wrap gap-3">
+                                        <Link
+                                            href={"/tvshows/" + selectedShow.id}
+                                            onClick={() => {
+                                                setSelectedShow(null);
+                                                setIsNavigating(true);
                                             }}
-                                            className="relative cursor-pointer overflow-hidden rounded-lg"
+                                            className="flex-1 rounded-xl bg-rose-600 px-6 py-3.5 text-center font-bold text-white transition hover:bg-rose-500 sm:flex-none shadow-lg shadow-rose-600/30"
                                         >
-                                            <Link href={"/tvshows/" + show.id} className="block w-full h-full">
-                                                <PosterImage
-                                                    show={show}
-                                                    className="aspect-[2/3] w-full object-cover"
-                                                />
-                                                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/70 to-transparent px-2 pb-2 pt-8">
-                                                    <p className="truncate text-xs font-semibold text-white sm:text-sm">
-                                                        {show.title}
-                                                    </p>
-                                                    <div className="mt-0.5 flex items-center gap-1 text-[10px] text-yellow-400 sm:text-xs">
-                                                        ⭐ {show.rating}
-                                                    </div>
-                                                </div>
-                                            </Link>
-                                        </motion.div>
-                                    ))}
-                                </div>
+                                            Watch Series
+                                        </Link>
 
-                                {modalTotalPages > 1 && (
-                                    <div className="mt-6 border-t border-neutral-800 pt-4">
-                                        <Pagination
-                                            currentPage={modalPage}
-                                            totalPages={modalTotalPages}
-                                            onPageChange={(p) => setModalPage(p)}
-                                            totalItems={selectedGenre.shows.length}
-                                            pageSize={MODAL_PAGE_SIZE}
-                                            showSummary={true}
-                                            itemName="TV shows"
-                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => setSelectedShow(null)}
+                                            className="rounded-xl border border-neutral-700 px-6 py-3.5 font-bold text-neutral-300 transition hover:border-neutral-500 hover:text-white cursor-pointer"
+                                        >
+                                            Close
+                                        </button>
                                     </div>
-                                )}
+                                </div>
                             </div>
                         </motion.div>
                     </>
                 )}
             </AnimatePresence>
+
+            {/* Navigation Transition Overlay */}
+            {isNavigating && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 px-4 backdrop-blur-sm">
+                    <div className="flex flex-col items-center text-center text-white">
+                        <div className="relative flex h-16 w-16 items-center justify-center">
+                            <div className="absolute inset-0 animate-spin rounded-full border-4 border-neutral-700 border-t-rose-600" />
+                            <Tv className="w-7 h-7 text-rose-500" />
+                        </div>
+                        <p className="mt-4 text-sm font-semibold">Loading TV series...</p>
+                    </div>
+                </div>
+            )}
         </main>
     );
 }
