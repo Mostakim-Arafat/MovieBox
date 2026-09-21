@@ -111,6 +111,7 @@ function Navbar() {
     };
 
     const { data } = authClient.useSession();
+    const isAdmin = (data?.user as { role?: string } | undefined)?.role === "admin";
     const pathname = usePathname();
 
     const isHome = pathname === "/" || pathname === "";
@@ -239,6 +240,13 @@ function Navbar() {
                                     Profile
                                 </Link>
                             </li>
+                            {isAdmin && (
+                                <li>
+                                    <Link href="/admin" className="block rounded-md px-3 py-2 font-semibold text-rose-600 transition hover:bg-muted">
+                                        Admin Dashboard
+                                    </Link>
+                                </li>
+                            )}
                             <li>
                                 <Link href="/history" className="block rounded-md px-3 py-2 transition hover:bg-muted">
                                     Watch History
@@ -532,6 +540,13 @@ function Navbar() {
                                         Profile
                                     </Link>
                                 </li>
+                                {isAdmin && (
+                                    <li>
+                                        <Link href="/admin" className="font-semibold text-rose-600 transition hover:text-rose-500">
+                                            Admin Dashboard
+                                        </Link>
+                                    </li>
+                                )}
                                 <li>
                                     <Link href={"/history"}>Watch History</Link>
                                 </li>
