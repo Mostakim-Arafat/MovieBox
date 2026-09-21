@@ -1,32 +1,22 @@
-"use client";
+import React from "react";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
+import AdminShell from "@/Components/Admin/AdminShell";
 
-import React, { useState } from "react";
-import AdminSidebar from "@/Components/Admin/AdminSidebar";
-import AdminHeader from "@/Components/Admin/AdminHeader";
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [desktopCollapsed, setDesktopCollapsed] = useState(false);
+  if (!session?.user) {
+    redirect("/login?admin=login-required");
+  }
 
-  return (
-    <div className="min-h-screen bg-zinc-950 text-white font-sans">
-      {/* Responsive Sidebar */}
-      <AdminSidebar
-        mobileOpen={mobileOpen}
-        onCloseMobile={() => setMobileOpen(false)}
-        desktopCollapsed={desktopCollapsed}
-        onToggleDesktopCollapse={() => setDesktopCollapsed(!desktopCollapsed)}
-      />
+  if (session.user.role !== "admin") {
+    redirect("/?admin=access-denied");
+  }
 
-      {/* Main content area — dynamic margin based on breakpoint and desktop collapse state */}
-      <div
-        className={`flex flex-col min-h-screen transition-all duration-300 ml-0 ${
-          desktopCollapsed ? "lg:ml-[72px]" : "lg:ml-[240px]"
-        }`}
-      >
-        <AdminHeader onToggleMobileSidebar={() => setMobileOpen(!mobileOpen)} />
-        <main className="flex-1 p-4 sm:p-6 lg:p-8">{children}</main>
-      </div>
-    </div>
-  );
+  return <AdminShell>{children}</AdminShell>;
 }
+
