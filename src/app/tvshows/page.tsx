@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import Pagination from "@/UI/Pagination";
 
-//hello
+//hell
 
 type Show = {
     id: number;
