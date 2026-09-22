@@ -253,6 +253,7 @@ function MoviesContent() {
         setSearchTerm("");
         router.replace(pathname, { scroll: false });
     };
+    const featured = movies[1];
 
     return (
         <main className="min-h-screen bg-black text-white selection:bg-rose-600 selection:text-white pb-20">

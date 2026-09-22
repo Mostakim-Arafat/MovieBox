@@ -111,6 +111,7 @@ function Navbar() {
     };
 
     const { data } = authClient.useSession();
+    const isAdmin = (data?.user as { role?: string } | undefined)?.role === "admin";
     const pathname = usePathname();
 
     const isHome = pathname === "/" || pathname === "";
@@ -239,6 +240,13 @@ function Navbar() {
                                     Profile
                                 </Link>
                             </li>
+                            {isAdmin && (
+                                <li>
+                                    <Link href="/admin" className="block rounded-md px-3 py-2 font-semibold text-rose-600 transition hover:bg-muted">
+                                        Admin Dashboard
+                                    </Link>
+                                </li>
+                            )}
                             <li>
                                 <Link href="/history" className="block rounded-md px-3 py-2 transition hover:bg-muted">
                                     Watch History
@@ -284,6 +292,7 @@ function Navbar() {
                 </div>
             )}
 
+            {/* MovieBox icon */}
             <div className="hidden min-w-0 shrink-0 items-center gap-4 lg:flex">
                 <div className="flex min-w-0 flex-col items-start">
                     <Link href="/" className="group flex items-center gap-2">
@@ -359,7 +368,7 @@ function Navbar() {
                     />
                 </label>
 
-                {/* Search Dropdown */}
+                {/* Search movielist*/}
                 {isOpen && (
                     <div className="absolute right-0 top-full mt-2 w-80 bg-background border border-border rounded-lg shadow-xl max-h-80 overflow-y-auto z-50 divide-y divide-border">
                         {movies.length > 0 ? (
@@ -532,6 +541,13 @@ function Navbar() {
                                         Profile
                                     </Link>
                                 </li>
+                                {isAdmin && (
+                                    <li>
+                                        <Link href="/admin" className="font-semibold text-rose-600 transition hover:text-rose-500">
+                                            Admin Dashboard
+                                        </Link>
+                                    </li>
+                                )}
                                 <li>
                                     <Link href={"/history"}>Watch History</Link>
                                 </li>
