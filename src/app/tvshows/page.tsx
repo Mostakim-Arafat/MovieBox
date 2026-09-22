@@ -73,20 +73,23 @@ function TvShowsContent() {
     const [selectedShow, setSelectedShow] = useState<Show | null>(null);
     const [isNavigating, setIsNavigating] = useState(false);
 
-    // URL Param Initializations
-    const initialGenre = searchParams.get("genre") || "All";
-    const initialPage = parseInt(searchParams.get("page") || "1", 10) || 1;
-    const initialSearch = searchParams.get("search") || "";
-    const initialSort =
+    // Derive active filter, sort, and pagination directly from URL searchParams
+    const activeGenre = searchParams.get("genre") || "All";
+    const currentPage = parseInt(searchParams.get("page") || "1", 10) || 1;
+    const sortBy =
         (searchParams.get("sort") as "rating" | "year" | "seasons" | "title") || "rating";
+    const urlSearch = searchParams.get("search") || "";
 
-    // Filtering, Sorting, and Pagination State
-    const [activeGenre, setActiveGenre] = useState<string>(initialGenre);
-    const [searchTerm, setSearchTerm] = useState<string>(initialSearch);
-    const [sortBy, setSortBy] = useState<"rating" | "year" | "seasons" | "title">(initialSort);
-    const [currentPage, setCurrentPage] = useState<number>(initialPage);
+    // Synchronize search input without useEffect (React 19 render-phase pattern)
+    const [searchTerm, setSearchTerm] = useState<string>(urlSearch);
+    const [prevUrlSearch, setPrevUrlSearch] = useState<string>(urlSearch);
+
+    if (urlSearch !== prevUrlSearch) {
+        setPrevUrlSearch(urlSearch);
+        setSearchTerm(urlSearch);
+    }
+
     const [pageSize, setPageSize] = useState<number>(12);
-
     const catalogSectionRef = useRef<HTMLDivElement>(null);
 
     // Fetch shows from /tvshows.json
@@ -110,20 +113,6 @@ function TvShowsContent() {
         };
     }, []);
 
-    // Sync state with URL searchParams
-    useEffect(() => {
-        const g = searchParams.get("genre") || "All";
-        const p = parseInt(searchParams.get("page") || "1", 10) || 1;
-        const s = searchParams.get("search") || "";
-        const sort =
-            (searchParams.get("sort") as "rating" | "year" | "seasons" | "title") || "rating";
-
-        setActiveGenre(g);
-        setCurrentPage(p);
-        setSearchTerm(s);
-        setSortBy(sort);
-    }, [searchParams]);
-
     // Update URL helper without full page reload
     const updateUrlParams = (updates: {
         page?: number;
@@ -143,7 +132,7 @@ function TvShowsContent() {
         if (nextSort && nextSort !== "rating") params.set("sort", nextSort);
 
         const qs = params.toString();
-        router.push(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+        router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
     };
 
     // Extract all unique genres
@@ -173,7 +162,7 @@ function TvShowsContent() {
     }, [shows]);
 
     // Filter and sort shows for the catalog
-    const filteredShows = useMemo(() => {
+    const filteredShows = (() => {
         let list = [...shows];
 
         // Genre filter
@@ -193,7 +182,7 @@ function TvShowsContent() {
                 const titleMatch = s.title?.toLowerCase().includes(q);
                 const channelMatch = s.channel?.toLowerCase().includes(q);
                 const descMatch = (s.shortDescription || s.description)?.toLowerCase().includes(q);
-                const genreMatch = Array.isArray(s.genre) && s.genre.some((g) => g.toLowerCase().includes(q));
+                const genreMatch = Array.isArray(s.genre) && s.genre.some((g) => g.toLowerCase() === target || g.toLowerCase().includes(q));
                 const yearMatch = String(s.year).includes(q);
                 return Boolean(titleMatch || channelMatch || descMatch || genreMatch || yearMatch);
             });
@@ -209,20 +198,19 @@ function TvShowsContent() {
         });
 
         return list;
-    }, [shows, activeGenre, searchTerm, sortBy]);
+    })();
 
     // Calculate Pagination
     const totalPages = Math.max(1, Math.ceil(filteredShows.length / pageSize));
     const safeCurrentPage = Math.min(currentPage, totalPages);
 
-    const paginatedShows = useMemo(() => {
-        const start = (safeCurrentPage - 1) * pageSize;
-        return filteredShows.slice(start, start + pageSize);
-    }, [filteredShows, safeCurrentPage, pageSize]);
+    const paginatedShows = (() => {
+        const startIndex = (safeCurrentPage - 1) * pageSize;
+        return filteredShows.slice(startIndex, startIndex + pageSize);
+    })();
 
     // Handlers
     const handlePageChange = (newPage: number) => {
-        setCurrentPage(newPage);
         updateUrlParams({ page: newPage });
         if (catalogSectionRef.current) {
             catalogSectionRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -230,35 +218,26 @@ function TvShowsContent() {
     };
 
     const handleGenreChange = (newGenre: string) => {
-        setActiveGenre(newGenre);
-        setCurrentPage(1);
         updateUrlParams({ genre: newGenre, page: 1 });
     };
 
     const handleSearchChange = (term: string) => {
         setSearchTerm(term);
-        setCurrentPage(1);
         updateUrlParams({ search: term, page: 1 });
     };
 
     const handleSortChange = (newSort: "rating" | "year" | "seasons" | "title") => {
-        setSortBy(newSort);
-        setCurrentPage(1);
         updateUrlParams({ sort: newSort, page: 1 });
     };
 
     const handlePageSizeChange = (newSize: number) => {
         setPageSize(newSize);
-        setCurrentPage(1);
         updateUrlParams({ page: 1 });
     };
 
     const handleResetFilters = () => {
-        setActiveGenre("All");
         setSearchTerm("");
-        setSortBy("rating");
-        setCurrentPage(1);
-        router.push(pathname, { scroll: false });
+        router.replace(pathname, { scroll: false });
     };
 
     return (
