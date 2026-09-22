@@ -292,6 +292,7 @@ function Navbar() {
                 </div>
             )}
 
+            {/* MovieBox icon */}
             <div className="hidden min-w-0 shrink-0 items-center gap-4 lg:flex">
                 <div className="flex min-w-0 flex-col items-start">
                     <Link href="/" className="group flex items-center gap-2">
@@ -367,7 +368,7 @@ function Navbar() {
                     />
                 </label>
 
-                {/* Search Dropdown */}
+                {/* Search movielist*/}
                 {isOpen && (
                     <div className="absolute right-0 top-full mt-2 w-80 bg-background border border-border rounded-lg shadow-xl max-h-80 overflow-y-auto z-50 divide-y divide-border">
                         {movies.length > 0 ? (
