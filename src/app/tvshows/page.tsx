@@ -182,7 +182,7 @@ function TvShowsContent() {
                 const titleMatch = s.title?.toLowerCase().includes(q);
                 const channelMatch = s.channel?.toLowerCase().includes(q);
                 const descMatch = (s.shortDescription || s.description)?.toLowerCase().includes(q);
-                const genreMatch = Array.isArray(s.genre) && s.genre.some((g) => g.toLowerCase() === target || g.toLowerCase().includes(q));
+                const genreMatch = Array.isArray(s.genre) && s.genre.some((g) => g.toLowerCase().includes(q));
                 const yearMatch = String(s.year).includes(q);
                 return Boolean(titleMatch || channelMatch || descMatch || genreMatch || yearMatch);
             });
