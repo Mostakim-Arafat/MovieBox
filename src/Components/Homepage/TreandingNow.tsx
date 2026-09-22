@@ -34,7 +34,7 @@ export default function TrendingNow() {
   useEffect(() => {
     const fetchdata = async () => {
       try {
-        const data1 = await fetch("/api/proxy-trending")
+        const data1 = await fetch("/api/trending")
         const data2 = await data1.json();
         setTrending(data2);
       } catch (error) {
