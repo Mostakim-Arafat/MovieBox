@@ -6,6 +6,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import toast, { Toaster } from "react-hot-toast";
 import { ObjectId } from "mongodb";
+import { useSession } from "@/lib/auth-client";
 import WatchModal from "@/Components/Movie/watchModal";
 
 type Movie = {
@@ -120,6 +121,7 @@ export default function MovieDetailsPage() {
     const [reviewComment, setReviewComment] = useState("");
 
     const [isPlaying, setIsPlaying] = useState(false);
+    const { data: session } = useSession();
 
     useEffect(() => {
         fetch("/api/movies")
@@ -326,7 +328,30 @@ export default function MovieDetailsPage() {
 
 
                     <button
-                        onClick={() => setIsPlaying(true)}
+                        onClick={async () => {
+                            setIsPlaying(true);
+                            // Save to watch history
+                            if (session?.user?.email && movie) {
+                                try {
+                                    await fetch("/api/watch-history", {
+                                        method: "POST",
+                                        headers: { "Content-Type": "application/json" },
+                                        body: JSON.stringify({
+                                            userEmail: session.user.email,
+                                            movieId: String(movie._id),
+                                            title: movie.title,
+                                            poster: movie.poster,
+                                            year: movie.year,
+                                            genre: movie.genre,
+                                            rating: movie.rating,
+                                            duration: movie.duration,
+                                        }),
+                                    });
+                                } catch (err) {
+                                    console.error("Failed to save watch history:", err);
+                                }
+                            }
+                        }}
                         disabled={!movie.muxPlaybackId}
                         className="px-6 py-3 rounded-xl font-semibold text-white bg-rose-600 hover:bg-rose-700 shadow-lg shadow-rose-900/30 transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                     >
