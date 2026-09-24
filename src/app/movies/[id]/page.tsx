@@ -17,7 +17,7 @@ type Movie = {
     rating: number;
     duration: string;
     description: string;
-    muxPlaybackId : string;
+    muxPlaybackId: string;
 };
 
 type Review = {
@@ -122,7 +122,7 @@ export default function MovieDetailsPage() {
     const [isPlaying, setIsPlaying] = useState(false);
 
     useEffect(() => {
-        fetch("/api/movies")
+        fetch("/api/proxy-movies")
             .then((res) => res.json())
             .then((data: Movie[]) => {
                 setAllMovies(data);

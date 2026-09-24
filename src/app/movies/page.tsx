@@ -198,7 +198,7 @@ export default function MoviesPage() {
     const [isNavigating, setIsNavigating] = useState(false);
 
     useEffect(() => {
-        fetch("/api/movies")
+        fetch("/api/proxy-movies")
             .then((res) => res.json())
             .then((data: Movie[]) => {
                 setMovies(data);
