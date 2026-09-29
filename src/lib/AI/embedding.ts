@@ -1,4 +1,4 @@
-import { getGeminiClient } from "@/lib/gemini";
+import { getGeminiClient } from "@/lib/AI/gemini";
 
 export async function createMovieEmbedding(movie: {
   title: string;
