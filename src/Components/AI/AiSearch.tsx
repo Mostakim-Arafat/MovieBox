@@ -63,7 +63,7 @@ export default function AiSearch({ onResults }: { onResults?: (movies: MovieResu
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Ask AI: e.g., funny sci-fi movies about space..."
+            placeholder="Ask AI: e.g., sea beach tour"
             aria-label="Search movies"
             className="w-full rounded-full border border-gray-700 bg-gray-900 py-3 pl-12 pr-28 text-white shadow-lg placeholder:text-gray-400 focus:border-purple-500 focus:outline-none"
           />
