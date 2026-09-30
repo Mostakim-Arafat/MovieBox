@@ -6,6 +6,7 @@ import { MdOutlineExpandMore, MdOutlineExpandLess } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
 import { PiDotsNineBold } from "react-icons/pi";
 import { authClient } from "@/lib/auth-client";
+import { MOVIE_GENRES } from "@/lib/movieGenres";
 import ThemeToggle from "@/UI/TToggle";
 import { useState, useEffect, useRef } from "react";
 
@@ -68,28 +69,11 @@ const LANGUAGE_COLUMNS: LanguageOption[][] = [
     ],
 ];
 
-const GENRE_COL_LEFT = [
-    "Action and adventure",
-    "Comedy",
-    "Documentary",
-    "Drama",
-    "Fantasy",
-    "Horror",
-    "Kids",
-    "Mystery and thrillers",
-];
-
-const GENRE_COL_RIGHT = [
-    "Romance",
-    "Science fiction",
-    "Anime & Animation",
-    "Crime & Suspense",
-];
-
 function Navbar() {
     const [query, setQuery] = useState("");
     const [isOpen, setIsOpen] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [mobileGenresOpen, setMobileGenresOpen] = useState(false);
     const [movies, setMovies] = useState<Movie[]>([]);
     
     // Genres Modal State
@@ -277,7 +261,6 @@ function Navbar() {
                             ["Home", "/"],
                             ["Movies", "/movies"],
                             ["TV shows", "/tvshows"],
-                            ["Genres", "/movies"],
                         ].map(([label, href]) => (
                             <Link
                                 key={label}
@@ -288,6 +271,32 @@ function Navbar() {
                                 {label}
                             </Link>
                         ))}
+                        <button
+                            type="button"
+                            onClick={() => setMobileGenresOpen((open) => !open)}
+                            aria-expanded={mobileGenresOpen}
+                            className="flex items-center justify-between rounded-md px-3 py-2.5 text-left text-muted-foreground transition hover:bg-muted hover:text-foreground"
+                        >
+                            Genres
+                            {mobileGenresOpen ? <MdOutlineExpandLess size={18} /> : <MdOutlineExpandMore size={18} />}
+                        </button>
+                        {mobileGenresOpen && (
+                            <div className="col-span-2 grid grid-cols-2 gap-1 rounded-md border border-border bg-muted/40 p-2">
+                                {MOVIE_GENRES.map((genre) => (
+                                    <Link
+                                        key={genre}
+                                        href={`/movies?genre=${encodeURIComponent(genre)}`}
+                                        onClick={() => {
+                                            setMobileMenuOpen(false);
+                                            setMobileGenresOpen(false);
+                                        }}
+                                        className="rounded-md px-3 py-2 text-muted-foreground transition hover:bg-muted hover:text-foreground"
+                                    >
+                                        {genre}
+                                    </Link>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </div>
             )}
@@ -495,7 +504,7 @@ function Navbar() {
                             <div className="grid grid-cols-2 gap-x-6 gap-y-3 text-left">
                                 {/* Column 1 */}
                                 <div className="flex flex-col space-y-3">
-                                    {GENRE_COL_LEFT.map((genre) => (
+                                    {MOVIE_GENRES.slice(0, 7).map((genre) => (
                                         <Link
                                             key={genre}
                                             href={`/movies?genre=${encodeURIComponent(genre)}`}
@@ -509,7 +518,7 @@ function Navbar() {
 
                                 {/* Column 2 */}
                                 <div className="flex flex-col space-y-3">
-                                    {GENRE_COL_RIGHT.map((genre) => (
+                                    {MOVIE_GENRES.slice(7).map((genre) => (
                                         <Link
                                             key={genre}
                                             href={`/movies?genre=${encodeURIComponent(genre)}`}

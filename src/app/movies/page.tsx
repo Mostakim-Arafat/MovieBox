@@ -15,6 +15,7 @@ import {
     Sparkles,
 } from "lucide-react";
 import Pagination from "@/UI/Pagination";
+import { MOVIE_GENRES } from "@/lib/movieGenres";
 
 type Movie = {
     _id: string;
@@ -151,16 +152,7 @@ function MoviesContent() {
     };
 
     // Extract all unique genres
-    const allGenresList = useMemo(() => {
-        const genres = new Set<string>();
-        movies.forEach((m) => {
-            if (Array.isArray(m.genre)) {
-                m.genre.forEach((g) => genres.add(g));
-            }
-        });
-        const sorted = Array.from(genres).sort();
-        return ["All", ...sorted];
-    }, [movies]);
+    const allGenresList = useMemo(() => ["All", ...MOVIE_GENRES], []);
 
     // Top spotlight / featured movies
     const featured = useMemo(() => {
@@ -183,11 +175,11 @@ function MoviesContent() {
 
         // Genre filter
         if (activeGenre !== "All") {
-            const target = activeGenre.toLowerCase();
+            const target = activeGenre.trim().toLowerCase();
             list = list.filter(
                 (m) =>
                     Array.isArray(m.genre) &&
-                    m.genre.some((g) => g.toLowerCase() === target)
+                    m.genre.some((genre) => genre.trim().toLowerCase() === target)
             );
         }
 
