@@ -59,7 +59,7 @@ export default function AiSearch({ onResults }: { onResults?: (movies: MovieResu
           <p className="mb-3 flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-rose-400">
             <Sparkles className="h-4 w-4" /> Moviebox discovery
           </p>
-          <h2 className="text-2xl font-bold text-white sm:text-3xl">Find your next favorite</h2>
+          <h2 className="text-2xl font-bold text-white sm:text-3xl">Find your next favorite with AI</h2>
           <p className="mt-2 text-sm text-zinc-400">Search by title, story</p>
 
           <form onSubmit={handleSearch} className="mx-auto mt-7 w-full max-w-2xl">
