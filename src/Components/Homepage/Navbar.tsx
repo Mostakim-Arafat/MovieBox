@@ -361,7 +361,7 @@ function Navbar() {
                     </svg>
                     <input
                         type="search"
-                        placeholder="Search"
+                        placeholder="Search By movie name"
                         value={query}
                         onChange={(e) => handleSearchChange(e.target.value)}
                         className="min-w-0 w-full"
