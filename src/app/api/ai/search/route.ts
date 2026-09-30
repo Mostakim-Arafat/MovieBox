@@ -40,7 +40,7 @@ export async function POST(req: Request) {
     const results = await moviesCollection.aggregate([
       {
         $vectorSearch: {
-          index: "MyFirstTry", // Make sure this matches your exact Atlas index name (or change to "movie_embedding_index")
+          index: "MyfirstTry", // Make sure this matches your exact Atlas index name (or change to "movie_embedding_index")
           path: "embedding",
           queryVector: queryEmbedding,
           numCandidates: 100,
@@ -61,9 +61,10 @@ export async function POST(req: Request) {
       },
     ]).toArray();
 
-    console.log(results)
+    const filteredResults = results.filter((movie) => movie.score > 0.7);
+    console.log(filteredResults)
 
-    return NextResponse.json({ success: true, movies: results }, { status: 200 });
+    return NextResponse.json({ success: true, movies: filteredResults }, { status: 200 });
   } catch (error: any) {
     console.error("AI Search Error:", error);
     return NextResponse.json(
