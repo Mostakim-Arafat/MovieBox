@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getDatabase } from "@/lib/mongo";
+import { createMovieEmbedding } from "@/lib/AI/embedding";
 
 export async function GET() {
     try {
@@ -22,9 +23,20 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "Title and at least one genre are required" }, { status: 400 });
         }
 
+        const embedding = await createMovieEmbedding({
+            title: movie.title,
+            description: movie.description ?? movie.synopsis ?? "",
+            genres: Array.isArray(movie.genre) ? movie.genre : [],
+            releaseYear: movie.year ?? movie.releaseYear ?? undefined,
+        });
+
+        const movieDocument = {
+            ...movie,
+            embedding,
+        };
+
         const db = await getDatabase();
-        const result = await db.collection("metaData").insertOne(movie);
-        console.log(result)
+        const result = await db.collection("metaData").insertOne(movieDocument);
         return NextResponse.json({ id: result.insertedId }, { status: 201 });
     } catch (error) {
         console.error("MongoDB insert error:", error);

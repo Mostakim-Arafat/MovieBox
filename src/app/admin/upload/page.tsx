@@ -228,6 +228,8 @@ export default function MovieUploadPage() {
       setUploadProgress(80);
       setUploadStage("Saving movie metadata to database...");
 
+      
+
       const moviePayload = {
         title: title.trim(),
         poster: posterPreview,
