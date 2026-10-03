@@ -108,20 +108,20 @@ function MoviesContent() {
             }
 
             // Fallback
-            try {
-                const proxyRes = await fetch("/api/proxy-movies");
-                const proxyData = await proxyRes.json();
-                if (isMounted) {
-                    if (Array.isArray(proxyData) && proxyData.length > 0) {
-                        setMovies(proxyData);
-                    }
-                }
-            } catch (proxyErr) {
-                console.error("Proxy fetch failed:", proxyErr);
-            } finally {
-                if (isMounted) setIsLoading(false);
-            }
-        };
+        //     try {
+        //         const proxyRes = await fetch("/api/proxy-movies");
+        //         const proxyData = await proxyRes.json();
+        //         if (isMounted) {
+        //             if (Array.isArray(proxyData) && proxyData.length > 0) {
+        //                 setMovies(proxyData);
+        //             }
+        //         }
+        //     } catch (proxyErr) {
+        //         console.error("Proxy fetch failed:", proxyErr);
+        //     } finally {
+        //         if (isMounted) setIsLoading(false);
+        //     }
+        // };
 
         fetchMovies();
         return () => {
