@@ -15,6 +15,7 @@ import {
     Sparkles,
 } from "lucide-react";
 import Pagination from "@/UI/Pagination";
+import { MOVIE_GENRES } from "@/lib/movieGenres";
 
 type Movie = {
     _id: string;
@@ -88,41 +89,32 @@ function MoviesContent() {
     const [pageSize, setPageSize] = useState<number>(18);
     const catalogSectionRef = useRef<HTMLDivElement>(null);
 
-    // Fetch movies from /api/movies with fallback to /api/proxy-movies
+    // Fetch movies from the app's local API only.
     useEffect(() => {
         let isMounted = true;
+
         const fetchMovies = async () => {
             try {
                 const res = await fetch("/api/movies");
                 const data = await res.json();
-                if (isMounted) {
-                    if (Array.isArray(data) && data.length > 0) {
-                        setMovies(data);
-                        setIsLoading(false);
-                        return;
-                    }
+
+                if (!isMounted) return;
+
+                if (Array.isArray(data) && data.length > 0) {
+                    setMovies(data);
+                } else {
+                    setMovies([]);
                 }
             } catch (err) {
-                console.warn("Direct /api/movies fetch failed, trying proxy...", err);
-            }
-
-            // Fallback
-            try {
-                const proxyRes = await fetch("/api/proxy-movies");
-                const proxyData = await proxyRes.json();
-                if (isMounted) {
-                    if (Array.isArray(proxyData) && proxyData.length > 0) {
-                        setMovies(proxyData);
-                    }
-                }
-            } catch (proxyErr) {
-                console.error("Proxy fetch failed:", proxyErr);
+                console.error("Failed to load movies from local API:", err);
+                if (isMounted) setMovies([]);
             } finally {
                 if (isMounted) setIsLoading(false);
             }
         };
 
         fetchMovies();
+
         return () => {
             isMounted = false;
         };
@@ -151,16 +143,7 @@ function MoviesContent() {
     };
 
     // Extract all unique genres
-    const allGenresList = useMemo(() => {
-        const genres = new Set<string>();
-        movies.forEach((m) => {
-            if (Array.isArray(m.genre)) {
-                m.genre.forEach((g) => genres.add(g));
-            }
-        });
-        const sorted = Array.from(genres).sort();
-        return ["All", ...sorted];
-    }, [movies]);
+    const allGenresList = useMemo(() => ["All", ...MOVIE_GENRES], []);
 
     // Top spotlight / featured movies
     const featured = useMemo(() => {
@@ -183,11 +166,11 @@ function MoviesContent() {
 
         // Genre filter
         if (activeGenre !== "All") {
-            const target = activeGenre.toLowerCase();
+            const target = activeGenre.trim().toLowerCase();
             list = list.filter(
                 (m) =>
                     Array.isArray(m.genre) &&
-                    m.genre.some((g) => g.toLowerCase() === target)
+                    m.genre.some((genre) => genre.trim().toLowerCase() === target)
             );
         }
 

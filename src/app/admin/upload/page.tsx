@@ -2,22 +2,7 @@
 import React, { useState, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-
-const GENRES_LIST = [
-  "Action",
-  "Adventure",
-  "Animation",
-  "Comedy",
-  "Crime",
-  "Documentary",
-  "Drama",
-  "Fantasy",
-  "Horror",
-  "Mystery",
-  "Romance",
-  "Sci-Fi",
-  "Thriller",
-];
+import { MOVIE_GENRES } from "@/lib/movieGenres";
 
 const AGE_RATINGS = ["G", "PG", "PG-13", "R", "NC-17", "TV-MA", "TV-14"];
 
@@ -239,7 +224,7 @@ export default function MovieUploadPage() {
         ageRating,
         language,
         subtitles,
-        genre: selectedGenres,
+        genre: MOVIE_GENRES.filter((genre) => selectedGenres.includes(genre)),
         rating: 0,
         duration: `${durationHours}h ${durationMinutes}m`,
         description: synopsis.trim(),
@@ -629,7 +614,7 @@ export default function MovieUploadPage() {
                   Movie Genres * (Select multiple)
                 </label>
                 <div className="flex flex-wrap gap-2">
-                  {GENRES_LIST.map((genre) => {
+                  {MOVIE_GENRES.map((genre) => {
                     const isSelected = selectedGenres.includes(genre);
                     return (
                       <button
