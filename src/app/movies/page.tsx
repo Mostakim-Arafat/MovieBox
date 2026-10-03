@@ -89,41 +89,32 @@ function MoviesContent() {
     const [pageSize, setPageSize] = useState<number>(18);
     const catalogSectionRef = useRef<HTMLDivElement>(null);
 
-    // Fetch movies from /api/movies with fallback to /api/proxy-movies
+    // Fetch movies from the app's local API only.
     useEffect(() => {
         let isMounted = true;
+
         const fetchMovies = async () => {
             try {
                 const res = await fetch("/api/movies");
                 const data = await res.json();
-                if (isMounted) {
-                    if (Array.isArray(data) && data.length > 0) {
-                        setMovies(data);
-                        setIsLoading(false);
-                        return;
-                    }
+
+                if (!isMounted) return;
+
+                if (Array.isArray(data) && data.length > 0) {
+                    setMovies(data);
+                } else {
+                    setMovies([]);
                 }
             } catch (err) {
-                console.warn("Direct /api/movies fetch failed, trying proxy...", err);
+                console.error("Failed to load movies from local API:", err);
+                if (isMounted) setMovies([]);
+            } finally {
+                if (isMounted) setIsLoading(false);
             }
-
-            //Fallback
-            // try {
-            //     const proxyRes = await fetch("/api/proxy-movies");
-            //     const proxyData = await proxyRes.json();
-            //     if (isMounted) {
-            //         if (Array.isArray(proxyData) && proxyData.length > 0) {
-            //             setMovies(proxyData);
-            //         }
-            //     }
-            // } catch (proxyErr) {
-            //     console.error("Proxy fetch failed:", proxyErr);
-            // } finally {
-            //     if (isMounted) setIsLoading(false);
-            // }
         };
 
         fetchMovies();
+
         return () => {
             isMounted = false;
         };
